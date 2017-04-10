@@ -1,0 +1,43 @@
+.js-row {
+    display: none;
+}
+
+table.data-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table.data-table td, table.data-table th {
+    padding: 3px 10px 3px 10px;
+    border: 1px solid #ccc;
+}
+
+table.data-table td:last-child, table.data-table th:last-child {
+    border-right:0;
+}
+
+table.data-table td:first-child, table.data-table th:first-child {
+    border-left:0;
+}
+
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+
+.tabs {
+    position: absolute;
+    bottom:0;
+}
+.tabs .tab {
+    padding: 5px 10px;
+    cursor: pointer;
+    background:#f1f1f1;
+    display: inline-block;
+}
+.tabs .tab.active {
+    background: #ffffff;
+}

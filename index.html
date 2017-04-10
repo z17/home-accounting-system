@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+
+    <link type="text/css" rel="stylesheet" href="node_modules/normalize.css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+
+</head>
+<body>
+
+<div class="js-income-page js-page page active" data-name="income">
+    <h1>Доход</h1>
+    <table class="data-table">
+        <tr>
+            <th>Дата</th>
+            <th>Месяц</th>
+            <th>Сумма</th>
+            <th>Тип</th>
+            <th>Контакт</th>
+            <th>Описание</th>
+        </tr>
+        <tr class="js-row">
+            <td class="js-date"></td>
+            <td class="js-month"></td>
+            <td class="js-sum"></td>
+            <td class="js-payment-type"></td>
+            <td class="js-contact"></td>
+            <td class="js-description"></td>
+        </tr>
+    </table>
+</div>
+<div class="js-orders-page js-page page" data-name="orders">
+    <h1>Заказы</h1>
+    <table class="data-table">
+        <tr>
+            <th>Месяц</th>
+            <th>Сумма</th>
+            <th>Предоплата</th>
+            <th>Оплата</th>
+            <th>Затраты</th>
+            <th>Способ</th>
+            <th>Контакт</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Ссылка</th>
+            <th>Статус</th>
+        </tr>
+        <tr class="js-row">
+            <td class="js-month"></td>
+            <td class="js-sum"></td>
+            <td class="js-prepayment"></td>
+            <td class="js-payment"></td>
+            <td class="js-expenses"></td>
+            <td class="js-payment-type"></td>
+            <td class="js-contact"></td>
+            <td class="js-type"></td>
+            <td class="js-description"></td>
+            <td class="js-link"></td>
+            <td class="js-status"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="js-orders-page js-page page" data-name="balance">
+    <h1>Баланс</h1>
+</div>
+<div class="tabs">
+    <a class="tab js-tab active" data-name="income">Доход</a>
+    <a class="tab js-tab" data-name="orders">Заказы</a>
+    <a class="tab js-tab" data-name="balance">Баланс</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    require('./scripts/renderer.js')
+</script>
+</body>
+</html>

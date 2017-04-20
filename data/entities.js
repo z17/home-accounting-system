@@ -1,6 +1,6 @@
-var Income = function (data, month, sum, paymentType, contact, description) {
-    this.date = data;
-    this.month = month;
+var Income = function (date, month, sum, paymentType, contact, description) {
+    this.date = date.unix();
+    this.month = month.unix();
     this.sum = sum;
     this.paymentType = paymentType;
     this.contact = contact;

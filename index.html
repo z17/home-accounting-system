@@ -9,8 +9,7 @@
 
 </head>
 <body>
-
-<div class="js-income-page js-page page active" data-name="income">
+<div class="js-income-page js-page page " data-name="income">
     <h1>Доход</h1>
     <table class="data-table">
         <tr>
@@ -63,8 +62,11 @@
     </table>
 </div>
 
-<div class="js-orders-page js-page page" data-name="balance">
+<div class="js-orders-page js-page page active" data-name="balance">
     <h1>Баланс</h1>
+
+    <div class="income-chart " id="js-income-chart" style="width: 900px; height: 300px;"></div>
+
 </div>
 <div class="tabs">
     <a class="tab js-tab active" data-name="income">Доход</a>
@@ -72,8 +74,14 @@
     <a class="tab js-tab" data-name="balance">Баланс</a>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="node_modules/moment/min/moment.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
     require('./scripts/renderer.js')
 </script>
+
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </body>
 </html>

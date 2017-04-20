@@ -1,5 +1,6 @@
 const electron = require('electron');
 const entities = require('./data/entities.js');
+const moment = require('moment');
 
 
 const app = electron.app;  // Модуль контролирующей жизненный цикл нашего приложения.
@@ -25,11 +26,15 @@ app.on('ready', function () {
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 1200, height: 800});
 
-    const incomeData = [
-        new entities.Income('01.02.1014', '02.2014', 343, 'WMR', "asda@ascf.eu", "test"),
-        new entities.Income('01.02.1014', '02.2014', 343, 'WMR', "asda@ascf.eu", "test"),
-        new entities.Income('01.02.1014', '02.2014', 343, 'WMR', "asda@ascf.eu", "test")
-    ];
+    const incomeData = [];
+    var date = moment([2014, 1, 2]);
+    var step;
+    for (step = 0; step < 50; step++) {
+        var sum = Math.round(Math.random() * (100000 - 20000) + 20000);
+        incomeData.push(new entities.Income(date, date, sum, 'WMR', "asda@ascf.eu", "test"));
+        var addDay = Math.round(Math.random() * (30 - 10) + 10);
+        date.add(addDay, 'd');
+    }
 
     const ordersData = [
       new entities.Order('02.2014', 5000, 2000, 3000, 0, 'WMR', 'asags@sdgd.ru', 'my type', 'desc', 'http://yandex.ru', 'complete')

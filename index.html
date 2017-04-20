@@ -2,86 +2,99 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Home accounting system</title>
 
     <link type="text/css" rel="stylesheet" href="node_modules/normalize.css/normalize.css">
     <link rel="stylesheet" type="text/css" href="./css/style.css"/>
 
 </head>
 <body>
-<div class="js-income-page js-page page " data-name="income">
-    <h1>Доход</h1>
-    <table class="data-table">
-        <tr>
-            <th>Дата</th>
-            <th>Месяц</th>
-            <th>Сумма</th>
-            <th>Тип</th>
-            <th>Контакт</th>
-            <th>Описание</th>
-        </tr>
-        <tr class="js-row">
-            <td class="js-date"></td>
-            <td class="js-month"></td>
-            <td class="js-sum"></td>
-            <td class="js-payment-type"></td>
-            <td class="js-contact"></td>
-            <td class="js-description"></td>
-        </tr>
-    </table>
-</div>
-<div class="js-orders-page js-page page" data-name="orders">
-    <h1>Заказы</h1>
-    <table class="data-table">
-        <tr>
-            <th>Месяц</th>
-            <th>Сумма</th>
-            <th>Предоплата</th>
-            <th>Оплата</th>
-            <th>Затраты</th>
-            <th>Способ</th>
-            <th>Контакт</th>
-            <th>Тип</th>
-            <th>Описание</th>
-            <th>Ссылка</th>
-            <th>Статус</th>
-        </tr>
-        <tr class="js-row">
-            <td class="js-month"></td>
-            <td class="js-sum"></td>
-            <td class="js-prepayment"></td>
-            <td class="js-payment"></td>
-            <td class="js-expenses"></td>
-            <td class="js-payment-type"></td>
-            <td class="js-contact"></td>
-            <td class="js-type"></td>
-            <td class="js-description"></td>
-            <td class="js-link"></td>
-            <td class="js-status"></td>
-        </tr>
-    </table>
-</div>
+<div class="wrapper">
+    <div class="content">
+        <div class="js-income-page js-page page active" data-name="income">
+            <h1>Income</h1>
 
-<div class="js-orders-page js-page page active" data-name="balance">
-    <h1>Баланс</h1>
+            <div class="income-statistic">
+                <div class="income-chart income-month-chart" id="js-income-month-chart"></div>
+                <div class="inline-blocks">
+                    <div class="income-chart income-year-chart" id="js-income-year-chart"></div>
+                    <div class="income-chart income-middle-year-chart" id="js-income-average-chart"></div>
+                    <div class="income-data">
+                        <p class="income-data-line"><span class="income-data-name">Sum:</span> <span
+                                class="js-income-sum"></span></p>
+                        <p class="income-data-line"><span class="income-data-name">Average:</span> <span
+                                class="js-income-average"></span></p>
+                    </div>
+                </div>
+            </div>
+            <table class="data-table">
+                <tr>
+                    <th>Дата</th>
+                    <th>Месяц</th>
+                    <th>Сумма</th>
+                    <th>Тип</th>
+                    <th>Контакт</th>
+                    <th>Описание</th>
+                </tr>
+                <tr class="js-row">
+                    <td class="js-date"></td>
+                    <td class="js-month"></td>
+                    <td class="js-sum"></td>
+                    <td class="js-payment-type"></td>
+                    <td class="js-contact"></td>
+                    <td class="js-description"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="js-orders-page js-page page" data-name="orders">
+            <h1>Заказы</h1>
+            <table class="data-table">
+                <tr>
+                    <th>Месяц</th>
+                    <th>Сумма</th>
+                    <th>Предоплата</th>
+                    <th>Оплата</th>
+                    <th>Затраты</th>
+                    <th>Способ</th>
+                    <th>Контакт</th>
+                    <th>Тип</th>
+                    <th>Описание</th>
+                    <th>Ссылка</th>
+                    <th>Статус</th>
+                </tr>
+                <tr class="js-row">
+                    <td class="js-month"></td>
+                    <td class="js-sum"></td>
+                    <td class="js-prepayment"></td>
+                    <td class="js-payment"></td>
+                    <td class="js-expenses"></td>
+                    <td class="js-payment-type"></td>
+                    <td class="js-contact"></td>
+                    <td class="js-type"></td>
+                    <td class="js-description"></td>
+                    <td class="js-link"></td>
+                    <td class="js-status"></td>
+                </tr>
+            </table>
+        </div>
 
-    <div class="income-chart " id="js-income-chart" style="width: 900px; height: 300px;"></div>
-
+        <div class="js-orders-page js-page page" data-name="balance">
+            <h1>Баланс</h1>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="tabs">
+            <a class="tab js-tab active" data-name="income">Доход</a>
+            <a class="tab js-tab" data-name="orders">Заказы</a>
+            <a class="tab js-tab" data-name="balance">Баланс</a>
+        </div>
+    </div>
 </div>
-<div class="tabs">
-    <a class="tab js-tab active" data-name="income">Доход</a>
-    <a class="tab js-tab" data-name="orders">Заказы</a>
-    <a class="tab js-tab" data-name="balance">Баланс</a>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="node_modules/moment/min/moment.min.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     require('./scripts/renderer.js')
 </script>
-
-<!--Load the AJAX API-->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 </body>
 </html>

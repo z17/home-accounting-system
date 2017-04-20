@@ -9,7 +9,7 @@ const BrowserWindow = electron.BrowserWindow;  // Модуль создающи�
 
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
-var mainWindow = null;
+let mainWindow = null;
 
 // Проверяем что все окна закрыты и закрываем приложение.
 app.on('window-all-closed', function () {
@@ -24,15 +24,16 @@ app.on('window-all-closed', function () {
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
     // Создаем окно браузера.
-    mainWindow = new BrowserWindow({width: 1200, height: 800});
+    mainWindow = new BrowserWindow({width: 800, height: 600});
+    mainWindow.maximize();
 
     const incomeData = [];
-    var date = moment([2014, 1, 2]);
-    var step;
-    for (step = 0; step < 50; step++) {
-        var sum = Math.round(Math.random() * (100000 - 20000) + 20000);
+    let date = moment([2012, 8, 2]);
+    let step;
+    for (step = 0; step < 80; step++) {
+        let sum = Math.round(Math.random() * (100000 - 20000) + 20000);
         incomeData.push(new entities.Income(date, date, sum, 'WMR', "asda@ascf.eu", "test"));
-        var addDay = Math.round(Math.random() * (30 - 10) + 10);
+        let addDay = Math.round(Math.random() * (30 - 10) + 10);
         date.add(addDay, 'd');
     }
 

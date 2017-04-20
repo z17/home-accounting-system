@@ -1,3 +1,21 @@
+html,
+body,
+.wrapper {
+    height: 100%;
+}
+
+.content {
+    box-sizing: border-box;
+    min-height: 100%;
+    padding-bottom: 60px;
+}
+
+.footer {
+    height: 40px;
+    padding: 10px 0;
+    margin-top: -60px;
+}
+
 .js-row {
     display: none;
 }
@@ -28,10 +46,6 @@ table.data-table td:first-child, table.data-table th:first-child {
     display: block;
 }
 
-.tabs {
-    position: absolute;
-    bottom:0;
-}
 .tabs .tab {
     padding: 5px 10px;
     cursor: pointer;
@@ -40,4 +54,25 @@ table.data-table td:first-child, table.data-table th:first-child {
 }
 .tabs .tab.active {
     background: #ffffff;
+}
+
+.income-statistic {
+    text-align: center;
+}
+.inline-blocks .income-chart, .inline-blocks .income-data {
+    display: inline-block;
+    padding: 0 20px;
+    vertical-align: top;
+    min-width: 300px;
+    text-align: left;
+}
+.income-data-line {
+    margin:0;
+    padding: 10px 0;
+    border-bottom: 1px solid #aaa;
+}
+.income-data-name {
+    font-weight: bold;
+    width: 90px;
+    display: inline-block;
 }

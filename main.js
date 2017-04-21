@@ -2,9 +2,9 @@ const electron = require('electron');
 const entities = require('./data/entities.js');
 const moment = require('moment');
 
-
 const app = electron.app;  // Модуль контролирующей жизненный цикл нашего приложения.
 const BrowserWindow = electron.BrowserWindow;  // Модуль создающий браузерное окно.
+const ipcMain = electron.ipcMain;
 
 
 // Определение глобальной ссылки , если мы не определим, окно
@@ -38,7 +38,7 @@ app.on('ready', function () {
     }
 
     const ordersData = [
-      new entities.Order('02.2014', 5000, 2000, 3000, 0, 'WMR', 'asags@sdgd.ru', 'my type', 'desc', 'http://yandex.ru', 'complete')
+        new entities.Order('02.2014', 5000, 2000, 3000, 0, 'WMR', 'asags@sdgd.ru', 'my type', 'desc', 'http://yandex.ru', 'complete')
     ];
 
     mainWindow.webContents.on('dom-ready', function () {
@@ -59,5 +59,20 @@ app.on('ready', function () {
         // окон вы будете хранить их в массиве, это время
         // когда нужно удалить соответствующий элемент.
         mainWindow = null;
+    });
+
+    ipcMain.on('income-add', (event, income) => {
+        console.log(income);
+        event.returnValue = true;
+    });
+
+    ipcMain.on('income-delete', (event, incomeId) => {
+        console.log(incomeId);
+        event.returnValue = true;
+    });
+
+    ipcMain.on('income-edit', (event, income) => {
+        console.log(income);
+        event.returnValue = true;
     });
 });

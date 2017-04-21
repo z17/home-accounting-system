@@ -1,6 +1,7 @@
 const ipcRenderer = require('electron').ipcRenderer;
 const $ = require('jquery');
 const incomeView = require('../data/IncomeView.js').IncomeView;
+const Income = require('../data/entities.js').Income;
 
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
@@ -59,7 +60,24 @@ $(document).ready(function () {
         $('.js-page').removeClass('active');
         $('.js-tab').removeClass('active');
         $(this).addClass('active');
-        $('.js-page[data-name="'+ name + '"]').addClass('active');
+        $('.js-page[data-name="' + name + '"]').addClass('active');
+    });
+
+    $(".js-income-page .js-submit").on('click', function () {
+        var data = new Income(
+            moment($(".js-income-page input.js-add-date").val()),
+            moment($(".js-income-page input.js-add-month").val()),
+            $(".js-income-page input.js-add-sum").val(),
+            $(".js-income-page input.js-add-payment-type").val(),
+            $(".js-income-page input.js-add-contact").val(),
+            $(".js-income-page input.js-add-description").val()
+        );
+        let result = ipcRenderer.sendSync('income-add', data);
+        if (result) {
+            alert("Saved");
+        } else {
+            alert("Error");
+        }
     });
 });
 

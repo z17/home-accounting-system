@@ -4,6 +4,10 @@ body,
     height: 100%;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 .content {
     box-sizing: border-box;
     min-height: 100%;
@@ -26,22 +30,44 @@ table.data-table {
     border-collapse: collapse;
 }
 
+table.data-table td {
+    position: relative;
+}
+
+table.data-table input {
+    width: 100%;
+    border: 0;
+    padding: 3px 10px 3px 10px;
+}
+
+table.data-table input.submit {
+    position: absolute;
+    right: 0;
+    width: 70px;
+    top: 30px;
+}
+
 table.data-table td, table.data-table th {
     padding: 3px 10px 3px 10px;
     border: 1px solid #ccc;
 }
 
+table.data-table .form td {
+    padding:0;
+}
+
 table.data-table td:last-child, table.data-table th:last-child {
-    border-right:0;
+    border-right: 0;
 }
 
 table.data-table td:first-child, table.data-table th:first-child {
-    border-left:0;
+    border-left: 0;
 }
 
 .page {
     display: none;
 }
+
 .page.active {
     display: block;
 }
@@ -49,9 +75,10 @@ table.data-table td:first-child, table.data-table th:first-child {
 .tabs .tab {
     padding: 5px 10px;
     cursor: pointer;
-    background:#f1f1f1;
+    background: #f1f1f1;
     display: inline-block;
 }
+
 .tabs .tab.active {
     background: #ffffff;
 }
@@ -59,20 +86,24 @@ table.data-table td:first-child, table.data-table th:first-child {
 .income-statistic {
     text-align: center;
 }
+
 .inline-blocks .income-chart, .inline-blocks .income-data {
     display: inline-block;
     padding: 0 20px;
     vertical-align: top;
     min-width: 300px;
+    width: 30%;
     text-align: left;
 }
+
 .income-data-line {
-    margin:0;
+    margin: 0;
     padding: 10px 0;
     border-bottom: 1px solid #aaa;
 }
+
 .income-data-name {
     font-weight: bold;
-    width: 90px;
+    width: 120px;
     display: inline-block;
 }

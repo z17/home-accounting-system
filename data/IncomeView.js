@@ -48,13 +48,13 @@ let IncomeView = {
         return this.data;
     },
     drawByMonth: function () {
-        this.draw(this.dataByMonth, "Income by month", 1800, 400, ["Month", "Sum"], "js-income-month-chart");
+        this.draw(this.dataByMonth, "Income by month", '100%', 400, ["Month", "Sum"], "js-income-month-chart");
     },
     drawByYear: function () {
-        this.draw(this.dataByYear, "Income by year", 600, 300, ["Year", "Sum"], "js-income-year-chart");
+        this.draw(this.dataByYear, "Income by year", '100%', 300, ["Year", "Sum"], "js-income-year-chart");
     },
     drawAverage: function () {
-        this.draw(this.dataAverage, "Income by middle ", 600, 300, ["Year", "Middle Sum"], "js-income-average-chart");
+        this.draw(this.dataAverage, "Income by middle ", '100%', 300, ["Year", "Middle Sum"], "js-income-average-chart");
     },
 
     draw: function (chartData, title, width, height, columnsName, chartId) {
@@ -77,6 +77,10 @@ let IncomeView = {
                 height: height,
                 bar: {groupWidth: "95%"},
                 legend: {position: "none"}
+                // chartArea: {
+                //     width: '80%',
+                //     height: '80%'
+                // }
             };
             let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(view, options);

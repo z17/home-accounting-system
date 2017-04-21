@@ -7,14 +7,12 @@ let Income = function (date, month, sum, paymentType, contact, description) {
     this.description = description;
 };
 
-let Order = function (month, sum, prepayment, payment, expenses, paymentType, contact, type, description, link,
-                        status) {
-    this.month = month;
+let Order = function (month, sum, prepayment, payment, expenses, contact, type, description, link, status) {
+    this.month = month.unix();
     this.sum = sum;
     this.prepayment = prepayment;
     this.payment = payment;
     this.expenses = expenses;
-    this.paymentType = paymentType;
     this.contact = contact;
     this.type = type;
     this.description = description;
@@ -22,5 +20,13 @@ let Order = function (month, sum, prepayment, payment, expenses, paymentType, co
     this.status = status;
 };
 
+let OrderStatus = {
+    PREPAYMENT: 'Waiting for prepayment',
+    IN_PROGRESS: 'In progress',
+    PAYMENT: 'Waiting for payment',
+    COMPLETED: 'Completed'
+};
+
 module.exports.Order = Order;
 module.exports.Income = Income;
+module.exports.OrderStatus = OrderStatus;

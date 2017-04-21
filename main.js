@@ -29,15 +29,13 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
 
-    const ordersData = [
-        new entities.Order('02.2014', 5000, 2000, 3000, 0, 'WMR', 'asags@sdgd.ru', 'my type', 'desc', 'http://yandex.ru', 'complete')
-    ];
-
     mainWindow.webContents.on('dom-ready', function () {
         Database.getIncomes(function (data) {
             mainWindow.webContents.send('income-data', data);
         });
-        mainWindow.webContents.send('orders-data', ordersData);
+        Database.getOrders(function (data) {
+            mainWindow.webContents.send('orders-data', data);
+        });
     });
 
     // и загружаем файл index.html нашего веб приложения.
@@ -67,6 +65,11 @@ app.on('ready', function () {
 
     ipcMain.on('income-edit', (event, income) => {
         console.log(income);
+        event.returnValue = true;
+    });
+
+    ipcMain.on('order-add', (event, order) => {
+        Database.insertOrder(order);
         event.returnValue = true;
     });
 });

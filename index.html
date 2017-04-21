@@ -49,17 +49,19 @@
                     <td class="js-description"></td>
                 </tr>
                 <tr class="form">
-                    <td><input class="js-add-date" type="date" /></td>
-                    <td><input class="js-add-month" type="month" /></td>
-                    <td><input class="js-add-sum" type="number" placeholder="Sum"/></td>
-                    <td><input class="js-add-payment-type" type="text" placeholder="Type"/></td>
-                    <td><input class="js-add-contact" type="text" placeholder="Contact"/></td>
-                    <td>
-                        <input class="js-add-description" type="text" placeholder="Description"/>
-                        <input class="submit js-submit" type="submit"/>
-                    </td>
+                        <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
+                        <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" required/></td>
+                        <td><input class="js-add-sum" form="income-form" type="number" placeholder="Sum" required/></td>
+                        <td><input class="js-add-payment-type" form="income-form" type="text" placeholder="Type" required/></td>
+                        <td><input class="js-add-contact" form="income-form" type="text" placeholder="Contact" required/></td>
+                        <td>
+                            <input class="js-add-description" form="income-form" type="text" placeholder="Description" required/>
+                            <input class="submit js-submit" form="income-form" type="submit"/>
+                        </td>
                 </tr>
             </table>
+            <form action="#" id="income-form" class="js-income-add">
+            </form>
         </div>
         <div class="js-orders-page js-page page" data-name="orders">
             <h1>Заказы</h1>
@@ -70,7 +72,6 @@
                     <th>Предоплата</th>
                     <th>Оплата</th>
                     <th>Затраты</th>
-                    <th>Способ</th>
                     <th>Контакт</th>
                     <th>Тип</th>
                     <th>Описание</th>
@@ -83,14 +84,31 @@
                     <td class="js-prepayment"></td>
                     <td class="js-payment"></td>
                     <td class="js-expenses"></td>
-                    <td class="js-payment-type"></td>
                     <td class="js-contact"></td>
                     <td class="js-type"></td>
                     <td class="js-description"></td>
                     <td class="js-link"></td>
                     <td class="js-status"></td>
                 </tr>
+                <tr class="form">
+                        <td><input class="js-add-month" form="order-form" type="month" placeholder="Month" required/></td>
+                        <td><input class="js-add-sum" form="order-form" type="number" placeholder="Sum" required/></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input class="js-add-contact" form="order-form" type="text" placeholder="Contact" required/></td>
+                        <td><input class="js-add-type" form="order-form" type="text" placeholder="Type" required/></td>
+                        <td><input class="js-add-description" form="order-form" type="text" placeholder="Description" required/></td>
+                        <td><input class="js-add-link" form="order-form" type="text" placeholder="Link" required/></td>
+                        <td>
+                            <select class="js-add-status" form="order-form" title="Status" required>
+                            </select>
+                            <input class="submit js-submit" form="order-form" type="submit"/>
+                        </td>
+                </tr>
             </table>
+            <form action="#" id="order-form" class="js-orders-add">
+            </form>
         </div>
 
         <div class="js-orders-page js-page page" data-name="balance">

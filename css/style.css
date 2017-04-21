@@ -34,7 +34,7 @@ table.data-table td {
     position: relative;
 }
 
-table.data-table input {
+table.data-table input, table.data-table select {
     width: 100%;
     border: 0;
     padding: 3px 10px 3px 10px;

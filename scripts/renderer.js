@@ -3,6 +3,8 @@ const $ = require('jquery');
 const incomeView = require('../data/IncomeView.js').IncomeView;
 const Income = require('../data/entities.js').Income;
 
+google.charts.load("current", {packages: ['corechart']});
+
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
     insertIncomeData();

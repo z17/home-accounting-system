@@ -58,7 +58,6 @@ let IncomeView = {
     },
 
     draw: function (chartData, title, width, height, columnsName, chartId) {
-        google.charts.load("current", {packages: ['corechart']});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {

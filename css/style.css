@@ -43,7 +43,7 @@ table.data-table input {
 table.data-table input.submit {
     position: absolute;
     right: 0;
-    width: 70px;
+    width: 80px;
     top: 30px;
 }
 
@@ -94,6 +94,10 @@ table.data-table td:first-child, table.data-table th:first-child {
     min-width: 300px;
     width: 30%;
     text-align: left;
+}
+
+.inline-blocks .income-data {
+    padding-top: 30px;
 }
 
 .income-data-line {

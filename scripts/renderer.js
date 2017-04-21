@@ -34,6 +34,8 @@ function insertIncomeData() {
 
     $('.js-income-sum').text(incomeView.sum);
     $('.js-income-average').text(incomeView.average);
+    $('.js-income-top').text(incomeView.topMonth.value);
+    $('.js-income-worst').text(incomeView.worstMonth.value);
 }
 
 function insertOrdersData(data) {
@@ -66,10 +68,10 @@ $(document).ready(function () {
     });
 
     $(".js-income-page .js-submit").on('click', function () {
-        var data = new Income(
+        let data = new Income(
             moment($(".js-income-page input.js-add-date").val()),
             moment($(".js-income-page input.js-add-month").val()),
-            $(".js-income-page input.js-add-sum").val(),
+            parseInt($(".js-income-page input.js-add-sum").val()),
             $(".js-income-page input.js-add-payment-type").val(),
             $(".js-income-page input.js-add-contact").val(),
             $(".js-income-page input.js-add-description").val()

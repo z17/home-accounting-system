@@ -48,6 +48,19 @@ app.on('ready', function () {
         });
         Database.getOrders(function (data) {
             mainWindow.webContents.send('orders-data', data);
+
+            let contacts = data.map(function (e) {
+                return e.contact;
+            });
+            contacts = contacts.filter(functions.uniqueArrayFilter);
+            mainWindow.webContents.send('order-contacts', contacts);
+
+
+            let types = data.map(function (e) {
+                return e.type;
+            });
+            types = types.filter(functions.uniqueArrayFilter);
+            mainWindow.webContents.send('order-types', types);
         });
     });
 

@@ -96,6 +96,15 @@ table.data-table td:first-child, table.data-table th:first-child {
     text-align: left;
 }
 
+.inline-blocks .orders-chart, .inline-blocks .orders-data {
+    display: inline-block;
+    padding: 0 20px;
+    vertical-align: top;
+    min-width: 300px;
+    width: 40%;
+    text-align: left;
+}
+
 .inline-blocks .income-data {
     padding-top: 30px;
 }

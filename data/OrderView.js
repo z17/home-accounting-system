@@ -2,6 +2,10 @@ const OrderStatus = require('../data/entities.js').OrderStatus;
 const shell = require('electron').shell;
 
 let OrderView = {
+    data: [],
+    dataByTypes: [],
+    dataByContacts: [],
+
     setupView: function () {
         for (let property in OrderStatus) {
             if (OrderStatus.hasOwnProperty(property)) {
@@ -17,12 +21,43 @@ let OrderView = {
             return a.month - b.month;
         });
         this.data = data;
+
+        let _this = this;
+        data.forEach(function (data) {
+            if (_this.dataByContacts[data.contact] == undefined) {
+                _this.dataByContacts[data.contact] = data.sum;
+            } else {
+                _this.dataByContacts[data.contact] += data.sum;
+            }
+
+            if (_this.dataByTypes[data.type] == undefined) {
+                _this.dataByTypes[data.type] = data.sum;
+            } else {
+                _this.dataByContacts[data.type] += data.sum;
+            }
+        });
+
         this.insertOrdersData();
+    },
+    setTypes: function (types) {
+        $(".js-orders-page .js-add-type").autocomplete({
+            source: types,
+            minLength: 0,
+        });
+    },
+    setContacts: function (contacts) {
+        $(".js-orders-page .js-add-contact").autocomplete({
+            source: contacts,
+            minLength: 0,
+        });
     },
     insertOrdersData: function () {
         this.data.forEach(this.insertOrder);
+
+        this.drawTypesDiagram();
+        this.drawContactsDiagram();
     },
-    insertOrder : function (item) {
+    insertOrder: function (item) {
         let rowExample = $('.js-orders-page .js-row');
         let row = rowExample.clone();
 
@@ -47,7 +82,40 @@ let OrderView = {
         row.insertBefore(rowExample);
 
         row.find('.js-link a').click(onLinkClick);
-    }
+    },
+    drawTypesDiagram: function () {
+        this.draw(this.dataByTypes, 'By Types', '100%', '400', ["Type", "Sum"],  'js-order-types-chart');
+    },
+
+    drawContactsDiagram: function () {
+        this.draw(this.dataByContacts, 'By Contacts', '100%', '400', ["Contact", "Sum"],  'js-order-contacts-chart');
+
+    },
+    draw: function (chartData, title, width, height, columnsName, chartId) {
+
+        let data = [columnsName];
+        for (let property in chartData) {
+            if (chartData.hasOwnProperty(property)) {
+                data.push([property, chartData[property]]);
+            }
+        }
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            data = google.visualization.arrayToDataTable(data);
+            let options = {
+                title: title,
+                width: width,
+                height: height,
+                bar: {groupWidth: "95%"},
+            };
+
+            let chart = new google.visualization.PieChart(document.getElementById(chartId));
+            chart.draw(data, options);
+        }
+    },
+
 };
 
 

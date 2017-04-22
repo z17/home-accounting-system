@@ -25,6 +25,15 @@ ipcRenderer.on('orders-data', function (event, data) {
     orderView.setData(data);
 });
 
+ipcRenderer.on('order-types' ,function (event, data) {
+    orderView.setTypes(data);
+});
+
+ipcRenderer.on('order-contacts' ,function (event, data) {
+    orderView.setContacts(data);
+});
+
+
 
 $(document).ready(function () {
     $('a').click(orderView.onLinkClick);

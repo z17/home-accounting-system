@@ -62,7 +62,7 @@ $(document).ready(function () {
 
         let result = ipcRenderer.sendSync('income-add', data);
         if (result) {
-            alert("Saved");
+            incomeView.insertIncome(data);
         } else {
             alert("Unknown error");
         }

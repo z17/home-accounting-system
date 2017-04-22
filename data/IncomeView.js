@@ -1,8 +1,28 @@
 let IncomeView = {
     data: {},
-    dataByMonth: {},
-    dataByYear: {},
-    dataAverage: {},
+    dataByMonth: {
+        title: "Income by month",
+        cols: ["Month", "Sum"],
+        data: {},
+        chart: {},
+        chartData: {},
+        chartOptions: {},
+    },
+    dataByYear: {
+        title: "Income by year",
+        cols: ["Year", "Sum"],
+        data: {},
+        chart: {},
+        chartData: {},
+        chartOptions: {},
+    },
+    dataAverage: {
+        title: "Average income by year",
+        cols: ["Year", "Middle sum"],
+        data: {},
+        chartData: {},
+        chartOptions: {},
+    },
     sum: 0,
     average: 0,
     topMonth: {
@@ -64,7 +84,7 @@ let IncomeView = {
             dataAverage[year] = element.sum / monthDiff;
         });
 
-        this.dataByMonth = [];
+        this.dataByMonth.data = [];
         for (let property in dataByMonth) {
             if (dataByMonth.hasOwnProperty(property)) {
                 if (this.topMonth.value < dataByMonth[property] || this.topMonth.name === '') {
@@ -75,7 +95,7 @@ let IncomeView = {
                     this.worstMonth.value = dataByMonth[property];
                     this.worstMonth.name = property;
                 }
-                this.dataByMonth.push({
+                this.dataByMonth.data.push({
                     name: property,
                     value: dataByMonth[property],
                     time: moment(property, "MMM YYYY").unix()
@@ -83,10 +103,10 @@ let IncomeView = {
             }
         }
 
-        this.dataByYear = [];
+        this.dataByYear.data = [];
         for (let property in dataByYear) {
             if (dataByYear.hasOwnProperty(property)) {
-                this.dataByYear.push({
+                this.dataByYear.data.push({
                     name: property,
                     value: dataByYear[property],
                     time: moment(property, "YYYY").unix()
@@ -94,10 +114,10 @@ let IncomeView = {
             }
         }
 
-        this.dataAverage = [];
+        this.dataAverage.data = [];
         for (let property in dataAverage) {
             if (dataAverage.hasOwnProperty(property)) {
-                this.dataAverage.push({
+                this.dataAverage.data.push({
                     name: property,
                     value: dataAverage[property],
                     time: moment(property, "YYYY").unix()
@@ -105,17 +125,17 @@ let IncomeView = {
             }
         }
 
-        this.dataByMonth.sort(function (a, b) {
+        this.dataByMonth.data.sort(function (a, b) {
             return a.time - b.time;
         });
-        this.dataByYear.sort(function (a, b) {
+        this.dataByYear.data.sort(function (a, b) {
             return a.time - b.time;
         });
-        this.dataAverage.sort(function (a, b) {
+        this.dataAverage.data.sort(function (a, b) {
             return a.time - b.time;
         });
 
-        this.average = Math.round(this.sum / Object.keys(this.dataByMonth).length);
+        this.average = Math.round(this.sum / Object.keys(this.dataByMonth.data).length);
 
         this.insertIncomeData();
     },
@@ -132,33 +152,32 @@ let IncomeView = {
         });
     },
     drawByMonth: function () {
-        this.draw(this.dataByMonth, "Income by month", '100%', 400, ["Month", "Sum"], "js-income-month-chart");
+        this.draw(this.dataByMonth, '100%', 400, "js-income-month-chart");
     },
     drawByYear: function () {
-        this.draw(this.dataByYear, "Income by year", '100%', 300, ["Year", "Sum"], "js-income-year-chart");
+        this.draw(this.dataByYear, '100%', 300, "js-income-year-chart");
     },
     drawAverage: function () {
-        this.draw(this.dataAverage, "Income by middle ", '100%', 300, ["Year", "Middle Sum"], "js-income-average-chart");
+        this.draw(this.dataAverage, '100%', 300, "js-income-average-chart");
     },
 
-    draw: function (chartData, title, width, height, columnsName, chartId) {
+    draw: function (chartData, width, height, chartId) {
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-            let data = [columnsName];
-
-            data = data.concat(chartData.map(function (element) {
-                return [element.name, element.value];
-            }));
-            let dataTable = google.visualization.arrayToDataTable(data);
+            let dataTable = prepareChartData(chartData);
             let view = new google.visualization.DataView(dataTable);
 
             let options = {
-                title: title,
+                title: chartData.title,
                 width: width,
                 height: height,
                 bar: {groupWidth: "95%"},
-                legend: {position: "none"}
+                legend: {position: "none"},
+                animation: {
+                    duration: 500,
+                    easing: 'out',
+                },
                 // chartArea: {
                 //     width: '80%',
                 //     height: '80%'
@@ -166,10 +185,14 @@ let IncomeView = {
             };
             let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(view, options);
+
+            chartData.chart = chart;
+            chartData.chartData = dataTable;
+            chartData.chartOptions = options;
         }
     },
     insertIncomeData: function () {
-        this.data.forEach(this.insertIncome);
+        this.data.forEach(insertIncomeToPage);
 
         this.drawByMonth();
         this.drawByYear();
@@ -180,18 +203,58 @@ let IncomeView = {
         $('.js-income-top').text(this.topMonth.value);
         $('.js-income-worst').text(this.worstMonth.value);
     },
-    insertIncome : function (item) {
-        let rowExample = $('.js-income-page .js-row');
-        let row = rowExample.clone();
-        row.removeClass('js-row');
-        row.find('.js-date').text(moment.unix(item.date).format("DD.MM.YYYY"));
-        row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
-        row.find('.js-sum').text(item.sum);
-        row.find('.js-payment-type').text(item.paymentType);
-        row.find('.js-contact').text(item.contact);
-        row.find('.js-description').text(item.description);
-        row.insertBefore(rowExample);
+    insertIncome: function (item) {
+        this.data.push(item);
+
+        let month = moment.unix(item.date).startOf('month');
+        let monthStr = month.format("MMM YYYY");
+        updateChart(this.dataByMonth, month, monthStr);
+
+        let year = moment.unix(item.date).startOf('year');
+        let yearStr = year.format("YYYY");
+        updateChart(this.dataByYear, year, yearStr);
+
+        insertIncomeToPage(item);
     }
 };
+
+function prepareChartData(chartData) {
+    let data = [chartData.cols];
+    data = data.concat(chartData.data.map(function (element) {
+        return [element.name, element.value];
+    }));
+    return google.visualization.arrayToDataTable(data);
+}
+
+function insertIncomeToPage(item) {
+    let rowExample = $('.js-income-page .js-row');
+    let row = rowExample.clone();
+    row.removeClass('js-row');
+    row.find('.js-date').text(moment.unix(item.date).format("DD.MM.YYYY"));
+    row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
+    row.find('.js-sum').text(item.sum);
+    row.find('.js-payment-type').text(item.paymentType);
+    row.find('.js-contact').text(item.contact);
+    row.find('.js-description').text(item.description);
+    row.insertBefore(rowExample);
+}
+
+function updateChart(updatedData, time, timeStr) {
+    let value = updatedData.data.find(function (e) {
+        return e.name == timeStr;
+    });
+    if (value != undefined) {
+        value.value += item.sum;
+    } else {
+        updatedData.data.push({
+            name: timeStr,
+            time: time.unix(),
+            value: item.sum
+        });
+    }
+
+    let dataTable = prepareChartData(updatedData);
+    updatedData.chart.draw(dataTable, updatedData.chartOptions);
+}
 
 module.exports.IncomeView = IncomeView;

@@ -21,10 +21,22 @@ let Order = function (month, sum, prepayment, payment, expenses, contact, type, 
 };
 
 let OrderStatus = {
-    PREPAYMENT: 'Waiting for prepayment',
-    IN_PROGRESS: 'In progress',
-    PAYMENT: 'Waiting for payment',
-    COMPLETED: 'Completed'
+    PREPAYMENT: {
+        name: 'Waiting for prepayment',
+        class: 'prepayment'
+    },
+    IN_PROGRESS: {
+        name: 'In progress',
+        class: 'in-progress',
+    },
+    PAYMENT: {
+        name: 'Waiting for payment',
+        class: 'payment'
+    },
+    COMPLETED: {
+        name: 'Completed',
+        class: 'completed'
+    }
 };
 
 module.exports.Order = Order;

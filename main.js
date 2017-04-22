@@ -2,6 +2,7 @@ const electron = require('electron');
 const entities = require('./data/entities.js');
 const moment = require('moment');
 const database = require('./backend/Database');
+const functions = require('./backend/functions');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -32,6 +33,18 @@ app.on('ready', function () {
     mainWindow.webContents.on('dom-ready', function () {
         Database.getIncomes(function (data) {
             mainWindow.webContents.send('income-data', data);
+
+            let paymentTypes = data.map(function (e) {
+                return e.paymentType;
+            });
+            paymentTypes = paymentTypes.filter(functions.uniqueArrayFilter);
+            mainWindow.webContents.send('income-payment-types', paymentTypes);
+
+            let contacts = data.map(function (e) {
+                return e.contact;
+            });
+            contacts = contacts.filter(functions.uniqueArrayFilter);
+            mainWindow.webContents.send('income-contacts', contacts);
         });
         Database.getOrders(function (data) {
             mainWindow.webContents.send('orders-data', data);

@@ -6,12 +6,12 @@ let IncomeView = {
     sum: 0,
     average: 0,
     topMonth: {
-        name : '',
-        value : 0
+        name: '',
+        value: 0
     },
     worstMonth: {
-        name : '',
-        value : 0
+        name: '',
+        value: 0
     },
 
     setData: function (data) {
@@ -105,20 +105,31 @@ let IncomeView = {
             }
         }
 
-        this.dataByMonth.sort(function (a,b) {
+        this.dataByMonth.sort(function (a, b) {
             return a.time - b.time;
         });
-        this.dataByYear.sort(function (a,b) {
+        this.dataByYear.sort(function (a, b) {
             return a.time - b.time;
         });
-        this.dataAverage.sort(function (a,b) {
+        this.dataAverage.sort(function (a, b) {
             return a.time - b.time;
         });
 
         this.average = Math.round(this.sum / Object.keys(this.dataByMonth).length);
+
+        this.insertIncomeData();
     },
-    getData: function () {
-        return this.data;
+    setPaymentTypes: function (types) {
+        $(".js-income-page .js-add-payment-type").autocomplete({
+            source: types,
+            minLength: 0,
+        });
+    },
+    setContacts: function (contacts) {
+        $(".js-income-page .js-add-contact").autocomplete({
+            source: contacts,
+            minLength: 0,
+        });
     },
     drawByMonth: function () {
         this.draw(this.dataByMonth, "Income by month", '100%', 400, ["Month", "Sum"], "js-income-month-chart");
@@ -137,7 +148,7 @@ let IncomeView = {
             let data = [columnsName];
 
             data = data.concat(chartData.map(function (element) {
-               return [element.name, element.value];
+                return [element.name, element.value];
             }));
             let dataTable = google.visualization.arrayToDataTable(data);
             let view = new google.visualization.DataView(dataTable);
@@ -156,6 +167,30 @@ let IncomeView = {
             let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(view, options);
         }
+    },
+    insertIncomeData: function () {
+        this.data.forEach(this.insertIncome);
+
+        this.drawByMonth();
+        this.drawByYear();
+        this.drawAverage();
+
+        $('.js-income-sum').text(this.sum);
+        $('.js-income-average').text(this.average);
+        $('.js-income-top').text(this.topMonth.value);
+        $('.js-income-worst').text(this.worstMonth.value);
+    },
+    insertIncome : function (item) {
+        let rowExample = $('.js-income-page .js-row');
+        let row = rowExample.clone();
+        row.removeClass('js-row');
+        row.find('.js-date').text(moment.unix(item.date).format("DD.MM.YYYY"));
+        row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
+        row.find('.js-sum').text(item.sum);
+        row.find('.js-payment-type').text(item.paymentType);
+        row.find('.js-contact').text(item.contact);
+        row.find('.js-description').text(item.description);
+        row.insertBefore(rowExample);
     }
 };
 

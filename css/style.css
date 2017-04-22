@@ -111,3 +111,24 @@ table.data-table td:first-child, table.data-table th:first-child {
     width: 120px;
     display: inline-block;
 }
+
+.js-orders-page .data-table tr.in-progress{
+    color: #00aa00;
+}
+.js-orders-page .data-table tr.in-progress a  {
+    color: #00cc00;
+}
+
+.js-orders-page .data-table tr.payment{
+    color: #aa0000;
+}
+.js-orders-page .data-table tr.payment a  {
+    color: #cc0000;
+}
+
+.js-orders-page .data-table tr.completed{
+    color: #777;
+}
+.js-orders-page .data-table tr.completed a  {
+    color: #aaa;
+}

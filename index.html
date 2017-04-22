@@ -5,6 +5,7 @@
     <title>Home accounting system</title>
 
     <link type="text/css" rel="stylesheet" href="node_modules/normalize.css/normalize.css">
+    <link type="text/css" rel="stylesheet" href="node_modules/jquery-ui-dist/jquery-ui.min.css">
     <link rel="stylesheet" type="text/css" href="./css/style.css"/>
 
 </head>
@@ -49,15 +50,19 @@
                     <td class="js-description"></td>
                 </tr>
                 <tr class="form">
-                        <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
-                        <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" required/></td>
-                        <td><input class="js-add-sum" form="income-form" type="number" placeholder="Sum" required/></td>
-                        <td><input class="js-add-payment-type" form="income-form" type="text" placeholder="Type" required/></td>
-                        <td><input class="js-add-contact" form="income-form" type="text" placeholder="Contact" required/></td>
-                        <td>
-                            <input class="js-add-description" form="income-form" type="text" placeholder="Description" required/>
-                            <input class="submit js-submit" form="income-form" type="submit"/>
-                        </td>
+                    <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
+                    <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" required/></td>
+                    <td><input class="js-add-sum" form="income-form" type="number" placeholder="Sum" required/></td>
+                    <td>
+                        <input class="js-add-payment-type" form="income-form" placeholder="Type" required/>
+                    </td>
+                    <td><input class="js-add-contact" form="income-form" type="text" placeholder="Contact" required/>
+                    </td>
+                    <td>
+                        <input class="js-add-description" form="income-form" type="text" placeholder="Description"
+                               required/>
+                        <input class="submit js-submit" form="income-form" type="submit"/>
+                    </td>
                 </tr>
             </table>
             <form action="#" id="income-form" class="js-income-add">
@@ -91,20 +96,22 @@
                     <td class="js-status"></td>
                 </tr>
                 <tr class="form">
-                        <td><input class="js-add-month" form="order-form" type="month" placeholder="Month" required/></td>
-                        <td><input class="js-add-sum" form="order-form" type="number" placeholder="Sum" required/></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><input class="js-add-contact" form="order-form" type="text" placeholder="Contact" required/></td>
-                        <td><input class="js-add-type" form="order-form" type="text" placeholder="Type" required/></td>
-                        <td><input class="js-add-description" form="order-form" type="text" placeholder="Description" required/></td>
-                        <td><input class="js-add-link" form="order-form" type="text" placeholder="Link" required/></td>
-                        <td>
-                            <select class="js-add-status" form="order-form" title="Status" required>
-                            </select>
-                            <input class="submit js-submit" form="order-form" type="submit"/>
-                        </td>
+                    <td><input class="js-add-month" form="order-form" type="month" placeholder="Month" required/></td>
+                    <td><input class="js-add-sum" form="order-form" type="number" placeholder="Sum" required/></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><input class="js-add-contact" form="order-form" type="text" placeholder="Contact" required/>
+                    </td>
+                    <td><input class="js-add-type" form="order-form" type="text" placeholder="Type" required/></td>
+                    <td><input class="js-add-description" form="order-form" type="text" placeholder="Description"
+                               required/></td>
+                    <td><input class="js-add-link" form="order-form" type="text" placeholder="Link"/></td>
+                    <td>
+                        <select class="js-add-status" form="order-form" title="Status" required>
+                        </select>
+                        <input class="submit js-submit" form="order-form" type="submit"/>
+                    </td>
                 </tr>
             </table>
             <form action="#" id="order-form" class="js-orders-add">
@@ -123,11 +130,14 @@
         </div>
     </div>
 </div>
-<script src="node_modules/moment/min/moment.min.js"></script>
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script type="text/javascript" src="node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+<script type="text/javascript" src="node_modules/moment/min/moment.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-    require('./scripts/renderer.js')
+    require('./scripts/renderer.js');
 </script>
 </body>
 </html>

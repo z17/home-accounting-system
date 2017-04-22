@@ -6,6 +6,7 @@
   "dependencies": {
     "electron-prebuilt": "^1.4.13",
     "jquery": "^3.2.1",
+    "jquery-ui-dist": "^1.12.1",
     "moment": "^2.18.1",
     "nedb": "^1.8.0",
     "normalize.css": "^6.0.0"

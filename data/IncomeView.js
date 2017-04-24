@@ -6,24 +6,25 @@ let IncomeView = {
         title: "Income by month",
         cols: ["Month", "Sum"],
         data: [],
-        chart: {},
-        chartData: {},
-        chartOptions: {},
+        chart: null,
+        chartData: null,
+        chartOptions: null,
     },
     dataByYear: {
         title: "Income by year",
         cols: ["Year", "Sum"],
         data: [],
-        chart: {},
-        chartData: {},
-        chartOptions: {},
+        chart: null,
+        chartData: null,
+        chartOptions: null,
     },
     dataAverage: {
         title: "Average income by year",
         cols: ["Year", "Middle sum"],
         data: [],
-        chartData: {},
-        chartOptions: {},
+        chart: null,
+        chartData: null,
+        chartOptions: null,
     },
     sum: 0,
     average: 0,
@@ -42,6 +43,76 @@ let IncomeView = {
         });
         this.data = data;
 
+        this.insertIncomeData();
+        this.updateGraphData(data);
+    },
+    setPaymentTypes: function (types) {
+        $(".js-income-page .js-add-payment-type").autocomplete({
+            source: types,
+            minLength: 0,
+        });
+    },
+    setContacts: function (contacts) {
+        $(".js-income-page .js-add-contact").autocomplete({
+            source: contacts,
+            minLength: 0,
+        });
+    },
+    drawByMonth: function () {
+        this.draw(this.dataByMonth, '100%', 400, "js-income-month-chart");
+    },
+    drawByYear: function () {
+        this.draw(this.dataByYear, '100%', 300, "js-income-year-chart");
+    },
+    drawAverage: function () {
+        this.draw(this.dataAverage, '100%', 300, "js-income-average-chart");
+    },
+
+    draw: function (chartData, width, height, chartId) {
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            let dataTable = prepareChartData(chartData);
+            if (chartData.chart != null) {
+                chartData.chart.draw(dataTable, chartData.chartOptions);
+                chartData.chartData = dataTable;
+                return
+            }
+
+            let view = new google.visualization.DataView(dataTable);
+
+            let options = {
+                title: chartData.title,
+                width: width,
+                height: height,
+                bar: {groupWidth: "95%"},
+                legend: {position: "none"},
+                animation: {
+                    duration: 500,
+                    easing: 'out',
+                },
+                // chartArea: {
+                //     width: '80%',
+                //     height: '80%'
+                // }
+            };
+            let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+            chart.draw(view, options);
+
+            chartData.chart = chart;
+            chartData.chartData = dataTable;
+            chartData.chartOptions = options;
+        }
+    },
+    insertIncomeData: function () {
+        this.data.forEach(insertIncomeToPage);
+    },
+    insertIncome: function (item) {
+        this.data.push(item);
+        this.updateGraphData(this.data);
+        insertIncomeToPage(item);
+    },
+    updateGraphData: function (data) {
         let firstMonth = moment().startOf('month');
         let firstYear = moment().startOf('year');
         let lastMonth = moment().startOf('month');
@@ -53,21 +124,21 @@ let IncomeView = {
             lastYear = moment.unix(data[data.length - 1].date).startOf('year');
         }
 
-        let countMonths = lastMonth.diff(firstMonth, 'months', false);
-        let countYears = lastYear.diff(firstYear, 'years', false);
+        let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
+        let countYears = lastYear.diff(firstYear, 'years', false) + 1;
 
         let dataByMonth = {};
         let dataByYear = {};
         let dataAverage = {};
         for (let i = 0; i < countMonths; i++) {
-            firstMonth.add(1, 'M');
             dataByMonth[firstMonth.format("MMM YYYY")] = 0;
+            firstMonth.add(1, 'M');
         }
 
         for (let i = 0; i < countYears; i++) {
-            firstYear.add(1, 'Y');
             dataByYear[firstYear.format("YYYY")] = 0;
             dataAverage[firstYear.format("YYYY")] = 0;
+            firstYear.add(1, 'Y');
         }
 
         let _this = this;
@@ -75,10 +146,10 @@ let IncomeView = {
             _this.sum += element.sum;
 
             let month = moment.unix(element.month).format("MMM YYYY");
-            dataByMonth[month] = element.sum;
+            dataByMonth[month] += element.sum;
 
             let year = moment.unix(element.month).format("YYYY");
-            dataByYear[year] = element.sum;
+            dataByYear[year] += element.sum;
 
             // если разница меньше нуля, значит анализируется месяц за прошлые годы, если 0, значит сейчас январь и нужно эти данные пропустить
             let monthDiff = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false);
@@ -89,7 +160,7 @@ let IncomeView = {
                 return;
             }
 
-            dataAverage[year] = element.sum / monthDiff;
+            dataAverage[year] += element.sum / monthDiff;
         });
 
         this.dataByMonth.data = [];
@@ -145,63 +216,6 @@ let IncomeView = {
 
         this.average = Math.round(this.sum / Object.keys(this.dataByMonth.data).length);
 
-        this.insertIncomeData();
-    },
-    setPaymentTypes: function (types) {
-        $(".js-income-page .js-add-payment-type").autocomplete({
-            source: types,
-            minLength: 0,
-        });
-    },
-    setContacts: function (contacts) {
-        $(".js-income-page .js-add-contact").autocomplete({
-            source: contacts,
-            minLength: 0,
-        });
-    },
-    drawByMonth: function () {
-        this.draw(this.dataByMonth, '100%', 400, "js-income-month-chart");
-    },
-    drawByYear: function () {
-        this.draw(this.dataByYear, '100%', 300, "js-income-year-chart");
-    },
-    drawAverage: function () {
-        this.draw(this.dataAverage, '100%', 300, "js-income-average-chart");
-    },
-
-    draw: function (chartData, width, height, chartId) {
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            let dataTable = prepareChartData(chartData);
-            let view = new google.visualization.DataView(dataTable);
-
-            let options = {
-                title: chartData.title,
-                width: width,
-                height: height,
-                bar: {groupWidth: "95%"},
-                legend: {position: "none"},
-                animation: {
-                    duration: 500,
-                    easing: 'out',
-                },
-                // chartArea: {
-                //     width: '80%',
-                //     height: '80%'
-                // }
-            };
-            let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
-            chart.draw(view, options);
-
-            chartData.chart = chart;
-            chartData.chartData = dataTable;
-            chartData.chartOptions = options;
-        }
-    },
-    insertIncomeData: function () {
-        this.data.forEach(insertIncomeToPage);
-
         this.drawByMonth();
         this.drawByYear();
         this.drawAverage();
@@ -210,19 +224,6 @@ let IncomeView = {
         $('.js-income-average').text(this.average);
         $('.js-income-top').text(this.topMonth.value);
         $('.js-income-worst').text(this.worstMonth.value);
-    },
-    insertIncome: function (item) {
-        this.data.push(item);
-
-        let month = moment.unix(item.date).startOf('month');
-        let monthStr = month.format("MMM YYYY");
-        updateChart(item, this.dataByMonth, month, monthStr);
-
-        let year = moment.unix(item.date).startOf('year');
-        let yearStr = year.format("YYYY");
-        updateChart(item, this.dataByYear, year, yearStr);
-
-        insertIncomeToPage(item);
     }
 };
 
@@ -249,24 +250,6 @@ function insertIncomeToPage(item) {
     row.insertBefore(rowExample);
 }
 
-function updateChart(item, updatedData, time, timeStr) {
-    let value = updatedData.data.find(function (e) {
-        return e.name == timeStr;
-    });
-    if (value != undefined) {
-        value.value += item.sum;
-    } else {
-        updatedData.data.push({
-            name: timeStr,
-            time: time.unix(),
-            value: item.sum
-        });
-    }
-
-    let dataTable = prepareChartData(updatedData);
-    updatedData.chart.draw(dataTable, updatedData.chartOptions);
-}
-
 function onDeleteClick() {
     // todo: are you sure?
     let row = $(this).closest('tr.row');
@@ -274,6 +257,13 @@ function onDeleteClick() {
 
     ipcRenderer.send('income-delete', id);
     row.remove();
+    let deletedItemIndex = IncomeView.data.findIndex(function (e) {
+        return e.id == id;
+    });
+    if (deletedItemIndex >= 0) {
+        IncomeView.data.splice(deletedItemIndex, 1);
+    }
+    IncomeView.updateGraphData(IncomeView.data);
 }
 
 module.exports.IncomeView = IncomeView;

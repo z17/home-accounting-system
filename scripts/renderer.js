@@ -21,6 +21,10 @@ ipcRenderer.on('income-contacts' ,function (event, data) {
     incomeView.setContacts(data);
 });
 
+ipcRenderer.on('income-data-inserted', function (event, data) {
+    incomeView.insertIncome(data);
+});
+
 ipcRenderer.on('orders-data', function (event, data) {
     orderView.setData(data);
 });
@@ -32,10 +36,10 @@ ipcRenderer.on('order-types' ,function (event, data) {
 ipcRenderer.on('order-contacts' ,function (event, data) {
     orderView.setContacts(data);
 });
-ipcRenderer.on('income-data-insert', function (event, data) {
-    incomeView.insertIncome(data);
-});
 
+ipcRenderer.on('order-data-inserted', function (event, data) {
+    orderView.insertOrder(data);
+});
 
 $(document).ready(function () {
     $('a').click(orderView.onLinkClick);
@@ -65,7 +69,6 @@ $(document).ready(function () {
         ipcRenderer.send('income-add', data);
     });
 
-
     $(".js-orders-page .js-orders-add").on('submit', function (e) {
         e.preventDefault();
         let month = $('.js-orders-page input.js-add-month').val();
@@ -92,14 +95,8 @@ $(document).ready(function () {
             link,
             status);
 
-        let result = ipcRenderer.sendSync('order-add', data);
-        if (result) {
-            orderView.insertOrder(data);
-        } else {
-            alert("Unknown error");
-        }
+        ipcRenderer.send('order-add', data);
     });
-
 });
 
 

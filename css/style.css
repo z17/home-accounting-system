@@ -74,6 +74,7 @@ table.data-table tr.row .delete {
     padding: 0 15px;
     display: none;
     cursor: pointer;
+    background: #fff;
 }
 
 table.data-table tr.row:hover .delete {

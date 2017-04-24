@@ -82,7 +82,7 @@ app.on('ready', function () {
     ipcMain.on('income-add', (event, income) => {
         Database.insertIncome(income,
             function (inserted) {
-                mainWindow.webContents.send('income-data-insert', inserted);
+                mainWindow.webContents.send('income-data-inserted', inserted);
             });
     });
 
@@ -97,10 +97,9 @@ app.on('ready', function () {
 
     ipcMain.on('order-add', (event, order) => {
         Database.insertOrder(order,
-            function (err, newDoc) {
-                console.log(err, newDoc);
+            function (inserted) {
+                mainWindow.webContents.send('order-data-inserted', inserted);
             });
-        event.returnValue = true;
     });
 
     ipcMain.on('order-delete', (event, orderId) => {

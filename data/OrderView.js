@@ -1,10 +1,26 @@
+const ipcRenderer = require('electron').ipcRenderer;
+
 const OrderStatus = require('../data/entities.js').OrderStatus;
 const shell = require('electron').shell;
 
 let OrderView = {
     data: [],
-    dataByTypes: [],
-    dataByContacts: [],
+    dataByTypes: {
+        title: "By Types",
+        cols: ["Type", "Sum"],
+        data: [],
+        chart: null,
+        chartData: null,
+        chartOptions: null,
+    },
+    dataByContacts: {
+        title: "By contacts",
+        cols: ["Contact", "Sum"],
+        data: [],
+        chart: null,
+        chartData: null,
+        chartOptions: null,
+    },
 
     setupView: function () {
         for (let property in OrderStatus) {
@@ -22,20 +38,7 @@ let OrderView = {
         });
         this.data = data;
 
-        let _this = this;
-        data.forEach(function (data) {
-            if (_this.dataByContacts[data.contact] == undefined) {
-                _this.dataByContacts[data.contact] = data.sum;
-            } else {
-                _this.dataByContacts[data.contact] += data.sum;
-            }
-
-            if (_this.dataByTypes[data.type] == undefined) {
-                _this.dataByTypes[data.type] = data.sum;
-            } else {
-                _this.dataByContacts[data.type] += data.sum;
-            }
-        });
+        updateGraphData();
 
         this.insertOrdersData();
     },
@@ -52,72 +55,46 @@ let OrderView = {
         });
     },
     insertOrdersData: function () {
-        this.data.forEach(this.insertOrder);
-
-        this.drawTypesDiagram();
-        this.drawContactsDiagram();
+        this.data.forEach(insertOrderToPage);
     },
     insertOrder: function (item) {
-        let rowExample = $('.js-orders-page .js-row');
-        let row = rowExample.clone();
-
-        let link = item.link;
-        if (item.link.length > 0) {
-            link = '<a href="http://' + item.link + '">' + item.link + '</a>';
-        }
-
-        row.removeClass('js-row');
-        row.addClass(OrderStatus[item.status].class);
-        row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
-        row.find('.js-sum').text(item.sum);
-        row.find('.js-prepayment').text(item.prepayment);
-        row.find('.js-payment').text(item.payment);
-        row.find('.js-expenses').text(item.expenses);
-        row.find('.js-payment-type').text(item.paymentType);
-        row.find('.js-contact').text(item.contact);
-        row.find('.js-type').text(item.type);
-        row.find('.js-description').text(item.description);
-        row.find('.js-link').html(link);
-        row.find('.js-status').text(OrderStatus[item.status].name);
-        row.insertBefore(rowExample);
-
-        row.find('.js-link a').click(onLinkClick);
+        this.data.push(item);
+        updateGraphData();
+        insertOrderToPage(item);
     },
     drawTypesDiagram: function () {
-        this.draw(this.dataByTypes, 'By Types', '100%', '400', ["Type", "Sum"],  'js-order-types-chart');
+        this.draw(this.dataByTypes, '100%', '400', 'js-order-types-chart');
     },
 
     drawContactsDiagram: function () {
-        this.draw(this.dataByContacts, 'By Contacts', '100%', '400', ["Contact", "Sum"],  'js-order-contacts-chart');
+        this.draw(this.dataByContacts, '100%', '400', 'js-order-contacts-chart');
 
     },
-    draw: function (chartData, title, width, height, columnsName, chartId) {
-
-        let data = [columnsName];
-        for (let property in chartData) {
-            if (chartData.hasOwnProperty(property)) {
-                data.push([property, chartData[property]]);
-            }
-        }
+    draw: function (chartData, width, height, chartId) {
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
+            let dataTable = prepareChartData(chartData);
 
-            data = google.visualization.arrayToDataTable(data);
+            if (chartData.chart != null) {
+                chartData.chart.draw(dataTable, chartData.chartOptions);
+                chartData.chartData = dataTable;
+                return
+            }
+
             let options = {
-                title: title,
+                title: chartData.title,
                 width: width,
                 height: height,
                 bar: {groupWidth: "95%"},
             };
 
             let chart = new google.visualization.PieChart(document.getElementById(chartId));
-            chart.draw(data, options);
+            chart.draw(dataTable, options);
         }
     },
 
 };
-
 
 function onLinkClick(e) {
     if ($(this).attr('href') != undefined) {
@@ -125,6 +102,85 @@ function onLinkClick(e) {
         shell.openExternal($(this).attr('href'));
     }
 }
+
+function insertOrderToPage(item) {
+    let rowExample = $('.js-orders-page .js-row');
+    let row = rowExample.clone();
+
+    let link = item.link;
+    if (item.link.length > 0) {
+        link = '<a href="http://' + item.link + '">' + item.link + '</a>';
+    }
+
+    row.removeClass('js-row');
+    row.addClass(OrderStatus[item.status].class);
+    row.data('id', item.id);
+    row.find('.js-delete').click(onDeleteClick);
+    row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
+    row.find('.js-sum').text(item.sum);
+    row.find('.js-prepayment').text(item.prepayment);
+    row.find('.js-payment').text(item.payment);
+    row.find('.js-expenses').text(item.expenses);
+    row.find('.js-payment-type').text(item.paymentType);
+    row.find('.js-contact').text(item.contact);
+    row.find('.js-type').text(item.type);
+    row.find('.js-description').text(item.description);
+    row.find('.js-link').html(link);
+    row.find('.js-status').text(OrderStatus[item.status].name);
+    row.insertBefore(rowExample);
+
+    row.find('.js-link a').click(onLinkClick);
+}
+
+function updateGraphData() {
+    OrderView.dataByContacts.data = [];
+    OrderView.dataByTypes.data = [];
+
+    OrderView.data.forEach(function (item) {
+        if (OrderView.dataByContacts.data[item.contact] == undefined) {
+            OrderView.dataByContacts.data[item.contact] = item.sum;
+        } else {
+            OrderView.dataByContacts.data[item.contact] += item.sum;
+        }
+
+        if (OrderView.dataByTypes.data[item.type] == undefined) {
+            OrderView.dataByTypes.data[item.type] = item.sum;
+        } else {
+            OrderView.dataByTypes.data[item.type] += item.sum;
+        }
+    });
+
+
+    OrderView.drawTypesDiagram();
+    OrderView.drawContactsDiagram();
+}
+
+function prepareChartData(chartData) {
+    let data = [chartData.cols];
+    for (let property in chartData.data) {
+        if (chartData.data.hasOwnProperty(property)) {
+            data.push([property, chartData.data[property]]);
+        }
+    }
+    return google.visualization.arrayToDataTable(data);
+}
+
+function onDeleteClick() {
+    // todo: are you sure?
+    let row = $(this).closest('tr.row');
+    let id = row.data('id');
+
+    ipcRenderer.send('order-delete', id);
+    row.remove();
+    let deletedItemIndex = OrderView.data.findIndex(function (e) {
+        return e.id == id;
+    });
+    if (deletedItemIndex >= 0) {
+        OrderView.data.splice(deletedItemIndex, 1);
+    }
+    updateGraphData();
+}
+
 
 module.exports.OrderView = OrderView;
 module.exports.onLinkClick = onLinkClick;

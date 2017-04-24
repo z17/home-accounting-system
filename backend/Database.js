@@ -27,14 +27,19 @@ Database.prototype.getIncomes = function (callback) {
 };
 
 Database.prototype.deleteIncome = function (incomeId) {
-    this.db.remove({type: Tables.INCOME, _id: incomeId});
+    this.db.remove({
+        type: Tables.INCOME,
+        _id: incomeId
+    });
 };
 
 Database.prototype.insertOrder = function (order, callback) {
     this.db.insert({
         type: Tables.ORDER,
         data: order
-    }, callback);
+    }, function (err, doc) {
+        callback(mapDataFromDB(doc));
+    });
 };
 
 Database.prototype.getOrders = function (callback) {
@@ -45,7 +50,10 @@ Database.prototype.getOrders = function (callback) {
 };
 
 Database.prototype.deleteOrder = function (orderId) {
-    this.db.remove({type: Tables.ORDER, _id: orderId});
+    this.db.remove({
+        type: Tables.ORDER,
+        _id: orderId
+    });
 };
 
 function mapDataFromDB(item) {

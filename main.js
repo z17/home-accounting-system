@@ -80,13 +80,14 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-add', (event, income) => {
-        Database.insertIncome(income);
-        event.returnValue = true;
+        Database.insertIncome(income,
+            function (inserted) {
+                mainWindow.webContents.send('income-data-insert', inserted);
+            });
     });
 
     ipcMain.on('income-delete', (event, incomeId) => {
-        console.log(incomeId);
-        event.returnValue = true;
+        Database.deleteIncome(incomeId);
     });
 
     ipcMain.on('income-edit', (event, income) => {
@@ -95,7 +96,15 @@ app.on('ready', function () {
     });
 
     ipcMain.on('order-add', (event, order) => {
-        Database.insertOrder(order);
+        Database.insertOrder(order,
+            function (err, newDoc) {
+                console.log(err, newDoc);
+            });
         event.returnValue = true;
     });
+
+    ipcMain.on('order-delete', (event, orderId) => {
+        Database.deleteOrder(orderId);
+    });
+
 });

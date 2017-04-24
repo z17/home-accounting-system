@@ -32,7 +32,9 @@ ipcRenderer.on('order-types' ,function (event, data) {
 ipcRenderer.on('order-contacts' ,function (event, data) {
     orderView.setContacts(data);
 });
-
+ipcRenderer.on('income-data-insert', function (event, data) {
+    incomeView.insertIncome(data);
+});
 
 
 $(document).ready(function () {
@@ -60,13 +62,9 @@ $(document).ready(function () {
         }
         let data = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
 
-        let result = ipcRenderer.sendSync('income-add', data);
-        if (result) {
-            incomeView.insertIncome(data);
-        } else {
-            alert("Unknown error");
-        }
+        ipcRenderer.send('income-add', data);
     });
+
 
     $(".js-orders-page .js-orders-add").on('submit', function (e) {
         e.preventDefault();
@@ -101,6 +99,7 @@ $(document).ready(function () {
             alert("Unknown error");
         }
     });
+
 });
 
 

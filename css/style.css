@@ -53,7 +53,7 @@ table.data-table td, table.data-table th {
 }
 
 table.data-table .form td {
-    padding:0;
+    padding: 0;
 }
 
 table.data-table td:last-child, table.data-table th:last-child {
@@ -62,6 +62,22 @@ table.data-table td:last-child, table.data-table th:last-child {
 
 table.data-table td:first-child, table.data-table th:first-child {
     border-left: 0;
+}
+
+table.data-table tr.row {
+    position: relative;
+}
+
+table.data-table tr.row .delete {
+    position: absolute;
+    right: 0;
+    padding: 0 15px;
+    display: none;
+    cursor: pointer;
+}
+
+table.data-table tr.row:hover .delete {
+    display: inline-block;;
 }
 
 .page {
@@ -121,23 +137,26 @@ table.data-table td:first-child, table.data-table th:first-child {
     display: inline-block;
 }
 
-.js-orders-page .data-table tr.in-progress{
+.js-orders-page .data-table tr.in-progress {
     color: #00aa00;
 }
-.js-orders-page .data-table tr.in-progress a  {
+
+.js-orders-page .data-table tr.in-progress a {
     color: #00cc00;
 }
 
-.js-orders-page .data-table tr.payment{
+.js-orders-page .data-table tr.payment {
     color: #aa0000;
 }
-.js-orders-page .data-table tr.payment a  {
+
+.js-orders-page .data-table tr.payment a {
     color: #cc0000;
 }
 
-.js-orders-page .data-table tr.completed{
+.js-orders-page .data-table tr.completed {
     color: #777;
 }
-.js-orders-page .data-table tr.completed a  {
+
+.js-orders-page .data-table tr.completed a {
     color: #aaa;
 }

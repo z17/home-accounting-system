@@ -1,4 +1,5 @@
 let Income = function (date, month, sum, paymentType, contact, description) {
+    this.id = null;
     this.date = date.unix();
     this.month = month.unix();
     this.sum = sum;
@@ -8,6 +9,7 @@ let Income = function (date, month, sum, paymentType, contact, description) {
 };
 
 let Order = function (month, sum, prepayment, payment, expenses, contact, type, description, link, status) {
+    this.id = null;
     this.month = month.unix();
     this.sum = sum;
     this.prepayment = prepayment;

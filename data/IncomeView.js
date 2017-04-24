@@ -1,9 +1,11 @@
+const ipcRenderer = require('electron').ipcRenderer;
+
 let IncomeView = {
     data: {},
     dataByMonth: {
         title: "Income by month",
         cols: ["Month", "Sum"],
-        data: {},
+        data: [],
         chart: {},
         chartData: {},
         chartOptions: {},
@@ -11,7 +13,7 @@ let IncomeView = {
     dataByYear: {
         title: "Income by year",
         cols: ["Year", "Sum"],
-        data: {},
+        data: [],
         chart: {},
         chartData: {},
         chartOptions: {},
@@ -19,7 +21,7 @@ let IncomeView = {
     dataAverage: {
         title: "Average income by year",
         cols: ["Year", "Middle sum"],
-        data: {},
+        data: [],
         chartData: {},
         chartOptions: {},
     },
@@ -40,10 +42,16 @@ let IncomeView = {
         });
         this.data = data;
 
-        let firstMonth = moment.unix(data[0].date).startOf('month');
-        let firstYear = moment.unix(data[0].date).startOf('year');
-        let lastMonth = moment.unix(data[data.length - 1].date).startOf('month');
-        let lastYear = moment.unix(data[data.length - 1].date).startOf('year');
+        let firstMonth = moment().startOf('month');
+        let firstYear = moment().startOf('year');
+        let lastMonth = moment().startOf('month');
+        let lastYear = moment().startOf('year');
+        if (data.length != 0) {
+            firstMonth = moment.unix(data[0].date).startOf('month');
+            firstYear = moment.unix(data[0].date).startOf('year');
+            lastMonth = moment.unix(data[data.length - 1].date).startOf('month');
+            lastYear = moment.unix(data[data.length - 1].date).startOf('year');
+        }
 
         let countMonths = lastMonth.diff(firstMonth, 'months', false);
         let countYears = lastYear.diff(firstYear, 'years', false);
@@ -208,11 +216,11 @@ let IncomeView = {
 
         let month = moment.unix(item.date).startOf('month');
         let monthStr = month.format("MMM YYYY");
-        updateChart(this.dataByMonth, month, monthStr);
+        updateChart(item, this.dataByMonth, month, monthStr);
 
         let year = moment.unix(item.date).startOf('year');
         let yearStr = year.format("YYYY");
-        updateChart(this.dataByYear, year, yearStr);
+        updateChart(item, this.dataByYear, year, yearStr);
 
         insertIncomeToPage(item);
     }
@@ -230,6 +238,8 @@ function insertIncomeToPage(item) {
     let rowExample = $('.js-income-page .js-row');
     let row = rowExample.clone();
     row.removeClass('js-row');
+    row.data('id', item.id);
+    row.find('.js-delete').click(onDeleteClick);
     row.find('.js-date').text(moment.unix(item.date).format("DD.MM.YYYY"));
     row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
     row.find('.js-sum').text(item.sum);
@@ -239,7 +249,7 @@ function insertIncomeToPage(item) {
     row.insertBefore(rowExample);
 }
 
-function updateChart(updatedData, time, timeStr) {
+function updateChart(item, updatedData, time, timeStr) {
     let value = updatedData.data.find(function (e) {
         return e.name == timeStr;
     });
@@ -255,6 +265,15 @@ function updateChart(updatedData, time, timeStr) {
 
     let dataTable = prepareChartData(updatedData);
     updatedData.chart.draw(dataTable, updatedData.chartOptions);
+}
+
+function onDeleteClick() {
+    // todo: are you sure?
+    let row = $(this).closest('tr.row');
+    let id = row.data('id');
+
+    ipcRenderer.send('income-delete', id);
+    row.remove();
 }
 
 module.exports.IncomeView = IncomeView;

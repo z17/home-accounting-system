@@ -4,10 +4,14 @@ const orderView = require('../data/OrderView').OrderView;
 const Income = require('../data/entities.js').Income;
 const Order = require('../data/entities.js').Order;
 const OrderStatus = require('../data/entities.js').OrderStatus;
+const shell = require('electron').shell;
 
 google.charts.load("current", {packages: ['corechart']});
 
 orderView.setupView();
+orderView.setCallbacks(onDeleteOrder, onLinkClick);
+incomeView.setCallbacks(onDeleteIncome);
+
 
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
@@ -42,7 +46,7 @@ ipcRenderer.on('order-data-inserted', function (event, data) {
 });
 
 $(document).ready(function () {
-    $('a').click(orderView.onLinkClick);
+    $('a').click(onLinkClick);
 
     $('.js-tab').click(function () {
         let name = $(this).data('name');
@@ -99,4 +103,17 @@ $(document).ready(function () {
     });
 });
 
+function onLinkClick(e) {
+    if ($(this).attr('href') != undefined) {
+        e.preventDefault();
+        shell.openExternal($(this).attr('href'));
+    }
+}
 
+function onDeleteOrder(orderId) {
+    ipcRenderer.send('order-delete', orderId);
+}
+
+function onDeleteIncome(incomeId) {
+    ipcRenderer.send('income-delete', incomeId);
+}

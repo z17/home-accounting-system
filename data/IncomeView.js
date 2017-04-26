@@ -1,231 +1,243 @@
-const ipcRenderer = require('electron').ipcRenderer;
-
-let IncomeView = {
-    data: {},
-    dataByMonth: {
+function IncomeView() {
+    this.data = {};
+    this.dataByMonth = {
         title: "Income by month",
         cols: ["Month", "Sum"],
         data: [],
         chart: null,
         chartData: null,
         chartOptions: null,
-    },
-    dataByYear: {
+    };
+    this.dataByYear = {
         title: "Income by year",
         cols: ["Year", "Sum"],
         data: [],
         chart: null,
         chartData: null,
         chartOptions: null,
-    },
-    dataAverage: {
+    };
+    this.dataAverage = {
         title: "Average income by year",
         cols: ["Year", "Middle sum"],
         data: [],
         chart: null,
         chartData: null,
         chartOptions: null,
-    },
-    sum: 0,
-    average: 0,
-    topMonth: {
+    };
+    this.sum = 0;
+    this.average = 0;
+    this.topMonth = {
         name: '',
         value: 0
-    },
-    worstMonth: {
+    };
+    this.worstMonth = {
         name: '',
         value: 0
-    },
+    };
+    this.onDeleteCallback = null;
+}
 
-    setData: function (data) {
-        data.sort(function (a, b) {
-            return a.date - b.date;
-        });
-        this.data = data;
+const incomeView = new IncomeView();
 
-        this.insertIncomeData();
-        this.updateGraphData(data);
-    },
-    setPaymentTypes: function (types) {
-        $(".js-income-page .js-add-payment-type").autocomplete({
-            source: types,
-            minLength: 0,
-        });
-    },
-    setContacts: function (contacts) {
-        $(".js-income-page .js-add-contact").autocomplete({
-            source: contacts,
-            minLength: 0,
-        });
-    },
-    drawByMonth: function () {
-        this.draw(this.dataByMonth, '100%', 400, "js-income-month-chart");
-    },
-    drawByYear: function () {
-        this.draw(this.dataByYear, '100%', 300, "js-income-year-chart");
-    },
-    drawAverage: function () {
-        this.draw(this.dataAverage, '100%', 300, "js-income-average-chart");
-    },
+IncomeView.prototype.setData = function (data) {
+    data.sort(function (a, b) {
+        return a.date - b.date;
+    });
+    this.data = data;
 
-    draw: function (chartData, width, height, chartId) {
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            let dataTable = prepareChartData(chartData);
-            if (chartData.chart != null) {
-                chartData.chart.draw(dataTable, chartData.chartOptions);
-                chartData.chartData = dataTable;
-                return
-            }
-
-            let view = new google.visualization.DataView(dataTable);
-
-            let options = {
-                title: chartData.title,
-                width: width,
-                height: height,
-                bar: {groupWidth: "95%"},
-                legend: {position: "none"},
-                animation: {
-                    duration: 500,
-                    easing: 'out',
-                },
-                // chartArea: {
-                //     width: '80%',
-                //     height: '80%'
-                // }
-            };
-            let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
-            chart.draw(view, options);
-
-            chartData.chart = chart;
-            chartData.chartData = dataTable;
-            chartData.chartOptions = options;
-        }
-    },
-    insertIncomeData: function () {
-        this.data.forEach(insertIncomeToPage);
-    },
-    insertIncome: function (item) {
-        this.data.push(item);
-        this.updateGraphData(this.data);
-        insertIncomeToPage(item);
-    },
-    updateGraphData: function (data) {
-        let firstMonth = moment().startOf('month');
-        let firstYear = moment().startOf('year');
-        let lastMonth = moment().startOf('month');
-        let lastYear = moment().startOf('year');
-        if (data.length != 0) {
-            firstMonth = moment.unix(data[0].date).startOf('month');
-            firstYear = moment.unix(data[0].date).startOf('year');
-            lastMonth = moment.unix(data[data.length - 1].date).startOf('month');
-            lastYear = moment.unix(data[data.length - 1].date).startOf('year');
-        }
-
-        let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
-        let countYears = lastYear.diff(firstYear, 'years', false) + 1;
-
-        let dataByMonth = {};
-        let dataByYear = {};
-        let dataAverage = {};
-        for (let i = 0; i < countMonths; i++) {
-            dataByMonth[firstMonth.format("MMM YYYY")] = 0;
-            firstMonth.add(1, 'M');
-        }
-
-        for (let i = 0; i < countYears; i++) {
-            dataByYear[firstYear.format("YYYY")] = 0;
-            dataAverage[firstYear.format("YYYY")] = 0;
-            firstYear.add(1, 'Y');
-        }
-
-        let _this = this;
-        data.forEach(function (element) {
-            _this.sum += element.sum;
-
-            let month = moment.unix(element.month).format("MMM YYYY");
-            dataByMonth[month] += element.sum;
-
-            let year = moment.unix(element.month).format("YYYY");
-            dataByYear[year] += element.sum;
-
-            // если разница меньше нуля, значит анализируется месяц за прошлые годы, если 0, значит сейчас январь и нужно эти данные пропустить
-            let monthDiff = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false);
-            if (monthDiff < 0) {
-                monthDiff = 12;
-            }
-            if (monthDiff == 0) {
-                return;
-            }
-
-            dataAverage[year] += element.sum / monthDiff;
-        });
-
-        this.dataByMonth.data = [];
-        for (let property in dataByMonth) {
-            if (dataByMonth.hasOwnProperty(property)) {
-                if (this.topMonth.value < dataByMonth[property] || this.topMonth.name === '') {
-                    this.topMonth.value = dataByMonth[property];
-                    this.topMonth.name = property;
-                }
-                if (this.worstMonth.value > dataByMonth[property] || this.worstMonth.name === '') {
-                    this.worstMonth.value = dataByMonth[property];
-                    this.worstMonth.name = property;
-                }
-                this.dataByMonth.data.push({
-                    name: property,
-                    value: dataByMonth[property],
-                    time: moment(property, "MMM YYYY").unix()
-                });
-            }
-        }
-
-        this.dataByYear.data = [];
-        for (let property in dataByYear) {
-            if (dataByYear.hasOwnProperty(property)) {
-                this.dataByYear.data.push({
-                    name: property,
-                    value: dataByYear[property],
-                    time: moment(property, "YYYY").unix()
-                });
-            }
-        }
-
-        this.dataAverage.data = [];
-        for (let property in dataAverage) {
-            if (dataAverage.hasOwnProperty(property)) {
-                this.dataAverage.data.push({
-                    name: property,
-                    value: dataAverage[property],
-                    time: moment(property, "YYYY").unix()
-                });
-            }
-        }
-
-        this.dataByMonth.data.sort(function (a, b) {
-            return a.time - b.time;
-        });
-        this.dataByYear.data.sort(function (a, b) {
-            return a.time - b.time;
-        });
-        this.dataAverage.data.sort(function (a, b) {
-            return a.time - b.time;
-        });
-
-        this.average = Math.round(this.sum / Object.keys(this.dataByMonth.data).length);
-
-        this.drawByMonth();
-        this.drawByYear();
-        this.drawAverage();
-
-        $('.js-income-sum').text(this.sum);
-        $('.js-income-average').text(this.average);
-        $('.js-income-top').text(this.topMonth.value);
-        $('.js-income-worst').text(this.worstMonth.value);
-    }
+    insertIncomeData(data);
+    updateGraphData(data);
 };
+
+IncomeView.prototype.setPaymentTypes = function (types) {
+    $(".js-income-page .js-add-payment-type").autocomplete({
+        source: types,
+        minLength: 0,
+    });
+};
+
+IncomeView.prototype.setContacts = function (contacts) {
+    $(".js-income-page .js-add-contact").autocomplete({
+        source: contacts,
+        minLength: 0,
+    });
+};
+
+IncomeView.prototype.insertIncome = function (item) {
+    this.data.push(item);
+    updateGraphData(this.data);
+    insertIncomeToPage(item);
+};
+
+IncomeView.prototype.setCallbacks = function (onDeleteCallback) {
+    this.onDeleteCallback = onDeleteCallback;
+};
+
+function drawByMonth() {
+    draw(incomeView.dataByMonth, '100%', 400, "js-income-month-chart");
+}
+
+function drawByYear() {
+    draw(incomeView.dataByYear, '100%', 300, "js-income-year-chart");
+}
+
+function drawAverage() {
+    draw(incomeView.dataAverage, '100%', 300, "js-income-average-chart");
+}
+
+function draw(chartData, width, height, chartId) {
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        let dataTable = prepareChartData(chartData);
+        if (chartData.chart != null) {
+            chartData.chart.draw(dataTable, chartData.chartOptions);
+            chartData.chartData = dataTable;
+            return
+        }
+
+        let view = new google.visualization.DataView(dataTable);
+
+        let options = {
+            title: chartData.title,
+            width: width,
+            height: height,
+            bar: {groupWidth: "95%"},
+            legend: {position: "none"},
+            animation: {
+                duration: 500,
+                easing: 'out',
+            },
+            // chartArea: {
+            //     width: '80%',
+            //     height: '80%'
+            // }
+        };
+        let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+        chart.draw(view, options);
+
+        chartData.chart = chart;
+        chartData.chartData = dataTable;
+        chartData.chartOptions = options;
+    }
+}
+
+function insertIncomeData(data) {
+    data.forEach(insertIncomeToPage);
+}
+
+function updateGraphData(data) {
+    let firstMonth = moment().startOf('month');
+    let firstYear = moment().startOf('year');
+    let lastMonth = moment().startOf('month');
+    let lastYear = moment().startOf('year');
+    if (data.length != 0) {
+        firstMonth = moment.unix(data[0].month).startOf('month');
+        firstYear = moment.unix(data[0].month).startOf('year');
+        lastMonth = moment.unix(data[data.length - 1].month).startOf('month');
+        lastYear = moment.unix(data[data.length - 1].month).startOf('year');
+    }
+
+    let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
+    let countYears = lastYear.diff(firstYear, 'years', false) + 1;
+
+    let dataByMonth = {};
+    let dataByYear = {};
+    let dataAverage = {};
+    for (let i = 0; i < countMonths; i++) {
+        dataByMonth[firstMonth.format("MMM YYYY")] = 0;
+        firstMonth.add(1, 'M');
+    }
+
+    for (let i = 0; i < countYears; i++) {
+        dataByYear[firstYear.format("YYYY")] = 0;
+        dataAverage[firstYear.format("YYYY")] = 0;
+        firstYear.add(1, 'Y');
+    }
+
+    data.forEach(function (element) {
+        incomeView.sum += element.sum;
+
+        let month = moment.unix(element.month).format("MMM YYYY");
+        dataByMonth[month] += element.sum;
+
+        let year = moment.unix(element.month).format("YYYY");
+        dataByYear[year] += element.sum;
+
+        // если разница меньше нуля, значит анализируется месяц за прошлые годы, если 0, значит сейчас январь и нужно эти данные пропустить
+        let monthDiff = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false);
+        if (monthDiff < 0) {
+            monthDiff = 12;
+        }
+        if (monthDiff == 0) {
+            return;
+        }
+
+        dataAverage[year] += element.sum / monthDiff;
+    });
+
+    incomeView.dataByMonth.data = [];
+    for (let property in dataByMonth) {
+        if (dataByMonth.hasOwnProperty(property)) {
+            if (incomeView.topMonth.value < dataByMonth[property] || incomeView.topMonth.name === '') {
+                incomeView.topMonth.value = dataByMonth[property];
+                incomeView.topMonth.name = property;
+            }
+            if (incomeView.worstMonth.value > dataByMonth[property] || incomeView.worstMonth.name === '') {
+                incomeView.worstMonth.value = dataByMonth[property];
+                incomeView.worstMonth.name = property;
+            }
+            incomeView.dataByMonth.data.push({
+                name: property,
+                value: dataByMonth[property],
+                time: moment(property, "MMM YYYY").unix()
+            });
+        }
+    }
+
+    incomeView.dataByYear.data = [];
+    for (let property in dataByYear) {
+        if (dataByYear.hasOwnProperty(property)) {
+            incomeView.dataByYear.data.push({
+                name: property,
+                value: dataByYear[property],
+                time: moment(property, "YYYY").unix()
+            });
+        }
+    }
+
+    incomeView.dataAverage.data = [];
+    for (let property in dataAverage) {
+        if (dataAverage.hasOwnProperty(property)) {
+            incomeView.dataAverage.data.push({
+                name: property,
+                value: dataAverage[property],
+                time: moment(property, "YYYY").unix()
+            });
+        }
+    }
+
+    incomeView.dataByMonth.data.sort(function (a, b) {
+        return a.time - b.time;
+    });
+    incomeView.dataByYear.data.sort(function (a, b) {
+        return a.time - b.time;
+    });
+    incomeView.dataAverage.data.sort(function (a, b) {
+        return a.time - b.time;
+    });
+
+    incomeView.average = Math.round(incomeView.sum / Object.keys(incomeView.dataByMonth.data).length);
+
+    drawByMonth();
+    drawByYear();
+    drawAverage();
+
+    $('.js-income-sum').text(incomeView.sum);
+    $('.js-income-average').text(incomeView.average);
+    $('.js-income-top').text(incomeView.topMonth.value);
+    $('.js-income-worst').text(incomeView.worstMonth.value);
+}
 
 function prepareChartData(chartData) {
     let data = [chartData.cols];
@@ -255,15 +267,16 @@ function onDeleteClick() {
     let row = $(this).closest('tr.row');
     let id = row.data('id');
 
-    ipcRenderer.send('income-delete', id);
+    incomeView.onDeleteCallback(id);
+
     row.remove();
-    let deletedItemIndex = IncomeView.data.findIndex(function (e) {
+    let deletedItemIndex = incomeView.data.findIndex(function (e) {
         return e.id == id;
     });
     if (deletedItemIndex >= 0) {
-        IncomeView.data.splice(deletedItemIndex, 1);
+        incomeView.data.splice(deletedItemIndex, 1);
     }
-    IncomeView.updateGraphData(IncomeView.data);
+    updateGraphData(incomeView.data);
 }
 
-module.exports.IncomeView = IncomeView;
+module.exports.IncomeView = incomeView;

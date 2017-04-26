@@ -1,107 +1,114 @@
-const ipcRenderer = require('electron').ipcRenderer;
-
 const OrderStatus = require('../data/entities.js').OrderStatus;
-const shell = require('electron').shell;
 
-let OrderView = {
-    data: [],
-    dataByTypes: {
+function OrderView() {
+    this.data = [];
+    this.dataByTypes = {
         title: "By Types",
         cols: ["Type", "Sum"],
         data: [],
         chart: null,
         chartData: null,
         chartOptions: null,
-    },
-    dataByContacts: {
+    };
+    this.dataByContacts = {
         title: "By contacts",
         cols: ["Contact", "Sum"],
         data: [],
         chart: null,
         chartData: null,
         chartOptions: null,
-    },
+    };
+    this.onDeleteCallback = null;
+    this.onLinkClickCallback = null;
+}
 
-    setupView: function () {
-        for (let property in OrderStatus) {
-            if (OrderStatus.hasOwnProperty(property)) {
-                $('.js-add-status').append($('<option>', {
-                    value: property,
-                    text: OrderStatus[property].name
-                }));
-            }
+const orderView = new OrderView();
+
+OrderView.prototype.setupView = function () {
+    for (let property in OrderStatus) {
+        if (OrderStatus.hasOwnProperty(property)) {
+            $('.js-add-status').append($('<option>', {
+                value: property,
+                text: OrderStatus[property].name
+            }));
         }
-    },
-    setData: function (data) {
-        data.sort(function (a, b) {
-            return a.month - b.month;
-        });
-        this.data = data;
-
-        updateGraphData();
-
-        this.insertOrdersData();
-    },
-    setTypes: function (types) {
-        $(".js-orders-page .js-add-type").autocomplete({
-            source: types,
-            minLength: 0,
-        });
-    },
-    setContacts: function (contacts) {
-        $(".js-orders-page .js-add-contact").autocomplete({
-            source: contacts,
-            minLength: 0,
-        });
-    },
-    insertOrdersData: function () {
-        this.data.forEach(insertOrderToPage);
-    },
-    insertOrder: function (item) {
-        this.data.push(item);
-        updateGraphData();
-        insertOrderToPage(item);
-    },
-    drawTypesDiagram: function () {
-        this.draw(this.dataByTypes, '100%', '400', 'js-order-types-chart');
-    },
-
-    drawContactsDiagram: function () {
-        this.draw(this.dataByContacts, '100%', '400', 'js-order-contacts-chart');
-
-    },
-    draw: function (chartData, width, height, chartId) {
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            let dataTable = prepareChartData(chartData);
-
-            if (chartData.chart != null) {
-                chartData.chart.draw(dataTable, chartData.chartOptions);
-                chartData.chartData = dataTable;
-                return
-            }
-
-            let options = {
-                title: chartData.title,
-                width: width,
-                height: height,
-                bar: {groupWidth: "95%"},
-            };
-
-            let chart = new google.visualization.PieChart(document.getElementById(chartId));
-            chart.draw(dataTable, options);
-        }
-    },
-
+    }
 };
 
-function onLinkClick(e) {
-    if ($(this).attr('href') != undefined) {
-        e.preventDefault();
-        shell.openExternal($(this).attr('href'));
+OrderView.prototype.setData = function (data) {
+    data.sort(function (a, b) {
+        return a.month - b.month;
+    });
+    this.data = data;
+
+    updateGraphData();
+
+    insertOrdersData();
+};
+
+OrderView.prototype.setTypes = function (types) {
+    $(".js-orders-page .js-add-type").autocomplete({
+        source: types,
+        minLength: 0,
+    })
+};
+
+OrderView.prototype.setContacts = function (contacts) {
+    $(".js-orders-page .js-add-contact").autocomplete({
+        source: contacts,
+        minLength: 0,
+    });
+};
+
+OrderView.prototype.insertOrder = function (item) {
+    this.data.push(item);
+    updateGraphData();
+    insertOrderToPage(item);
+};
+
+OrderView.prototype.setCallbacks = function (onDeleteCallback, onLinkClickCallback) {
+    this.onDeleteCallback = onDeleteCallback;
+    this.onLinkClickCallback = onLinkClickCallback;
+};
+
+function insertOrdersData() {
+    orderView.data.forEach(insertOrderToPage);
+}
+
+function drawTypesDiagram() {
+    draw(orderView.dataByTypes, '100%', '400', 'js-order-types-chart');
+}
+
+
+function drawContactsDiagram() {
+    draw(orderView.dataByContacts, '100%', '400', 'js-order-contacts-chart');
+
+}
+
+function draw(chartData, width, height, chartId) {
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        let dataTable = prepareChartData(chartData);
+
+        if (chartData.chart != null) {
+            chartData.chart.draw(dataTable, chartData.chartOptions);
+            chartData.chartData = dataTable;
+            return
+        }
+
+        let options = {
+            title: chartData.title,
+            width: width,
+            height: height,
+            bar: {groupWidth: "95%"},
+        };
+
+        let chart = new google.visualization.PieChart(document.getElementById(chartId));
+        chart.draw(dataTable, options);
     }
 }
+
 
 function insertOrderToPage(item) {
     let rowExample = $('.js-orders-page .js-row');
@@ -115,7 +122,6 @@ function insertOrderToPage(item) {
     row.removeClass('js-row');
     row.addClass(OrderStatus[item.status].class);
     row.data('id', item.id);
-    row.find('.js-delete').click(onDeleteClick);
     row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
     row.find('.js-sum').text(item.sum);
     row.find('.js-prepayment').text(item.prepayment);
@@ -129,30 +135,31 @@ function insertOrderToPage(item) {
     row.find('.js-status').text(OrderStatus[item.status].name);
     row.insertBefore(rowExample);
 
-    row.find('.js-link a').click(onLinkClick);
+    row.find('.js-delete').click(onDeleteClick);
+    row.find('a').click(orderView.onLinkClickCallback);
 }
 
 function updateGraphData() {
-    OrderView.dataByContacts.data = [];
-    OrderView.dataByTypes.data = [];
+    orderView.dataByContacts.data = [];
+    orderView.dataByTypes.data = [];
 
-    OrderView.data.forEach(function (item) {
-        if (OrderView.dataByContacts.data[item.contact] == undefined) {
-            OrderView.dataByContacts.data[item.contact] = item.sum;
+    orderView.data.forEach(function (item) {
+        if (orderView.dataByContacts.data[item.contact] == undefined) {
+            orderView.dataByContacts.data[item.contact] = item.sum;
         } else {
-            OrderView.dataByContacts.data[item.contact] += item.sum;
+            orderView.dataByContacts.data[item.contact] += item.sum;
         }
 
-        if (OrderView.dataByTypes.data[item.type] == undefined) {
-            OrderView.dataByTypes.data[item.type] = item.sum;
+        if (orderView.dataByTypes.data[item.type] == undefined) {
+            orderView.dataByTypes.data[item.type] = item.sum;
         } else {
-            OrderView.dataByTypes.data[item.type] += item.sum;
+            orderView.dataByTypes.data[item.type] += item.sum;
         }
     });
 
 
-    OrderView.drawTypesDiagram();
-    OrderView.drawContactsDiagram();
+    drawTypesDiagram();
+    drawContactsDiagram();
 }
 
 function prepareChartData(chartData) {
@@ -170,17 +177,16 @@ function onDeleteClick() {
     let row = $(this).closest('tr.row');
     let id = row.data('id');
 
-    ipcRenderer.send('order-delete', id);
+    orderView.onDeleteCallback(id);
+
     row.remove();
-    let deletedItemIndex = OrderView.data.findIndex(function (e) {
+    let deletedItemIndex = orderView.data.findIndex(function (e) {
         return e.id == id;
     });
     if (deletedItemIndex >= 0) {
-        OrderView.data.splice(deletedItemIndex, 1);
+        orderView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData();
 }
 
-
-module.exports.OrderView = OrderView;
-module.exports.onLinkClick = onLinkClick;
+module.exports.OrderView = orderView;

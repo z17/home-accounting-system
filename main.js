@@ -1,6 +1,5 @@
 const electron = require('electron');
 const entities = require('./data/entities.js');
-const moment = require('moment');
 const database = require('./backend/Database');
 const functions = require('./backend/functions');
 

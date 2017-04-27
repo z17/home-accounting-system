@@ -44,7 +44,32 @@ app.on('ready', function () {
             });
             contacts = contacts.filter(functions.uniqueArrayFilter);
             mainWindow.webContents.send('income-contacts', contacts);
+
+            let paymentsByOrders = {};
+            data.forEach(function (income) {
+                if (income.orderId == null) {
+                    return;
+                }
+
+                if (paymentsByOrders[income.orderId] == undefined) {
+                    paymentsByOrders[income.orderId] = {
+                        payment: 0,
+                        prepayment: 0,
+                    }
+                }
+                if (income.orderPaymentType == entities.IncomeOrderPaymentType.PAYMENT.value) {
+                    paymentsByOrders[income.orderId].payment += income.sum;
+                } else if (income.orderPaymentType == entities.IncomeOrderPaymentType.PREPAYMENT.value) {
+                    paymentsByOrders[income.orderId].prepayment += income.sum;
+                } else {
+                    let error = "Error payment data with income " + income.id;
+                    console.log(error);
+                    mainWindow.webContents.send('error', error);
+                }
+            });
+            mainWindow.webContents.send('orders-payment-data', paymentsByOrders);
         });
+
         Database.getOrders(function (data) {
             mainWindow.webContents.send('orders-data', data);
 

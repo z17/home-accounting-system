@@ -13,6 +13,11 @@ orderView.setCallbacks(onDeleteOrder, onLinkClick);
 incomeView.setCallbacks(onDeleteIncome);
 
 
+
+ipcRenderer.on('error', function (event, data) {
+    alert(data);
+});
+
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
 });
@@ -27,10 +32,16 @@ ipcRenderer.on('income-contacts' ,function (event, data) {
 
 ipcRenderer.on('income-data-inserted', function (event, data) {
     incomeView.insertIncome(data);
+    orderView.updatePaymentData('add', data);
 });
 
 ipcRenderer.on('orders-data', function (event, data) {
     orderView.setData(data);
+    incomeView.setOrders(data);
+});
+
+ipcRenderer.on('orders-payment-data', function (event, data) {
+    orderView.setPaymentData(data);
 });
 
 ipcRenderer.on('order-types' ,function (event, data) {
@@ -64,11 +75,19 @@ $(document).ready(function () {
         let type = $('.js-income-page input.js-add-payment-type').val();
         let contact = $('.js-income-page input.js-add-contact').val();
         let description = $('.js-income-page input.js-add-description').val();
-        if (date.length == 0 || month.length == 0 || sum.length == 0 || type.length == 0 || contact.length == 0 || description.length == 0) {
+        if (date.length == 0 || month.length == 0 || sum.length == 0 || type.length == 0 || contact.length == 0) {
             alert("Error");
             return;
         }
-        let data = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+        let orderId = $('.js-income-page input.js-add-order').data('order-id');
+        let orderPaymentType = null;
+        if (orderId != undefined) {
+            orderPaymentType = $('.js-income-page select.js-add-order-payment').val();
+        } else {
+            orderId = null;
+        }
+
+        let data = new Income(moment(date), moment(month), parseInt(sum), type, contact, description, orderId, orderPaymentType);
 
         ipcRenderer.send('income-add', data);
     });
@@ -114,6 +133,7 @@ function onDeleteOrder(orderId) {
     ipcRenderer.send('order-delete', orderId);
 }
 
-function onDeleteIncome(incomeId) {
-    ipcRenderer.send('income-delete', incomeId);
+function onDeleteIncome(income) {
+    ipcRenderer.send('income-delete', income.id);
+    orderView.updatePaymentData('delete', income);
 }

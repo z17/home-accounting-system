@@ -64,6 +64,10 @@ table.data-table td:first-child, table.data-table th:first-child {
     border-left: 0;
 }
 
+table.data-table tr.row span {
+    display: inline-block;
+}
+
 table.data-table tr.row {
     position: relative;
 }
@@ -82,7 +86,7 @@ table.data-table tr.row:hover .delete {
 }
 
 .page {
-    display: none;
+    /*display: none;*/
 }
 
 .page.active {

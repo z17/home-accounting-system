@@ -39,7 +39,9 @@
                     <th>Сумма</th>
                     <th>Тип</th>
                     <th>Контакт</th>
-                    <th>Описание</th>
+                    <th>Description</th>
+                    <th>Order</th>
+                    <th>Order payment type</th>
                 </tr>
                 <tr class="js-row row">
                     <td class="js-date"></td>
@@ -47,7 +49,9 @@
                     <td class="js-sum"></td>
                     <td class="js-payment-type"></td>
                     <td class="js-contact"></td>
-                    <td><span class="js-description"></span><span class="delete js-delete">&#10006;</span></td>
+                    <td class="js-description"></td>
+                    <td class="js-order"></td>
+                    <td><span class="js-order-payment"></span><span class="delete js-delete">&#10006;</span></td>
                 </tr>
                 <tr class="form">
                     <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
@@ -59,8 +63,17 @@
                     <td><input class="js-add-contact" form="income-form" type="text" placeholder="Contact" required/>
                     </td>
                     <td>
-                        <input class="js-add-description" form="income-form" type="text" placeholder="Description"
-                               required/>
+                        <input class="js-add-description" form="income-form" type="text" placeholder="Description"/>
+                    </td>
+                    <td>
+                        <input class="js-add-order" form="income-form" type="text" placeholder="Order" />
+                    </td>
+                    <td>
+                        <select class="js-add-order-payment" form="income-form" title="Order payment type" required>
+                            <option>--</option>
+                            <option>payment</option>
+                            <option>prepayment</option>
+                        </select>
                         <input class="submit js-submit" form="income-form" type="submit"/>
                     </td>
                 </tr>

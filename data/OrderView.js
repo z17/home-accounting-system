@@ -1,4 +1,6 @@
-const OrderStatus = require('../data/entities.js').OrderStatus;
+const entities = require('../data/entities.js');
+const OrderStatus = entities.OrderStatus;
+const IncomeOrderPaymentType = entities.IncomeOrderPaymentType;
 
 function OrderView() {
     this.data = [];
@@ -20,6 +22,7 @@ function OrderView() {
     };
     this.onDeleteCallback = null;
     this.onLinkClickCallback = null;
+    this.paymentData = {};
 }
 
 const orderView = new OrderView();
@@ -71,8 +74,45 @@ OrderView.prototype.setCallbacks = function (onDeleteCallback, onLinkClickCallba
     this.onLinkClickCallback = onLinkClickCallback;
 };
 
+OrderView.prototype.setPaymentData = function (data) {
+    this.paymentData = data;
+    updatePaymentData(data);
+};
+
+OrderView.prototype.updatePaymentData = function (type, item) {
+    if (type != 'add' && type != 'delete') {
+        alert('error type');
+    }
+
+    if (type == 'add') {
+        if (this.paymentData[item.orderId] == undefined) {
+            this.paymentData[item.orderId] = {
+                payment: 0,
+                prepayment: 0
+            }
+        }
+        if (item.orderPaymentType == IncomeOrderPaymentType.PAYMENT.value) {
+            this.paymentData[item.orderId].payment += item.sum;
+        } else if (item.orderPaymentType == IncomeOrderPaymentType.PREPAYMENT.value) {
+            this.paymentData[item.orderId].prepayment += item.sum;
+        }
+
+    }
+
+    if (type == 'delete') {
+        if (item.orderPaymentType == IncomeOrderPaymentType.PAYMENT.value) {
+            this.paymentData[item.orderId].payment -= item.sum;
+        } else if (item.orderPaymentType == IncomeOrderPaymentType.PREPAYMENT.value) {
+            this.paymentData[item.orderId].prepayment -= item.sum;
+        }
+    }
+
+    updatePaymentData(this.paymentData);
+};
+
 function insertOrdersData() {
     orderView.data.forEach(insertOrderToPage);
+    updatePaymentData(orderView.paymentData)
 }
 
 function drawTypesDiagram() {
@@ -187,6 +227,18 @@ function onDeleteClick() {
         orderView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData();
+}
+
+function updatePaymentData(data) {
+    for (let property in data) {
+        if (data.hasOwnProperty(property)) {
+            let row = $('.js-orders-page tr.row').filter(function () {
+                return $(this).data('id') == property;
+            });
+            row.find('.js-prepayment').text(data[property].prepayment);
+            row.find('.js-payment').text(data[property].payment);
+        }
+    }
 }
 
 module.exports.OrderView = orderView;

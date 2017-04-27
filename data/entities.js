@@ -1,4 +1,4 @@
-let Income = function (date, month, sum, paymentType, contact, description) {
+let Income = function (date, month, sum, paymentType, contact, description, orderId, orderPaymentType) {
     this.id = null;
     this.date = date.unix();
     this.month = month.unix();
@@ -6,6 +6,8 @@ let Income = function (date, month, sum, paymentType, contact, description) {
     this.paymentType = paymentType;
     this.contact = contact;
     this.description = description;
+    this.orderId = orderId;
+    this.orderPaymentType = orderPaymentType;
 };
 
 let Order = function (month, sum, prepayment, payment, expenses, contact, type, description, link, status) {
@@ -41,6 +43,16 @@ let OrderStatus = {
     }
 };
 
+let IncomeOrderPaymentType = {
+    PREPAYMENT: {
+        value: 'prepayment'
+    },
+    PAYMENT: {
+        value : 'payment'
+    }
+};
+
 module.exports.Order = Order;
 module.exports.Income = Income;
 module.exports.OrderStatus = OrderStatus;
+module.exports.IncomeOrderPaymentType = IncomeOrderPaymentType;

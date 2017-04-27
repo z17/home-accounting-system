@@ -54,6 +54,7 @@ ipcRenderer.on('order-contacts' ,function (event, data) {
 
 ipcRenderer.on('order-data-inserted', function (event, data) {
     orderView.insertOrder(data);
+    incomeView.updateOrderData('add', data);
 });
 
 $(document).ready(function () {
@@ -129,8 +130,9 @@ function onLinkClick(e) {
     }
 }
 
-function onDeleteOrder(orderId) {
-    ipcRenderer.send('order-delete', orderId);
+function onDeleteOrder(order) {
+    ipcRenderer.send('order-delete', order.id);
+    incomeView.updateOrderData('delete', order);
 }
 
 function onDeleteIncome(income) {

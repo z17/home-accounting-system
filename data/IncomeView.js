@@ -78,23 +78,11 @@ IncomeView.prototype.setCallbacks = function (onDeleteCallback) {
 IncomeView.prototype.setOrders = function (orders) {
     this.orders = orders;
 
-    let source = orders.map(function (item) {
-        return {
-            order: item,
-            label: moment.unix(item.month).format("MM.YY") + ' / ' + item.contact + ' / ' + item.description
-        };
-    });
+    updateOrdersAutocomplete(this.orders);
+};
 
-    $(".js-income-page .js-add-order").autocomplete({
-        source: source,
-        minLength: 0,
-        select: function (event, ui) {
-            $('.js-add-order').data('order-id', ui.item.order.id);
-            $('.js-add-contact').val(ui.item.order.contact);
-        }
-    });
-
-    updateOrderData(orders);
+IncomeView.prototype.updateOrderData = function (type, order) {
+    updateOrdersAutocomplete(this.orders);
 };
 
 function drawByMonth() {
@@ -299,17 +287,15 @@ function onDeleteClick() {
         return e.id == id;
     });
 
-    incomeView.onDeleteCallback(incomeView.data[deletedItemIndex]);
-
     if (deletedItemIndex >= 0) {
         incomeView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData(incomeView.data);
+    incomeView.onDeleteCallback(incomeView.data[deletedItemIndex]);
 }
 
-
 function updateOrderData(data) {
-    $('.js-income-page tr.row .js-order').each(function(index, element) {
+    $('.js-income-page tr.row .js-order').each(function (index, element) {
         let orderId = $(element).data('order-id');
         if (orderId == '') {
             return;
@@ -326,5 +312,24 @@ function updateOrderData(data) {
     });
 }
 
+function updateOrdersAutocomplete(orders) {
+    let source = orders.map(function (item) {
+        return {
+            order: item,
+            label: moment.unix(item.month).format("MM.YY") + ' / ' + item.contact + ' / ' + item.description
+        };
+    });
+
+    $(".js-income-page .js-add-order").autocomplete({
+        source: source,
+        minLength: 0,
+        select: function (event, ui) {
+            $('.js-add-order').data('order-id', ui.item.order.id);
+            $('.js-add-contact').val(ui.item.order.contact);
+        }
+    });
+
+    updateOrderData(orders);
+}
 
 module.exports.IncomeView = incomeView;

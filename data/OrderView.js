@@ -217,16 +217,17 @@ function onDeleteClick() {
     let row = $(this).closest('tr.row');
     let id = row.data('id');
 
-    orderView.onDeleteCallback(id);
 
     row.remove();
     let deletedItemIndex = orderView.data.findIndex(function (e) {
         return e.id == id;
     });
+
     if (deletedItemIndex >= 0) {
         orderView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData();
+    orderView.onDeleteCallback(orderView.data[deletedItemIndex]);
 }
 
 function updatePaymentData(data) {

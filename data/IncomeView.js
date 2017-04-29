@@ -67,6 +67,7 @@ IncomeView.prototype.setContacts = function (contacts) {
 IncomeView.prototype.insertIncome = function (item) {
     this.data.push(item);
     updateGraphData(this.data);
+    this.reloadGraph();
     insertIncomeToPage(item);
     updateOrderData(this.orders);
 };
@@ -83,6 +84,12 @@ IncomeView.prototype.setOrders = function (orders) {
 
 IncomeView.prototype.updateOrderData = function (type, order) {
     updateOrdersAutocomplete(this.orders);
+};
+
+IncomeView.prototype.reloadGraph = function() {
+    drawByMonth();
+    drawByYear();
+    drawAverage();
 };
 
 function drawByMonth() {
@@ -242,10 +249,6 @@ function updateGraphData(data) {
 
     incomeView.average = Math.round(incomeView.sum / Object.keys(incomeView.dataByMonth.data).length);
 
-    drawByMonth();
-    drawByYear();
-    drawAverage();
-
     $('.js-income-sum').text(incomeView.sum);
     $('.js-income-average').text(incomeView.average);
     $('.js-income-top').text(incomeView.topMonth.value);
@@ -291,6 +294,7 @@ function onDeleteClick() {
         incomeView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData(incomeView.data);
+    incomeView.reloadGraph();
     incomeView.onDeleteCallback(incomeView.data[deletedItemIndex]);
 }
 

@@ -60,12 +60,10 @@ ipcRenderer.on('order-data-inserted', function (event, data) {
 $(document).ready(function () {
     $('a').click(onLinkClick);
 
+    makeActive($('.js-tab.active'));
+
     $('.js-tab').click(function () {
-        let name = $(this).data('name');
-        $('.js-page').removeClass('active');
-        $('.js-tab').removeClass('active');
-        $(this).addClass('active');
-        $('.js-page[data-name="' + name + '"]').addClass('active');
+        makeActive($(this));
     });
 
     $(".js-income-page .js-income-add").on('submit', function (e) {
@@ -138,4 +136,25 @@ function onDeleteOrder(order) {
 function onDeleteIncome(income) {
     ipcRenderer.send('income-delete', income.id);
     orderView.updatePaymentData('delete', income);
+}
+
+function makeActive(tab) {
+    let name = tab.data('name');
+    $('.js-page').removeClass('active');
+    $('.js-tab').removeClass('active');
+    tab.addClass('active');
+    $('.js-page[data-name="' + name + '"]').addClass('active');
+
+    switch(name) {
+        case 'orders':
+            orderView.reloadGraph();
+            break;
+        case 'income':
+            incomeView.reloadGraph();
+            break;
+        case 'balance':
+            break;
+        default:
+            alert('Unknown tab name');
+    }
 }

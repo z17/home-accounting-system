@@ -86,7 +86,7 @@ table.data-table tr.row:hover .delete {
 }
 
 .page {
-    /*display: none;*/
+    display: none;
 }
 
 .page.active {

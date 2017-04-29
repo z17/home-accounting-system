@@ -66,6 +66,7 @@ OrderView.prototype.setContacts = function (contacts) {
 OrderView.prototype.insertOrder = function (item) {
     this.data.push(item);
     updateGraphData();
+    this.reloadGraph();
     insertOrderToPage(item);
 };
 
@@ -108,6 +109,11 @@ OrderView.prototype.updatePaymentData = function (type, item) {
     }
 
     updatePaymentData(this.paymentData);
+};
+
+OrderView.prototype.reloadGraph = function () {
+    drawTypesDiagram();
+    drawContactsDiagram();
 };
 
 function insertOrdersData() {
@@ -196,10 +202,6 @@ function updateGraphData() {
             orderView.dataByTypes.data[item.type] += item.sum;
         }
     });
-
-
-    drawTypesDiagram();
-    drawContactsDiagram();
 }
 
 function prepareChartData(chartData) {
@@ -227,6 +229,7 @@ function onDeleteClick() {
         orderView.data.splice(deletedItemIndex, 1);
     }
     updateGraphData();
+    orderView.reloadGraph();
     orderView.onDeleteCallback(orderView.data[deletedItemIndex]);
 }
 

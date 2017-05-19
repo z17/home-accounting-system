@@ -45,47 +45,8 @@ app.on('ready', function () {
             contacts = contacts.filter(functions.uniqueArrayFilter);
             mainWindow.webContents.send('income-contacts', contacts);
 
-            let paymentsByOrders = {};
-            data.forEach(function (income) {
-                if (income.orderId == null) {
-                    return;
-                }
-
-                if (paymentsByOrders[income.orderId] == undefined) {
-                    paymentsByOrders[income.orderId] = {
-                        payment: 0,
-                        prepayment: 0,
-                    }
-                }
-                if (income.orderPaymentType == entities.IncomeOrderPaymentType.PAYMENT.value) {
-                    paymentsByOrders[income.orderId].payment += income.sum;
-                } else if (income.orderPaymentType == entities.IncomeOrderPaymentType.PREPAYMENT.value) {
-                    paymentsByOrders[income.orderId].prepayment += income.sum;
-                } else {
-                    let error = "Error payment data with income " + income.id;
-                    console.log(error);
-                    mainWindow.webContents.send('error', error);
-                }
-            });
-            mainWindow.webContents.send('orders-payment-data', paymentsByOrders);
         });
 
-        Database.getOrders(function (data) {
-            mainWindow.webContents.send('orders-data', data);
-
-            let contacts = data.map(function (e) {
-                return e.contact;
-            });
-            contacts = contacts.filter(functions.uniqueArrayFilter);
-            mainWindow.webContents.send('order-contacts', contacts);
-
-
-            let types = data.map(function (e) {
-                return e.type;
-            });
-            types = types.filter(functions.uniqueArrayFilter);
-            mainWindow.webContents.send('order-types', types);
-        });
     });
 
     // и загружаем файл index.html нашего веб приложения.
@@ -117,17 +78,6 @@ app.on('ready', function () {
     ipcMain.on('income-edit', (event, income) => {
         console.log(income);
         event.returnValue = true;
-    });
-
-    ipcMain.on('order-add', (event, order) => {
-        Database.insertOrder(order,
-            function (inserted) {
-                mainWindow.webContents.send('order-data-inserted', inserted);
-            });
-    });
-
-    ipcMain.on('order-delete', (event, orderId) => {
-        Database.deleteOrder(orderId);
     });
 
 });

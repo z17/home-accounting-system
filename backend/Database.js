@@ -1,8 +1,7 @@
 const Datastore = require('nedb');
 
 let Tables = {
-    INCOME: 'income',
-    ORDER: 'order',
+    INCOME: 'income'
 };
 
 function Database() {
@@ -30,29 +29,6 @@ Database.prototype.deleteIncome = function (incomeId) {
     this.db.remove({
         type: Tables.INCOME,
         _id: incomeId
-    });
-};
-
-Database.prototype.insertOrder = function (order, callback) {
-    this.db.insert({
-        type: Tables.ORDER,
-        data: order
-    }, function (err, doc) {
-        callback(mapDataFromDB(doc));
-    });
-};
-
-Database.prototype.getOrders = function (callback) {
-    this.db.find({type: Tables.ORDER}, function (err, docs) {
-        let result = docs.map(mapDataFromDB);
-        callback(result);
-    });
-};
-
-Database.prototype.deleteOrder = function (orderId) {
-    this.db.remove({
-        type: Tables.ORDER,
-        _id: orderId
     });
 };
 

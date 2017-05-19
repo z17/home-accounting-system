@@ -117,14 +117,6 @@ table.data-table tr.row:hover .delete {
     text-align: left;
 }
 
-.inline-blocks .orders-chart, .inline-blocks .orders-data {
-    display: inline-block;
-    padding: 0 20px;
-    vertical-align: top;
-    min-width: 300px;
-    width: 40%;
-    text-align: left;
-}
 
 .inline-blocks .income-data {
     padding-top: 30px;
@@ -142,26 +134,3 @@ table.data-table tr.row:hover .delete {
     display: inline-block;
 }
 
-.js-orders-page .data-table tr.in-progress {
-    color: #00aa00;
-}
-
-.js-orders-page .data-table tr.in-progress a {
-    color: #00cc00;
-}
-
-.js-orders-page .data-table tr.payment {
-    color: #aa0000;
-}
-
-.js-orders-page .data-table tr.payment a {
-    color: #cc0000;
-}
-
-.js-orders-page .data-table tr.completed {
-    color: #777;
-}
-
-.js-orders-page .data-table tr.completed a {
-    color: #aaa;
-}

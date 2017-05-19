@@ -35,7 +35,6 @@ function IncomeView() {
         value: 0
     };
     this.onDeleteCallback = null;
-    this.orders = [];
 }
 
 const incomeView = new IncomeView();
@@ -69,21 +68,10 @@ IncomeView.prototype.insertIncome = function (item) {
     updateGraphData(this.data);
     this.reloadGraph();
     insertIncomeToPage(item);
-    updateOrderData(this.orders);
 };
 
 IncomeView.prototype.setCallbacks = function (onDeleteCallback) {
     this.onDeleteCallback = onDeleteCallback;
-};
-
-IncomeView.prototype.setOrders = function (orders) {
-    this.orders = orders;
-
-    updateOrdersAutocomplete(this.orders);
-};
-
-IncomeView.prototype.updateOrderData = function (type, order) {
-    updateOrdersAutocomplete(this.orders);
 };
 
 IncomeView.prototype.reloadGraph = function() {
@@ -143,7 +131,6 @@ function draw(chartData, width, height, chartId) {
 
 function insertIncomeData(data) {
     data.forEach(insertIncomeToPage);
-    updateOrderData(incomeView.orders);
 }
 
 function updateGraphData(data) {
@@ -275,8 +262,6 @@ function insertIncomeToPage(item) {
     row.find('.js-payment-type').text(item.paymentType);
     row.find('.js-contact').text(item.contact);
     row.find('.js-description').text(item.description);
-    row.find('.js-order').data('order-id', item.orderId);
-    row.find('.js-order-payment').text(item.orderPaymentType);
     row.insertBefore(rowExample);
 }
 
@@ -298,42 +283,5 @@ function onDeleteClick() {
     incomeView.onDeleteCallback(incomeView.data[deletedItemIndex]);
 }
 
-function updateOrderData(data) {
-    $('.js-income-page tr.row .js-order').each(function (index, element) {
-        let orderId = $(element).data('order-id');
-        if (orderId == '') {
-            return;
-        }
-
-        let order = data.find(function (item) {
-            return item.id == orderId;
-        });
-        if (order == undefined) {
-            $(element).text('deleted order');
-            return;
-        }
-        $(element).text(moment.unix(order.month).format("MM.YY") + ' / ' + order.contact + ' / ' + order.description);
-    });
-}
-
-function updateOrdersAutocomplete(orders) {
-    let source = orders.map(function (item) {
-        return {
-            order: item,
-            label: moment.unix(item.month).format("MM.YY") + ' / ' + item.contact + ' / ' + item.description
-        };
-    });
-
-    $(".js-income-page .js-add-order").autocomplete({
-        source: source,
-        minLength: 0,
-        select: function (event, ui) {
-            $('.js-add-order').data('order-id', ui.item.order.id);
-            $('.js-add-contact').val(ui.item.order.contact);
-        }
-    });
-
-    updateOrderData(orders);
-}
 
 module.exports.IncomeView = incomeView;

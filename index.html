@@ -34,14 +34,12 @@
             </div>
             <table class="data-table">
                 <tr>
-                    <th>Дата</th>
-                    <th>Месяц</th>
-                    <th>Сумма</th>
-                    <th>Тип</th>
-                    <th>Контакт</th>
+                    <th>Date</th>
+                    <th>Month</th>
+                    <th>Sum</th>
+                    <th>Type</th>
+                    <th>Contact</th>
                     <th>Description</th>
-                    <th>Order</th>
-                    <th>Order payment type</th>
                 </tr>
                 <tr class="js-row row">
                     <td class="js-date"></td>
@@ -49,9 +47,9 @@
                     <td class="js-sum"></td>
                     <td class="js-payment-type"></td>
                     <td class="js-contact"></td>
-                    <td class="js-description"></td>
-                    <td class="js-order"></td>
-                    <td><span class="js-order-payment"></span><span class="delete js-delete">&#10006;</span></td>
+                    <td>
+                        <span class="js-description"></span><span class="delete js-delete">&#10006;</span>
+                    </td>
                 </tr>
                 <tr class="form">
                     <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
@@ -64,16 +62,6 @@
                     </td>
                     <td>
                         <input class="js-add-description" form="income-form" type="text" placeholder="Description"/>
-                    </td>
-                    <td>
-                        <input class="js-add-order" form="income-form" type="text" placeholder="Order" />
-                    </td>
-                    <td>
-                        <select class="js-add-order-payment" form="income-form" title="Order payment type" required>
-                            <option>--</option>
-                            <option>payment</option>
-                            <option>prepayment</option>
-                        </select>
                         <input class="submit js-submit" form="income-form" type="submit"/>
                     </td>
                 </tr>
@@ -81,63 +69,6 @@
             <form action="#" id="income-form" class="js-income-add">
             </form>
         </div>
-        <div class="js-orders-page js-page page" data-name="orders">
-            <h1>Orders</h1>
-            <div>
-
-                <div class="inline-blocks">
-                    <div class="orders-chart" id="js-order-types-chart"></div>
-                    <div class="orders-chart" id="js-order-contacts-chart"></div>
-                </div>
-            </div>
-            <table class="data-table">
-                <tr>
-                    <th>Месяц</th>
-                    <th>Сумма</th>
-                    <th>Предоплата</th>
-                    <th>Оплата</th>
-                    <th>Затраты</th>
-                    <th>Контакт</th>
-                    <th>Тип</th>
-                    <th>Описание</th>
-                    <th>Ссылка</th>
-                    <th>Статус</th>
-                </tr>
-                <tr class="js-row row">
-                    <td class="js-month"></td>
-                    <td class="js-sum"></td>
-                    <td class="js-prepayment"></td>
-                    <td class="js-payment"></td>
-                    <td class="js-expenses"></td>
-                    <td class="js-contact"></td>
-                    <td class="js-type"></td>
-                    <td class="js-description"></td>
-                    <td class="js-link"></td>
-                    <td><span class="js-status"></span><span class="delete js-delete">&#10006;</span></td>
-                </tr>
-                <tr class="form">
-                    <td><input class="js-add-month" form="order-form" type="month" placeholder="Month" required/></td>
-                    <td><input class="js-add-sum" form="order-form" type="number" placeholder="Sum" required/></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><input class="js-add-contact" form="order-form" type="text" placeholder="Contact" required/>
-                    </td>
-                    <td><input class="js-add-type" form="order-form" type="text" placeholder="Type" required/></td>
-                    <td><input class="js-add-description" form="order-form" type="text" placeholder="Description"
-                               required/></td>
-                    <td><input class="js-add-link" form="order-form" type="text" placeholder="Link"/></td>
-                    <td>
-                        <select class="js-add-status" form="order-form" title="Status" required>
-                        </select>
-                        <input class="submit js-submit" form="order-form" type="submit"/>
-                    </td>
-                </tr>
-            </table>
-            <form action="#" id="order-form" class="js-orders-add">
-            </form>
-        </div>
-
         <div class="js-orders-page js-page page" data-name="balance">
             <h1>Баланс</h1>
         </div>
@@ -145,7 +76,6 @@
     <div class="footer">
         <div class="tabs">
             <a class="tab js-tab active" data-name="income">Доход</a>
-            <a class="tab js-tab" data-name="orders">Заказы</a>
             <a class="tab js-tab" data-name="balance">Баланс</a>
         </div>
     </div>

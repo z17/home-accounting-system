@@ -21,7 +21,7 @@ app.on('window-all-closed', function () {
     }
 });
 
-// Этот метод будет вызван когда Electron закончит инициализацию 
+// Этот метод будет вызван когда Electron закончит инициализацию
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
     const Database = new database.Database();
@@ -65,7 +65,7 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-add', (event, income) => {
-        Database.insertIncome(income,
+        Database.insert(income, 'income',
             function (inserted) {
                 mainWindow.webContents.send('income-data-inserted', inserted);
             });

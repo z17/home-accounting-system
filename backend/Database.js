@@ -1,34 +1,33 @@
 const Datastore = require('nedb');
 
-let Tables = {
-    INCOME: 'income'
-};
-
 function Database() {
     this.db = new Datastore({filename: 'db/database'});
     this.db.loadDatabase();
 }
 
-Database.prototype.insertIncome = function (income, callback) {
+Database.prototype.insert = function (data, type, callback) {
     this.db.insert({
-        type: Tables.INCOME,
-        data: income
+        type: type,
+        data: data
     }, function (err, doc) {
+        if (err) {
+          throw new Error(err);
+        }
         callback(mapDataFromDB(doc));
     });
 };
 
-Database.prototype.getIncomes = function (callback) {
-    this.db.find({type: Tables.INCOME}, function (err, docs) {
+Database.prototype.get = function (type, callback) {
+    this.db.find({type: type}, function (err, docs) {
         let result = docs.map(mapDataFromDB);
         callback(result);
     });
 };
 
-Database.prototype.deleteIncome = function (incomeId) {
+Database.prototype.delete = function (type, id) {
     this.db.remove({
-        type: Tables.INCOME,
-        _id: incomeId
+        type: type,
+        _id: id
     });
 };
 

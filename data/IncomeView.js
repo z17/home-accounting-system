@@ -1,4 +1,4 @@
-function IncomeView() {
+function IncomeView(onDeleteCallback) {
     this.data = {};
     this.dataByMonth = {
         title: "Income by month",
@@ -34,7 +34,7 @@ function IncomeView() {
         name: '',
         value: 0
     };
-    this.onDeleteCallback = null;
+    this.onDeleteCallback = onDeleteCallback;
 }
 
 const incomeView = new IncomeView();
@@ -68,10 +68,6 @@ IncomeView.prototype.insertIncome = function (item) {
     updateGraphData(this.data);
     this.reloadGraph();
     insertIncomeToPage(item);
-};
-
-IncomeView.prototype.setCallbacks = function (onDeleteCallback) {
-    this.onDeleteCallback = onDeleteCallback;
 };
 
 IncomeView.prototype.reloadGraph = function() {
@@ -284,4 +280,4 @@ function onDeleteClick() {
 }
 
 
-module.exports.IncomeView = incomeView;
+module.exports = incomeView; //TODO fix this shit

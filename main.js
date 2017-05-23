@@ -1,5 +1,4 @@
 const electron = require('electron');
-const entities = require('./data/entities.js');
 const database = require('./backend/Database');
 const functions = require('./backend/functions');
 
@@ -30,7 +29,7 @@ app.on('ready', function () {
     mainWindow.maximize();
 
     mainWindow.webContents.on('dom-ready', function () {
-        Database.getIncomes(function (data) {
+        Database.get('income', function (data) {
             mainWindow.webContents.send('income-data', data);
 
             let paymentTypes = data.map(function (e) {
@@ -53,7 +52,7 @@ app.on('ready', function () {
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     // mainWindow.setMenu(null);
 
-    // Открываем DevTools.
+    // TODO hide it in prod mode
     mainWindow.webContents.openDevTools();
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.

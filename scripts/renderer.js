@@ -1,11 +1,9 @@
 const ipcRenderer = require('electron').ipcRenderer;
-const incomeView = require('../data/IncomeView.js').IncomeView;
-const Income = require('../data/entities.js').Income;
+const incomeView = require('../data/IncomeView.js');
+incomeView.onDeleteCallback = onDeleteIncome; //TODO fix this shit
 const shell = require('electron').shell;
 
 google.charts.load("current", {packages: ['corechart']});
-
-incomeView.setCallbacks(onDeleteIncome);
 
 ipcRenderer.on('error', function (event, data) {
     alert(data);
@@ -29,9 +27,9 @@ ipcRenderer.on('income-data-inserted', function (event, data) {
 
 
 $(document).ready(function () {
-    $('a').click(onLinkClick);
-
     makeActive($('.js-tab.active'));
+
+    $('a').click(onLinkClick);
 
     $('.js-tab').click(function () {
         makeActive($(this));
@@ -50,9 +48,9 @@ $(document).ready(function () {
             return;
         }
 
-        let data = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+        const incomeItem = require('../models/income.js')(moment(date), moment(month), parseInt(sum), type, contact, description);
 
-        ipcRenderer.send('income-add', data);
+        ipcRenderer.send('income-add', incomeItem);
     });
 });
 

@@ -1,4 +1,4 @@
-let Income = function (date, month, sum, paymentType, contact, description) {
+module.exports = (date, month, sum, paymentType, contact, description) => {
     this.id = null;
     this.date = date.unix();
     this.month = month.unix();
@@ -7,5 +7,3 @@ let Income = function (date, month, sum, paymentType, contact, description) {
     this.contact = contact;
     this.description = description;
 };
-
-module.exports.Income = Income;

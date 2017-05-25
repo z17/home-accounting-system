@@ -2,6 +2,9 @@ const electron = require('electron');
 const database = require('./backend/Database');
 const functions = require('./backend/functions');
 
+let locals = {'name': 'Hey'};
+const pug = require('electron-pug');
+const pugExec = pug({pretty: true}, locals);
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
@@ -24,9 +27,13 @@ app.on('window-all-closed', function () {
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
     const Database = new database.Database();
+    Database.drop();
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
+    // и загружаем файл index.html нашего веб приложения.
+    // mainWindow.loadURL('file://' + __dirname + '/index.html');
+    mainWindow.loadURL(`file://${__dirname}/index.pug`);
 
     mainWindow.webContents.on('dom-ready', function () {
         Database.get('income', function (data) {
@@ -48,8 +55,6 @@ app.on('ready', function () {
 
     });
 
-    // и загружаем файл index.html нашего веб приложения.
-    mainWindow.loadURL('file://' + __dirname + '/index.html');
     // mainWindow.setMenu(null);
 
     // TODO hide it in prod mode
@@ -64,6 +69,7 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-add', (event, income) => {
+        console.log(income, 'main');
         Database.insert(income, 'income',
             function (inserted) {
                 mainWindow.webContents.send('income-data-inserted', inserted);
@@ -71,7 +77,10 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-delete', (event, incomeId) => {
-        Database.deleteIncome(incomeId);
+        console.log(incomeId, 'check');
+        Database.delete('income', incomeId, () => {
+          mainWindow.webContents.send('income-data-deleted', incomeId);
+        });
     });
 
     ipcMain.on('income-edit', (event, income) => {

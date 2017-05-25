@@ -1,4 +1,4 @@
-function IncomeView(onDeleteCallback) {
+function IncomeView() {
     this.data = {};
     this.dataByMonth = {
         title: "Income by month",
@@ -34,19 +34,15 @@ function IncomeView(onDeleteCallback) {
         name: '',
         value: 0
     };
-    this.onDeleteCallback = onDeleteCallback;
 }
-
-const incomeView = new IncomeView();
 
 IncomeView.prototype.setData = function (data) {
     data.sort(function (a, b) {
         return a.date - b.date;
     });
     this.data = data;
-
     insertIncomeData(data);
-    updateGraphData(data);
+    updateGraphData(this);
 };
 
 IncomeView.prototype.setPaymentTypes = function (types) {
@@ -65,27 +61,38 @@ IncomeView.prototype.setContacts = function (contacts) {
 
 IncomeView.prototype.insertIncome = function (item) {
     this.data.push(item);
-    updateGraphData(this.data);
+    updateGraphData(this);
     this.reloadGraph();
     insertIncomeToPage(item);
 };
 
+IncomeView.prototype.deleteIncome = function(id) {
+  for (let i = 0; i < this.data.length; i++) {
+    if (this.data[i]['_id'] === id) {
+      this.data.splice(i, 1);
+    }
+  }
+}
 IncomeView.prototype.reloadGraph = function() {
-    drawByMonth();
-    drawByYear();
-    drawAverage();
+    drawByMonth(this);
+    drawByYear(this);
+    drawAverage(this);
 };
 
-function drawByMonth() {
-    draw(incomeView.dataByMonth, '100%', 400, "js-income-month-chart");
+function drawByMonth(incomeItem) {
+    if (!incomeItem.dataByMonth) {
+      throw new Error('There is no month data in this item');
+    } else {
+      draw(incomeItem.dataByMonth, '100%', 400, "js-income-month-chart");
+    }
 }
 
-function drawByYear() {
-    draw(incomeView.dataByYear, '100%', 300, "js-income-year-chart");
+function drawByYear(incomeItem) {
+    draw(incomeItem.dataByYear, '100%', 300, "js-income-year-chart");
 }
 
-function drawAverage() {
-    draw(incomeView.dataAverage, '100%', 300, "js-income-average-chart");
+function drawAverage(incomeItem) {
+    draw(incomeItem.dataAverage, '100%', 300, "js-income-average-chart");
 }
 
 function draw(chartData, width, height, chartId) {
@@ -129,18 +136,19 @@ function insertIncomeData(data) {
     data.forEach(insertIncomeToPage);
 }
 
-function updateGraphData(data) {
+//ok to stay
+function updateGraphData(incomeItem) {
+    let data = incomeItem.data;
     let firstMonth = moment().startOf('month');
     let firstYear = moment().startOf('year');
     let lastMonth = moment().startOf('month');
     let lastYear = moment().startOf('year');
     if (data.length != 0) {
-        firstMonth = moment.unix(data[0].month).startOf('month');
-        firstYear = moment.unix(data[0].month).startOf('year');
-        lastMonth = moment.unix(data[data.length - 1].month).startOf('month');
-        lastYear = moment.unix(data[data.length - 1].month).startOf('year');
+        firstMonth = moment.unix(data[0]['data']['month']).startOf('month');
+        firstYear = moment.unix(data[0]['data']['month']).startOf('year');
+        lastMonth = moment.unix(data[data.length - 1]['data']['month']).startOf('month');
+        lastYear = moment.unix(data[data.length - 1]['data']['month']).startOf('year');
     }
-
     let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
     let countYears = lastYear.diff(firstYear, 'years', false) + 1;
 
@@ -159,16 +167,16 @@ function updateGraphData(data) {
     }
 
     data.forEach(function (element) {
-        incomeView.sum += element.sum;
+        incomeItem.sum += element.data.sum;
 
-        let month = moment.unix(element.month).format("MMM YYYY");
-        dataByMonth[month] += element.sum;
+        let month = moment.unix(element.data.month).format("MMM YYYY");
+        dataByMonth[month] += element.data.sum;
 
-        let year = moment.unix(element.month).format("YYYY");
-        dataByYear[year] += element.sum;
+        let year = moment.unix(element.data.month).format("YYYY");
+        dataByYear[year] += element.data.sum;
 
         // если разница меньше нуля, значит анализируется месяц за прошлые годы, если 0, значит сейчас январь и нужно эти данные пропустить
-        let monthDiff = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false);
+        let monthDiff = moment.unix(element.data.month).startOf('month').diff(moment().startOf('year'), 'months', false);
         if (monthDiff < 0) {
             monthDiff = 12;
         }
@@ -176,21 +184,21 @@ function updateGraphData(data) {
             return;
         }
 
-        dataAverage[year] += element.sum / monthDiff;
+        dataAverage[year] += element.data.sum / monthDiff;
     });
 
-    incomeView.dataByMonth.data = [];
+    incomeItem.dataByMonth.data = [];
     for (let property in dataByMonth) {
         if (dataByMonth.hasOwnProperty(property)) {
-            if (incomeView.topMonth.value < dataByMonth[property] || incomeView.topMonth.name === '') {
-                incomeView.topMonth.value = dataByMonth[property];
-                incomeView.topMonth.name = property;
+            if (incomeItem.topMonth.value < dataByMonth[property] || incomeItem.topMonth.name === '') {
+                incomeItem.topMonth.value = dataByMonth[property];
+                incomeItem.topMonth.name = property;
             }
-            if (incomeView.worstMonth.value > dataByMonth[property] || incomeView.worstMonth.name === '') {
-                incomeView.worstMonth.value = dataByMonth[property];
-                incomeView.worstMonth.name = property;
+            if (incomeItem.worstMonth.value > dataByMonth[property] || incomeItem.worstMonth.name === '') {
+                incomeItem.worstMonth.value = dataByMonth[property];
+                incomeItem.worstMonth.name = property;
             }
-            incomeView.dataByMonth.data.push({
+            incomeItem.dataByMonth.data.push({
                 name: property,
                 value: dataByMonth[property],
                 time: moment(property, "MMM YYYY").unix()
@@ -198,10 +206,10 @@ function updateGraphData(data) {
         }
     }
 
-    incomeView.dataByYear.data = [];
+    incomeItem.dataByYear.data = [];
     for (let property in dataByYear) {
         if (dataByYear.hasOwnProperty(property)) {
-            incomeView.dataByYear.data.push({
+            incomeItem.dataByYear.data.push({
                 name: property,
                 value: dataByYear[property],
                 time: moment(property, "YYYY").unix()
@@ -209,10 +217,10 @@ function updateGraphData(data) {
         }
     }
 
-    incomeView.dataAverage.data = [];
+    incomeItem.dataAverage.data = [];
     for (let property in dataAverage) {
         if (dataAverage.hasOwnProperty(property)) {
-            incomeView.dataAverage.data.push({
+            incomeItem.dataAverage.data.push({
                 name: property,
                 value: dataAverage[property],
                 time: moment(property, "YYYY").unix()
@@ -220,24 +228,24 @@ function updateGraphData(data) {
         }
     }
 
-    incomeView.dataByMonth.data.sort(function (a, b) {
+    incomeItem.dataByMonth.data.sort(function (a, b) {
         return a.time - b.time;
     });
-    incomeView.dataByYear.data.sort(function (a, b) {
+    incomeItem.dataByYear.data.sort(function (a, b) {
         return a.time - b.time;
     });
-    incomeView.dataAverage.data.sort(function (a, b) {
+    incomeItem.dataAverage.data.sort(function (a, b) {
         return a.time - b.time;
     });
 
-    incomeView.average = Math.round(incomeView.sum / Object.keys(incomeView.dataByMonth.data).length);
-
-    $('.js-income-sum').text(incomeView.sum);
-    $('.js-income-average').text(incomeView.average);
-    $('.js-income-top').text(incomeView.topMonth.value);
-    $('.js-income-worst').text(incomeView.worstMonth.value);
+    incomeItem.average = Math.round(incomeItem.sum / Object.keys(incomeItem.dataByMonth.data).length);
+    $('.js-income-sum').text(incomeItem.sum);
+    $('.js-income-average').text(incomeItem.average);
+    $('.js-income-top').text(incomeItem.topMonth.value);
+    $('.js-income-worst').text(incomeItem.worstMonth.value);
 }
 
+//ok to stay
 function prepareChartData(chartData) {
     let data = [chartData.cols];
     data = data.concat(chartData.data.map(function (element) {
@@ -246,19 +254,27 @@ function prepareChartData(chartData) {
     return google.visualization.arrayToDataTable(data);
 }
 
+//ok to stay
 function insertIncomeToPage(item) {
-    let rowExample = $('.js-income-page .js-row');
-    let row = rowExample.clone();
-    row.removeClass('js-row');
-    row.data('id', item.id);
-    row.find('.js-delete').click(onDeleteClick);
-    row.find('.js-date').text(moment.unix(item.date).format("DD.MM.YYYY"));
-    row.find('.js-month').text(moment.unix(item.month).format("MMM YYYY"));
-    row.find('.js-sum').text(item.sum);
-    row.find('.js-payment-type').text(item.paymentType);
-    row.find('.js-contact').text(item.contact);
-    row.find('.js-description').text(item.description);
-    row.insertBefore(rowExample);
+    if (item.data) {
+        let id = item._id.toString();
+        let rowExample = document.querySelector('.js-income-page .js-row');
+        let row = rowExample.cloneNode(true);
+        console.log(row);
+        row.classList.remove('js-row');
+        row.dataset.id = id;
+        row.querySelector('.js-delete').dataset.id = id;
+        row.querySelector('.js-date').textContent = moment.unix(item.data.date).format("DD.MM.YYYY");
+        row.querySelector('.js-month').textContent = moment.unix(item.data.month).format("MMM YYYY");
+        row.querySelector('.js-sum').textContent = item.data.sum;
+        row.querySelector('.js-payment-type').textContent = item.data.paymentType;
+        row.querySelector('.js-contact').textContent = item.data.contact;
+        row.querySelector('.js-description').textContent = item.data.description;
+        let rowParent = rowExample.parentNode;
+        rowParent.insertBefore(row, rowExample);
+    } else {
+      throw new Error('error in schema');
+    }
 }
 
 function onDeleteClick() {
@@ -267,9 +283,6 @@ function onDeleteClick() {
     let id = row.data('id');
 
     row.remove();
-    let deletedItemIndex = incomeView.data.findIndex(function (e) {
-        return e.id == id;
-    });
 
     if (deletedItemIndex >= 0) {
         incomeView.data.splice(deletedItemIndex, 1);
@@ -280,4 +293,4 @@ function onDeleteClick() {
 }
 
 
-module.exports = incomeView; //TODO fix this shit
+module.exports = IncomeView;

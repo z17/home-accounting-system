@@ -1,6 +1,6 @@
 const ipcRenderer = require('electron').ipcRenderer;
-const incomeView = require('../data/IncomeView.js');
-incomeView.onDeleteCallback = onDeleteIncome; //TODO fix this shit
+const IncomeView = require('../data/IncomeView.js');
+const incomeView = new IncomeView();
 const shell = require('electron').shell;
 
 google.charts.load("current", {packages: ['corechart']});
@@ -10,6 +10,7 @@ ipcRenderer.on('error', function (event, data) {
 });
 
 ipcRenderer.on('income-data', function (event, data) {
+    console.log(incomeView);
     incomeView.setData(data);
 });
 
@@ -21,15 +22,32 @@ ipcRenderer.on('income-contacts' ,function (event, data) {
     incomeView.setContacts(data);
 });
 
-ipcRenderer.on('income-data-inserted', function (event, data) {
-    incomeView.insertIncome(data);
+ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
+    if (incomeItem.data) {
+      incomeView.insertIncome(incomeItem);
+    } else {
+      throw new Error('Something went wrong with income schema');
+    }
 });
 
+ipcRenderer.on('income-data-deleted', function (event, id) {
+      incomeView.deleteIncome(id);
+      console.log(incomeView);
+});
 
 $(document).ready(function () {
     makeActive($('.js-tab.active'));
 
     $('a').click(onLinkClick);
+
+    $(document).click(function (e) {
+      if (e.target.classList.contains('js-delete')) {
+        let row = e.target.closest('tr');
+        let id = row.dataset.id.toString();
+        row.remove();
+        ipcRenderer.send('income-delete', id);
+      }
+    });
 
     $('.js-tab').click(function () {
         makeActive($(this));
@@ -49,7 +67,6 @@ $(document).ready(function () {
         }
 
         const incomeItem = require('../models/income.js')(moment(date), moment(month), parseInt(sum), type, contact, description);
-
         ipcRenderer.send('income-add', incomeItem);
     });
 });

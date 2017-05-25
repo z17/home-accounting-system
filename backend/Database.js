@@ -13,27 +13,30 @@ Database.prototype.insert = function (data, type, callback) {
         if (err) {
           throw new Error(err);
         }
-        callback(mapDataFromDB(doc));
+        console.log(doc);
+        callback(doc);
     });
 };
 
 Database.prototype.get = function (type, callback) {
     this.db.find({type: type}, function (err, docs) {
-        let result = docs.map(mapDataFromDB);
-        callback(result);
+        callback(docs);
     });
 };
 
-Database.prototype.delete = function (type, id) {
+Database.prototype.delete = function (type, id, callback) {
     this.db.remove({
         type: type,
         _id: id
+    }, {}, function(err, del) {
+      if (err) {
+        throw new Error(err);
+      }
+      callback(id);
     });
 };
-
-function mapDataFromDB(item) {
-    let data = item.data;
-    data.id = item._id;
-    return data;
-}
+Database.prototype.drop = function () {
+    this.db.remove({}, { multi: true }, function (err, numRemoved) {
+    });
+};
 module.exports.Database = Database;

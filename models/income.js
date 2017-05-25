@@ -6,4 +6,5 @@ module.exports = (date, month, sum, paymentType, contact, description) => {
     this.paymentType = paymentType;
     this.contact = contact;
     this.description = description;
+    return this;
 };

@@ -2,6 +2,7 @@ html,
 body,
 .wrapper {
     height: 100%;
+    margin: 0;
 }
 
 * {
@@ -9,9 +10,9 @@ body,
 }
 
 .content {
+    padding: 10px 10px 60px 10px;
     box-sizing: border-box;
     min-height: 100%;
-    padding-bottom: 60px;
 }
 
 .footer {
@@ -134,3 +135,39 @@ table.data-table tr.row:hover .delete {
     display: inline-block;
 }
 
+.settings-button {
+    position: absolute;
+    top:0;
+    right:0;
+    cursor: pointer;
+    border:1px solid #aaa;
+    margin: 20px 20px 0 0;
+    padding: 5px 8px;
+    z-index: 100;
+}
+.settings-button.active {
+    background:#aaa;
+}
+
+.settings-page {
+    display: none;
+    position: fixed;
+    width:100%;
+    height: 100%;
+    background: #fff;
+    z-index: 50;
+    padding: 10px;
+}
+
+.settings-page.active {
+    display: block;
+}
+
+.setting-form label {
+    display: block;
+    margin:15px 0;
+}
+
+.settings-response.error {
+    color:#ff0000;
+}

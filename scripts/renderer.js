@@ -2,6 +2,7 @@ const ipcRenderer = require('electron').ipcRenderer;
 const IncomeView = require('../data/IncomeView.js');
 const incomeView = new IncomeView();
 const shell = require('electron').shell;
+const Income = require('../models/income.js');
 
 google.charts.load("current", {packages: ['corechart']});
 
@@ -14,25 +15,36 @@ ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
 });
 
-ipcRenderer.on('income-payment-types' ,function (event, data) {
+ipcRenderer.on('income-payment-types', function (event, data) {
     incomeView.setPaymentTypes(data);
 });
 
-ipcRenderer.on('income-contacts' ,function (event, data) {
+ipcRenderer.on('income-contacts', function (event, data) {
     incomeView.setContacts(data);
 });
 
-ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
-    if (incomeItem.data) {
-      incomeView.insertIncome(incomeItem);
-    } else {
-      throw new Error('Something went wrong with income schema');
+ipcRenderer.on('settings', function (event, data) {
+    if (data.length == 0) {
+        return
     }
+
+    if (data.length > 1) {
+        throw new Error("Settings error");
+    }
+
+    let settings = data[0];
+
+    $('.js-settings-remind').prop("checked", settings.remind);
+    $('.js-settings-email').val(settings.email);
+
+});
+
+ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
+    incomeView.insertIncome(incomeItem);
 });
 
 ipcRenderer.on('income-data-deleted', function (event, id) {
-      incomeView.deleteIncome(id);
-      console.log(incomeView);
+    incomeView.deleteIncome(id);
 });
 
 $(document).ready(function () {
@@ -66,8 +78,38 @@ $(document).ready(function () {
             return;
         }
 
-        const incomeItem = require('../models/income.js')(moment(date), moment(month), parseInt(sum), type, contact, description);
+        const incomeItem = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
         ipcRenderer.send('income-add', incomeItem);
+    });
+
+    $(".js-settings-button").click(function () {
+        $(".js-settings-button").toggleClass("active");
+        $(".js-settings-page").toggleClass("active");
+    });
+
+    $(".js-settings-form").on('submit', function (e) {
+        e.preventDefault();
+
+        let response = $('.js-settings-response');
+
+        let remindFlag = $('.js-settings-remind').is(":checked");
+        let remindEmail = $('.js-settings-email').val();
+
+        if (remindFlag === true && remindEmail.length == 0) {
+            response.text("Empty email");
+            response.addClass("error");
+            return;
+        }
+
+        let settings = {
+            remind: remindFlag,
+            email: remindEmail
+        };
+
+        ipcRenderer.send('update-settings', settings);
+
+        response.removeClass("error");
+        response.text("ok");
     });
 });
 
@@ -78,11 +120,6 @@ function onLinkClick(e) {
     }
 }
 
-function onDeleteIncome(income) {
-    ipcRenderer.send('income-delete', income.id);
-    orderView.updatePaymentData('delete', income);
-}
-
 function makeActive(tab) {
     let name = tab.data('name');
     $('.js-page').removeClass('active');
@@ -90,7 +127,7 @@ function makeActive(tab) {
     tab.addClass('active');
     $('.js-page[data-name="' + name + '"]').addClass('active');
 
-    switch(name) {
+    switch (name) {
         case 'income':
             incomeView.reloadGraph();
             break;

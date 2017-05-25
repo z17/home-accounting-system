@@ -1,10 +1,8 @@
 const electron = require('electron');
-const database = require('./backend/Database');
+const Dao = require('./backend/Dao').Dao;
 const functions = require('./backend/functions');
 
 let locals = {'name': 'Hey'};
-const pug = require('electron-pug');
-const pugExec = pug({pretty: true}, locals);
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
@@ -26,17 +24,17 @@ app.on('window-all-closed', function () {
 // Этот метод будет вызван когда Electron закончит инициализацию
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
-    const Database = new database.Database();
-    Database.drop();
+    const dao = new Dao();
+    // dao.drop();
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
     // и загружаем файл index.html нашего веб приложения.
     // mainWindow.loadURL('file://' + __dirname + '/index.html');
-    mainWindow.loadURL(`file://${__dirname}/index.pug`);
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {
-        Database.get('income', function (data) {
+        dao.getIncomes(function (data) {
             mainWindow.webContents.send('income-data', data);
 
             let paymentTypes = data.map(function (e) {
@@ -51,6 +49,10 @@ app.on('ready', function () {
             contacts = contacts.filter(functions.uniqueArrayFilter);
             mainWindow.webContents.send('income-contacts', contacts);
 
+        });
+
+        dao.getSettings(function (settings) {
+            mainWindow.webContents.send('settings', settings);
         });
 
     });
@@ -70,21 +72,24 @@ app.on('ready', function () {
 
     ipcMain.on('income-add', (event, income) => {
         console.log(income, 'main');
-        Database.insert(income, 'income',
+        dao.insertIncome(income,
             function (inserted) {
                 mainWindow.webContents.send('income-data-inserted', inserted);
             });
     });
 
     ipcMain.on('income-delete', (event, incomeId) => {
-        console.log(incomeId, 'check');
-        Database.delete('income', incomeId, () => {
+        dao.deleteIncome(incomeId, () => {
           mainWindow.webContents.send('income-data-deleted', incomeId);
         });
     });
 
     ipcMain.on('income-edit', (event, income) => {
-        console.log(income);
+        event.returnValue = true;
+    });
+
+    ipcMain.on('update-settings', (event, settings) => {
+        dao.updateSettings(settings);
         event.returnValue = true;
     });
 

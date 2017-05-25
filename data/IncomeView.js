@@ -1,3 +1,5 @@
+const functions = require('../backend/functions');
+
 function IncomeView() {
     this.data = {};
     this.dataByMonth = {
@@ -66,14 +68,22 @@ IncomeView.prototype.insertIncome = function (item) {
     insertIncomeToPage(item);
 };
 
-IncomeView.prototype.deleteIncome = function(id) {
-  for (let i = 0; i < this.data.length; i++) {
-    if (this.data[i]['_id'] === id) {
-      this.data.splice(i, 1);
+IncomeView.prototype.deleteIncome = function (id) {
+    for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i]['id'] === id) {
+            this.data.splice(i, 1);
+            break;
+        }
     }
-  }
-}
-IncomeView.prototype.reloadGraph = function() {
+
+    updateGraphData(this);
+    this.reloadGraph();
+
+
+    // todo: delete row here
+};
+
+IncomeView.prototype.reloadGraph = function () {
     drawByMonth(this);
     drawByYear(this);
     drawAverage(this);
@@ -81,9 +91,9 @@ IncomeView.prototype.reloadGraph = function() {
 
 function drawByMonth(incomeItem) {
     if (!incomeItem.dataByMonth) {
-      throw new Error('There is no month data in this item');
+        throw new Error('There is no month data in this item');
     } else {
-      draw(incomeItem.dataByMonth, '100%', 400, "js-income-month-chart");
+        draw(incomeItem.dataByMonth, '100%', 400, "js-income-month-chart");
     }
 }
 
@@ -144,10 +154,10 @@ function updateGraphData(incomeItem) {
     let lastMonth = moment().startOf('month');
     let lastYear = moment().startOf('year');
     if (data.length != 0) {
-        firstMonth = moment.unix(data[0]['data']['month']).startOf('month');
-        firstYear = moment.unix(data[0]['data']['month']).startOf('year');
-        lastMonth = moment.unix(data[data.length - 1]['data']['month']).startOf('month');
-        lastYear = moment.unix(data[data.length - 1]['data']['month']).startOf('year');
+        firstMonth = moment.unix(data[0]['month']).startOf('month');
+        firstYear = moment.unix(data[0]['month']).startOf('year');
+        lastMonth = moment.unix(data[data.length - 1]['month']).startOf('month');
+        lastYear = moment.unix(data[data.length - 1]['month']).startOf('year');
     }
     let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
     let countYears = lastYear.diff(firstYear, 'years', false) + 1;
@@ -167,24 +177,27 @@ function updateGraphData(incomeItem) {
     }
 
     data.forEach(function (element) {
-        incomeItem.sum += element.data.sum;
+        incomeItem.sum += element.sum;
 
-        let month = moment.unix(element.data.month).format("MMM YYYY");
-        dataByMonth[month] += element.data.sum;
+        let month = moment.unix(element.month).format("MMM YYYY");
+        dataByMonth[month] += element.sum;
 
-        let year = moment.unix(element.data.month).format("YYYY");
-        dataByYear[year] += element.data.sum;
+        let year = moment.unix(element.month).format("YYYY");
+        dataByYear[year] += element.sum;
 
-        // если разница меньше нуля, значит анализируется месяц за прошлые годы, если 0, значит сейчас январь и нужно эти данные пропустить
-        let monthDiff = moment.unix(element.data.month).startOf('month').diff(moment().startOf('year'), 'months', false);
-        if (monthDiff < 0) {
-            monthDiff = 12;
+        // если разница меньше нуля, значит анализируется месяц за прошлые годы
+        let monthDiff = 12;
+        let isPreviousYear = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false) < 0;
+        if (!isPreviousYear) {
+            monthDiff = moment().month();
         }
+
+        // если 0, значит сейчас январь и можно пропустить его
         if (monthDiff == 0) {
             return;
         }
 
-        dataAverage[year] += element.data.sum / monthDiff;
+        dataAverage[year] += element.sum / monthDiff;
     });
 
     incomeItem.dataByMonth.data = [];
@@ -239,10 +252,10 @@ function updateGraphData(incomeItem) {
     });
 
     incomeItem.average = Math.round(incomeItem.sum / Object.keys(incomeItem.dataByMonth.data).length);
-    $('.js-income-sum').text(incomeItem.sum);
-    $('.js-income-average').text(incomeItem.average);
-    $('.js-income-top').text(incomeItem.topMonth.value);
-    $('.js-income-worst').text(incomeItem.worstMonth.value);
+    $('.js-income-sum').text(functions.numberWithSpaces(incomeItem.sum));
+    $('.js-income-average').text(functions.numberWithSpaces(incomeItem.average));
+    $('.js-income-top').text(functions.numberWithSpaces(incomeItem.topMonth.value));
+    $('.js-income-worst').text(functions.numberWithSpaces(incomeItem.worstMonth.value));
 }
 
 //ok to stay
@@ -256,40 +269,20 @@ function prepareChartData(chartData) {
 
 //ok to stay
 function insertIncomeToPage(item) {
-    if (item.data) {
-        let id = item._id.toString();
-        let rowExample = document.querySelector('.js-income-page .js-row');
-        let row = rowExample.cloneNode(true);
-        console.log(row);
-        row.classList.remove('js-row');
-        row.dataset.id = id;
-        row.querySelector('.js-delete').dataset.id = id;
-        row.querySelector('.js-date').textContent = moment.unix(item.data.date).format("DD.MM.YYYY");
-        row.querySelector('.js-month').textContent = moment.unix(item.data.month).format("MMM YYYY");
-        row.querySelector('.js-sum').textContent = item.data.sum;
-        row.querySelector('.js-payment-type').textContent = item.data.paymentType;
-        row.querySelector('.js-contact').textContent = item.data.contact;
-        row.querySelector('.js-description').textContent = item.data.description;
-        let rowParent = rowExample.parentNode;
-        rowParent.insertBefore(row, rowExample);
-    } else {
-      throw new Error('error in schema');
-    }
-}
-
-function onDeleteClick() {
-    // todo: are you sure?
-    let row = $(this).closest('tr.row');
-    let id = row.data('id');
-
-    row.remove();
-
-    if (deletedItemIndex >= 0) {
-        incomeView.data.splice(deletedItemIndex, 1);
-    }
-    updateGraphData(incomeView.data);
-    incomeView.reloadGraph();
-    incomeView.onDeleteCallback(incomeView.data[deletedItemIndex]);
+    let id = item.id.toString();
+    let rowExample = document.querySelector('.js-income-page .js-row');
+    let row = rowExample.cloneNode(true);
+    row.classList.remove('js-row');
+    row.dataset.id = id;
+    row.querySelector('.js-delete').dataset.id = id;
+    row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
+    row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
+    row.querySelector('.js-sum').textContent = item.sum;
+    row.querySelector('.js-payment-type').textContent = item.paymentType;
+    row.querySelector('.js-contact').textContent = item.contact;
+    row.querySelector('.js-description').textContent = item.description;
+    let rowParent = rowExample.parentNode;
+    rowParent.insertBefore(row, rowExample);
 }
 
 

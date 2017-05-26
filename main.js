@@ -2,7 +2,6 @@ const electron = require('electron');
 const Dao = require('./backend/Dao').Dao;
 const functions = require('./backend/functions');
 
-let locals = {'name': 'Hey'};
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
@@ -29,8 +28,6 @@ app.on('ready', function () {
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
-    // и загружаем файл index.html нашего веб приложения.
-    // mainWindow.loadURL('file://' + __dirname + '/index.html');
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {

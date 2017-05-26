@@ -25,7 +25,7 @@ app.on('window-all-closed', function () {
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
     const dao = new Dao();
-    // dao.drop();
+    dao.drop();
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();

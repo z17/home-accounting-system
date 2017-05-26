@@ -43,8 +43,8 @@ ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
     incomeView.insertIncome(incomeItem);
 });
 
-ipcRenderer.on('income-data-deleted', function (event, id) {
-    incomeView.deleteIncome(id);
+ipcRenderer.on('income-data-deleted', function (event, incomeId) {
+    incomeView.deleteIncome(incomeId);
 });
 
 $(document).ready(function () {
@@ -54,9 +54,9 @@ $(document).ready(function () {
 
     $(document).click(function (e) {
       if (e.target.classList.contains('js-delete')) {
-        let row = e.target.closest('tr');
-        let id = row.dataset.id.toString();
-        row.remove();
+        // let row = e.target.closest('tr');
+        let id = e.target.dataset.id.toString();
+        // row.remove();
         ipcRenderer.send('income-delete', id);
       }
     });

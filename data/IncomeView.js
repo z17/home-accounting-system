@@ -73,7 +73,7 @@ IncomeView.prototype.deleteIncome = function (id) {
         if (this.data[i]['id'] === id) {
             this.data.splice(i, 1);
             document.querySelector('tr[data-id="'+id+'"]').remove();
-            return;
+            break;
         }
     }
 

@@ -86,8 +86,9 @@ app.on('ready', function () {
     });
 
     ipcMain.on('update-settings', (event, settings) => {
-        dao.updateSettings(settings);
+        dao.updateSettings(settings, () => {
+            mainWindow.webContents.send('settings-saved', settings);
+        });
         event.returnValue = true;
     });
-
 });

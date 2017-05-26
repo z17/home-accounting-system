@@ -27,9 +27,9 @@ Dao.prototype.getSettings = function (callback) {
     this.database.get(Tables.SETTINGS, callback);
 };
 
-Dao.prototype.updateSettings = function (settings) {
+Dao.prototype.updateSettings = function (settings, callback) {
     this.database.deleteAll(Tables.SETTINGS);
-    this.database.insert(settings, Tables.SETTINGS);
+    this.database.insert(settings, Tables.SETTINGS, callback);
 };
 
 // Other

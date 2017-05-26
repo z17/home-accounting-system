@@ -1,8 +1,11 @@
 const ipcRenderer = require('electron').ipcRenderer;
-const IncomeView = require('../data/IncomeView.js');
-const incomeView = new IncomeView();
+const IncomeView = require('../data/IncomeView');
+const SettingsView = require('../data/SettingsView');
 const shell = require('electron').shell;
 const Income = require('../models/income.js');
+
+const incomeView = new IncomeView();
+const settingsView = new SettingsView();
 
 google.charts.load("current", {packages: ['corechart']});
 
@@ -23,28 +26,20 @@ ipcRenderer.on('income-contacts', function (event, data) {
     incomeView.setContacts(data);
 });
 
-ipcRenderer.on('settings', function (event, data) {
-    if (data.length == 0) {
-        return
-    }
-
-    if (data.length > 1) {
-        throw new Error("Settings error");
-    }
-
-    let settings = data[0];
-
-    $('.js-settings-remind').prop("checked", settings.remind);
-    $('.js-settings-email').val(settings.email);
-
-});
-
 ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
     incomeView.insertIncome(incomeItem);
 });
 
 ipcRenderer.on('income-data-deleted', function (event, incomeId) {
     incomeView.deleteIncome(incomeId);
+});
+
+ipcRenderer.on('settings', function (event, data) {
+    settingsView.setData(data);
+});
+
+ipcRenderer.on('settings-saved', function (event, data) {
+    settingsView.updateData(data);
 });
 
 $(document).ready(function () {
@@ -109,8 +104,9 @@ $(document).ready(function () {
         ipcRenderer.send('update-settings', settings);
 
         response.removeClass("error");
-        response.text("ok");
+        response.text("");
     });
+
 });
 
 function onLinkClick(e) {

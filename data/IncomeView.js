@@ -177,6 +177,7 @@ function updateGraphData(incomeItem) {
         firstYear.add(1, 'Y');
     }
 
+    incomeItem.sum = 0;
     data.forEach(function (element) {
         incomeItem.sum += element.sum;
 

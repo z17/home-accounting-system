@@ -1,11 +1,13 @@
 const electron = require('electron');
-const Dao = require('./backend/Dao').Dao;
 const functions = require('./backend/functions');
+const Dao = require('./backend/Dao').Dao;
+const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-
+const dao = new Dao();
+const serverNotify = new ServerNotify();
 
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
@@ -23,8 +25,7 @@ app.on('window-all-closed', function () {
 // Этот метод будет вызван когда Electron закончит инициализацию
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
-    const dao = new Dao();
-    dao.drop();
+    // dao.drop();
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
@@ -86,9 +87,13 @@ app.on('ready', function () {
     });
 
     ipcMain.on('update-settings', (event, settings) => {
-        dao.updateSettings(settings, () => {
-            mainWindow.webContents.send('settings-saved', settings);
+        dao.getSettings((oldSettings) => {
+            serverNotify.notify(oldSettings, settings);
+            dao.updateSettings(settings, () => {
+                mainWindow.webContents.send('settings-saved', settings);
+            });
         });
+
         event.returnValue = true;
     });
 });

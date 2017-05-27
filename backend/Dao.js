@@ -24,7 +24,18 @@ Dao.prototype.deleteIncome = function (incomeId, callback) {
 
 // Settings
 Dao.prototype.getSettings = function (callback) {
-    this.database.get(Tables.SETTINGS, callback);
+    this.database.get(Tables.SETTINGS, (data) => {
+        if (data.length == 0) {
+            return
+        }
+
+        if (data.length > 1) {
+            throw new Error("Settings error");
+        }
+
+        let settings = data[0];
+        callback(settings);
+    });
 };
 
 Dao.prototype.updateSettings = function (settings, callback) {

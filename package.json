@@ -13,7 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "./node_modules/.bin/electron ."
+    "start": "electron .",
+    "dev": "electron . --reset"
   },
   "author": "z-17",
   "license": "GPL"

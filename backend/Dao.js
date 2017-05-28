@@ -2,7 +2,8 @@ const Database = require('../backend/Database').Database;
 
 let Tables = {
     INCOME: 'income',
-    SETTINGS: 'settings'
+    SETTINGS: 'settings',
+    BALANCE: 'balance'
 };
 
 function Dao() {
@@ -22,6 +23,19 @@ Dao.prototype.deleteIncome = function (incomeId, callback) {
     this.database.delete(Tables.INCOME, incomeId, callback);
 };
 
+//Balance
+Dao.prototype.getBalances = function (callback) {
+    this.database.get(Tables.BALANCE, callback);
+};
+
+Dao.prototype.insertBalance = function (source, callback) {
+    this.database.insert(source, Tables.BALANCE, callback);
+}
+
+Dao.prototype.updateBalance = function (id, data, callback) {
+    this.database.updateBalance({'id': id}, data, callback);
+}
+
 // Settings
 Dao.prototype.getSettings = function (callback) {
     this.database.get(Tables.SETTINGS, callback);
@@ -38,4 +52,4 @@ Dao.prototype.drop = function () {
 };
 
 
-module.exports.Dao = Dao;
+module.exports = Dao;

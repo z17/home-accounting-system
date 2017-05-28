@@ -1,7 +1,7 @@
 const electron = require('electron');
-const Dao = require('./backend/Dao').Dao;
+const Dao = require('./backend/Dao');
 const functions = require('./backend/functions');
-
+const argv = require('minimist')(process.argv);
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
@@ -24,7 +24,9 @@ app.on('window-all-closed', function () {
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
     const dao = new Dao();
-    dao.drop();
+    if (argv.reset) {
+      dao.drop();
+    }
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
@@ -68,7 +70,6 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-add', (event, income) => {
-        console.log(income, 'main');
         dao.insertIncome(income,
             function (inserted) {
                 mainWindow.webContents.send('income-data-inserted', inserted);
@@ -83,6 +84,19 @@ app.on('ready', function () {
 
     ipcMain.on('income-edit', (event, income) => {
         event.returnValue = true;
+    });
+
+    ipcMain.on('balance-add', (event, source) => {
+        dao.insertBalance(source, insertedSource => {
+          mainWindow.webContents.send('balance-inserted', insertedSource);
+        });
+    });
+
+    ipcMain.on('balance-update', (event, id, data) => {
+        console.log(data);
+        dao.updateBalance(id, data, (query, source) => {
+          mainWindow.webContents.send('balance-updated', query, source);
+        });
     });
 
     ipcMain.on('update-settings', (event, settings) => {

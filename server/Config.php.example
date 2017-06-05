@@ -1,0 +1,9 @@
+<?php
+class Config
+{
+	// Base
+	static $host = 'localhost';
+	static $db_name = 'accountingsystem';
+	static $db_user = 'accountingsystem';
+	static $db_password = '';
+}

@@ -42,7 +42,7 @@ ServerNotify.prototype.notify = function (oldSettings, newSettings) {
     let req = http.request({
         method: 'POST',
         host: host,
-        path: '/',
+        path: '/email',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }

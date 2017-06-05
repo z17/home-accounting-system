@@ -5,6 +5,7 @@ const BalanceView = require('../controllers/BalanceView')
 const shell = require('electron').shell;
 const Income = require('../models/income');
 const Settings = require('../models/settings');
+const Balance = require('../models/balance.js');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -45,6 +46,10 @@ ipcRenderer.on('balance-inserted', function(event, source) {
 ipcRenderer.on('balance-updated', function(event, query, source) {
     console.log(source);
     balanceView.updateBalance(query['id'], source);
+});
+
+ipcRenderer.on('balance-types', function(event, types) {
+    balanceView.setBalance(types);
 });
 
 ipcRenderer.on('settings', function (event, data) {

@@ -5,15 +5,17 @@ function BalanceView() {
   return this;
 }
 
-BalanceView.prototype.insertBalance = function(source) {
-  this.data[source.id] = { 'name': source.name };
-  this.addBalanceSourceToDOM(source);
-}
+BalanceView.prototype.insertBalance = function (source) {
+    this.data[source.id] = {
+        'name': source.name,
+        'value': [],
+    };
+    this.addBalanceSourceToDOM(source);
+};
 
 BalanceView.prototype.updateBalance = function(id, source) {
   if (typeof this.data[id] === 'undefined') {
     throw new Error('Ops');
-    return;
   }
   if (typeof this.data[id]['value'] === 'undefined') {
     this.data[id]['value'] = [];
@@ -21,7 +23,7 @@ BalanceView.prototype.updateBalance = function(id, source) {
   this.data[id]['value'].push(source);
   this.updateDOM(id, source);
   // this.addBalanceSourceToDOM(source);
-}
+};
 
 BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   let section = document.createElement('SECTION');
@@ -62,7 +64,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   this.cachedForm.id = source.id;
   section.appendChild(this.cachedForm);
   document.querySelector('.balance-items').appendChild(section);
-}
+};
 
 BalanceView.prototype.updateDOM = function(id, source) {
   let form = document.querySelector('form[id="'+id+'"');
@@ -73,5 +75,14 @@ BalanceView.prototype.updateDOM = function(id, source) {
   let p = document.createElement('P');
   p.textContent = month + ' : ' + value;
   section.insertBefore(p, form);
-}
+};
+
+BalanceView.prototype.setBalance = function (types) {
+    let _this = this;
+    types.forEach(function (type) {
+        _this[type.id] = type;
+        _this.addBalanceSourceToDOM(type);
+    });
+};
+
 module.exports = BalanceView;

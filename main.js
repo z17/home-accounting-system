@@ -56,6 +56,10 @@ app.on('ready', function () {
             mainWindow.webContents.send('settings', settings);
         });
 
+        dao.getBalances(function(types) {
+            mainWindow.webContents.send('balance-types', types);
+        });
+
     });
 
     // mainWindow.setMenu(null);

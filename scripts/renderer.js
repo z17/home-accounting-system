@@ -18,7 +18,6 @@ ipcRenderer.on('error', function (event, data) {
 });
 
 ipcRenderer.on('income-data', function (event, data) {
-    console.log(incomeView);
     incomeView.setData(data);
 });
 
@@ -39,12 +38,10 @@ ipcRenderer.on('income-data-deleted', function (event, incomeId) {
 });
 
 ipcRenderer.on('balance-inserted', function(event, source) {
-    console.log(source);
     balanceView.insertBalance(source);
 });
 
 ipcRenderer.on('balance-updated', function(event, query, source) {
-    console.log(source);
     balanceView.updateBalance(query['id'], source);
 });
 

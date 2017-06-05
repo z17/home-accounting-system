@@ -14,6 +14,7 @@ BalanceView.prototype.insertBalance = function (source) {
 };
 
 BalanceView.prototype.updateBalance = function(id, source) {
+  console.log(this.data);
   if (typeof this.data[id] === 'undefined') {
     throw new Error('Ops');
   }
@@ -28,41 +29,42 @@ BalanceView.prototype.updateBalance = function(id, source) {
 BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   let section = document.createElement('SECTION');
   let h2 = document.createElement('H2');
+  h2.id = source.id;
   h2.textContent = source.name;
+  let remove = document.createElement('A');
+  remove.className = 'delete-balance-item';
+  h2.appendChild(remove);
   section.appendChild(h2);
-  if (typeof this.cachedForm === 'undefined'){
-    let form = document.createElement('FORM');
-    form.className = "updateBalance";
-    let select = document.createElement('SELECT');
-    select.name = 'month';
-    select.required = 'required';
-    for (let i = 0; i < 12; i++) {
-      let month = i+1;
-      let option = document.createElement('OPTION');
-      option.textContent = i < 10?'0'+month:month;
-      option.value = option.textContent;
-      select.appendChild(option);
-    }
-    form.appendChild(select);
-    let input = document.createElement('INPUT');
-    input.type = 'number';
-    input.name = 'year';
-    input.placeholder = 'Enter year(e.g. 2017)';
-    input.required = 'required';
-    form.appendChild(input);
-    let balanceVal = document.createElement('INPUT');
-    balanceVal.type = 'number';
-    balanceVal.name = 'balanceValue'
-    balanceVal.placeholder = 'Enter balance for this month';
-    balanceVal.required = 'required';
-    form.appendChild(balanceVal);
-    let submit = document.createElement('INPUT');
-    submit.type = 'submit';
-    form.appendChild(submit);
-    this.cachedForm = form;
+  let form = document.createElement('FORM');
+  form.className = "updateBalance";
+  form.id = source.id;
+  let select = document.createElement('SELECT');
+  select.name = 'month';
+  select.required = 'required';
+  for (let i = 0; i < 12; i++) {
+    let month = i+1;
+    let option = document.createElement('OPTION');
+    option.textContent = i < 10?'0'+month:month;
+    option.value = option.textContent;
+    select.appendChild(option);
   }
-  this.cachedForm.id = source.id;
-  section.appendChild(this.cachedForm);
+  form.appendChild(select);
+  let input = document.createElement('INPUT');
+  input.type = 'number';
+  input.name = 'year';
+  input.placeholder = 'Enter year(e.g. 2017)';
+  input.required = 'required';
+  form.appendChild(input);
+  let balanceVal = document.createElement('INPUT');
+  balanceVal.type = 'number';
+  balanceVal.name = 'balanceValue'
+  balanceVal.placeholder = 'Enter balance for this month';
+  balanceVal.required = 'required';
+  form.appendChild(balanceVal);
+  let submit = document.createElement('INPUT');
+  submit.type = 'submit';
+  form.appendChild(submit);
+  section.appendChild(form);
   document.querySelector('.balance-items').appendChild(section);
 };
 

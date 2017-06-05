@@ -2,7 +2,8 @@ const ipcRenderer = require('electron').ipcRenderer;
 const IncomeView = require('../data/IncomeView');
 const SettingsView = require('../data/SettingsView');
 const shell = require('electron').shell;
-const Income = require('../models/income.js');
+const Income = require('../models/income');
+const Settings = require('../models/settings');
 
 const incomeView = new IncomeView();
 const settingsView = new SettingsView();
@@ -48,12 +49,12 @@ $(document).ready(function () {
     $('a').click(onLinkClick);
 
     $(document).click(function (e) {
-      if (e.target.classList.contains('js-delete')) {
-        // let row = e.target.closest('tr');
-        let id = e.target.dataset.id.toString();
-        // row.remove();
-        ipcRenderer.send('income-delete', id);
-      }
+        if (e.target.classList.contains('js-delete')) {
+            // let row = e.target.closest('tr');
+            let id = e.target.dataset.id.toString();
+            // row.remove();
+            ipcRenderer.send('income-delete', id);
+        }
     });
 
     $('.js-tab').click(function () {
@@ -68,7 +69,7 @@ $(document).ready(function () {
         let type = $('.js-income-page input.js-add-payment-type').val();
         let contact = $('.js-income-page input.js-add-contact').val();
         let description = $('.js-income-page input.js-add-description').val();
-        if (date.length == 0 || month.length == 0 || sum.length == 0 || type.length == 0 || contact.length == 0) {
+        if (date.length === 0 || month.length === 0 || sum.length === 0 || type.length === 0 || contact.length === 0) {
             alert("Error");
             return;
         }
@@ -90,16 +91,13 @@ $(document).ready(function () {
         let remindFlag = $('.js-settings-remind').is(":checked");
         let remindEmail = $('.js-settings-email').val();
 
-        if (remindFlag === true && remindEmail.length == 0) {
+        if (remindFlag === true && remindEmail.length === 0) {
             response.text("Empty email");
             response.addClass("error");
             return;
         }
 
-        let settings = {
-            remind: remindFlag,
-            email: remindEmail
-        };
+        let settings = new Settings(remindFlag, remindEmail);
 
         ipcRenderer.send('update-settings', settings);
 
@@ -110,7 +108,7 @@ $(document).ready(function () {
 });
 
 function onLinkClick(e) {
-    if ($(this).attr('href') != undefined) {
+    if ($(this).attr('href') !== undefined) {
         e.preventDefault();
         shell.openExternal($(this).attr('href'));
     }

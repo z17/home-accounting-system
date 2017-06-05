@@ -1,4 +1,5 @@
 const Database = require('../backend/Database').Database;
+const Settings = require('../models/settings');
 
 let Tables = {
     INCOME: 'income',
@@ -25,16 +26,16 @@ Dao.prototype.deleteIncome = function (incomeId, callback) {
 // Settings
 Dao.prototype.getSettings = function (callback) {
     this.database.get(Tables.SETTINGS, (data) => {
-        if (data.length == 0) {
-            return
-        }
-
         if (data.length > 1) {
             throw new Error("Settings error");
         }
 
-        let settings = data[0];
-        callback(settings);
+        if (data.length === 0) {
+            callback(new Settings(false, ''));  // default settings
+            return;
+        }
+
+        callback(data[0]);
     });
 };
 

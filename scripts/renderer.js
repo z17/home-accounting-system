@@ -3,8 +3,8 @@ const IncomeView = require('../controllers/IncomeView');
 const SettingsView = require('../controllers/SettingsView');
 const BalanceView = require('../controllers/BalanceView')
 const shell = require('electron').shell;
-const Income = require('../models/income.js');
-const Balance = require('../models/balance.js');
+const Income = require('../models/income');
+const Settings = require('../models/settings');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -61,12 +61,12 @@ $(document).ready(function () {
     $('a').click(onLinkClick);
 
     $(document).click(function (e) {
-      if (e.target.classList.contains('js-delete')) {
-        // let row = e.target.closest('tr');
-        let id = e.target.dataset.id.toString();
-        // row.remove();
-        ipcRenderer.send('income-delete', id);
-      }
+        if (e.target.classList.contains('js-delete')) {
+            // let row = e.target.closest('tr');
+            let id = e.target.dataset.id.toString();
+            // row.remove();
+            ipcRenderer.send('income-delete', id);
+        }
       if ((e.target.parentNode.className === 'updateBalance') && (e.target.type === 'submit')) {
         e.preventDefault();
         let month = e.target.parentNode.querySelector('select[name="month"]').value;
@@ -93,7 +93,7 @@ $(document).ready(function () {
         let type = $('.js-income-page input.js-add-payment-type').val();
         let contact = $('.js-income-page input.js-add-contact').val();
         let description = $('.js-income-page input.js-add-description').val();
-        if (date.length == 0 || month.length == 0 || sum.length == 0 || type.length == 0 || contact.length == 0) {
+        if (date.length === 0 || month.length === 0 || sum.length === 0 || type.length === 0 || contact.length === 0) {
             alert("Error");
             return;
         }
@@ -101,6 +101,7 @@ $(document).ready(function () {
         const incomeItem = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
         ipcRenderer.send('income-add', incomeItem);
     });
+
     //Adding balance source
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
     balanceIncrement.addEventListener('click', function() {
@@ -121,16 +122,13 @@ $(document).ready(function () {
         let remindFlag = $('.js-settings-remind').is(":checked");
         let remindEmail = $('.js-settings-email').val();
 
-        if (remindFlag === true && remindEmail.length == 0) {
+        if (remindFlag === true && remindEmail.length === 0) {
             response.text("Empty email");
             response.addClass("error");
             return;
         }
 
-        let settings = {
-            remind: remindFlag,
-            email: remindEmail
-        };
+        let settings = new Settings(remindFlag, remindEmail);
 
         ipcRenderer.send('update-settings', settings);
 
@@ -141,7 +139,7 @@ $(document).ready(function () {
 });
 
 function onLinkClick(e) {
-    if ($(this).attr('href') != undefined) {
+    if ($(this).attr('href') !== undefined) {
         e.preventDefault();
         shell.openExternal($(this).attr('href'));
     }

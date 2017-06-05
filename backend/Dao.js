@@ -1,4 +1,5 @@
 const Database = require('../backend/Database').Database;
+const Settings = require('../models/settings');
 
 let Tables = {
     INCOME: 'income',
@@ -38,7 +39,18 @@ Dao.prototype.updateBalance = function (id, data, callback) {
 
 // Settings
 Dao.prototype.getSettings = function (callback) {
-    this.database.get(Tables.SETTINGS, callback);
+    this.database.get(Tables.SETTINGS, (data) => {
+        if (data.length > 1) {
+            throw new Error("Settings error");
+        }
+
+        if (data.length === 0) {
+            callback(new Settings(false, ''));  // default settings
+            return;
+        }
+
+        callback(data[0]);
+    });
 };
 
 Dao.prototype.updateSettings = function (settings, callback) {

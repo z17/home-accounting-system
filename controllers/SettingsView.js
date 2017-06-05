@@ -5,15 +5,7 @@ function SettingsView() {
 }
 
 SettingsView.prototype.setData = function (data) {
-    if (data.length == 0) {
-        return
-    }
-
-    if (data.length > 1) {
-        throw new Error("Settings error");
-    }
-
-    this.data = data[0];
+    this.data = data;
     updateData(this.data);
 };
 

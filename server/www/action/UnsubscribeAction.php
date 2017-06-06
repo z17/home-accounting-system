@@ -12,6 +12,6 @@ class UnsubscribeAction extends Action
 
     public function process()
     {
-        $this->db->disableEmailByUuid($email);
+        $this->db->disableEmailByUuid($this -> uuid);
     }
 }

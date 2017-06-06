@@ -1,12 +1,7 @@
 <?php
-
 class Base
 {
     private $base;
-    private $host;
-    private $baseName;
-    private $user;
-    private $password;
 
     public function __construct()
     {
@@ -16,12 +11,11 @@ class Base
 
     public function addEmail($email)
     {
-        $query = "
-            INSERT INTO emails (uuid, email, deleted) VALUES (:uuid, :email, true)";
+        $query = "INSERT INTO emails (uuid, email, deleted) VALUES (:uuid, :email, TRUE)";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':uuid', uniqid());
         $sql->bindParam(':email', $email);
-        $fl = $sql->execute();
+        $sql->execute();
     }
 
     public function updateEmail($newEmail, $oldEmail)
@@ -43,7 +37,7 @@ class Base
         $query = "
 		UPDATE emails
 		SET
-			deleted = false
+			deleted = FALSE
 		WHERE 
 			email = :email";
         $sql = $this->base->prepare($query);
@@ -56,7 +50,7 @@ class Base
         $query = "
 		UPDATE emails
 		SET
-			deleted = true
+			deleted = TRUE
 		WHERE 
 			email = :email";
         $sql = $this->base->prepare($query);
@@ -69,7 +63,7 @@ class Base
         $query = "
 		UPDATE emails
 		SET
-			deleted = true
+			deleted = TRUE
 		WHERE 
 			uuid = :uuid";
         $sql = $this->base->prepare($query);
@@ -79,7 +73,7 @@ class Base
 
     public function emailExists($email)
     {
-        $query = "SELECT COUNT(email) as count FROM  emails WHERE email = :email";
+        $query = "SELECT COUNT(email) AS count FROM  emails WHERE email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
         $sql->execute();
@@ -87,9 +81,21 @@ class Base
         return $result->count > 0;
     }
 
-    public function getActiveEmails() {
-        $query = "SELECT email FROM emails WHERE deleted = false";
-        $sql -> execute();
-        return  $sql -> fetchAll(PDO::FETCH_ASSOC);
+    public function getActiveEmails()
+    {
+        $query = "SELECT email FROM emails WHERE deleted = FALSE";
+        $sql = $this->base->prepare($query);
+        $sql->execute($query);
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fillNotificationTable()
+    {
+        $query = "
+        INSERT INTO 
+          reminders (email_uuid) 
+        SELECT uuid FROM emails WHERE deleted = FALSE";
+        $sql = $this->base->prepare($query);
+        $sql->execute($query);
     }
 }

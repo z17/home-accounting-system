@@ -37,15 +37,15 @@ ipcRenderer.on('income-data-deleted', function (event, incomeId) {
     incomeView.deleteIncome(incomeId);
 });
 
-ipcRenderer.on('balance-inserted', function(event, source) {
+ipcRenderer.on('balance-inserted', function (event, source) {
     balanceView.insertBalance(source);
 });
 
-ipcRenderer.on('balance-updated', function(event, query, source) {
+ipcRenderer.on('balance-updated', function (event, query, source) {
     balanceView.updateBalance(query['id'], source);
 });
 
-ipcRenderer.on('balance-types', function(event, types) {
+ipcRenderer.on('balance-types', function (event, types) {
     balanceView.setBalance(types);
 });
 
@@ -62,24 +62,82 @@ $(document).ready(function () {
 
     $('a').click(onLinkClick);
 
+    let activeIncomeEditing = false;
+    let incomeEditingRow;
+
     $(document).click(function (e) {
         if (e.target.classList.contains('js-delete')) {
-            // let row = e.target.closest('tr');
             let id = e.target.dataset.id.toString();
-            // row.remove();
             ipcRenderer.send('income-delete', id);
+            return;
         }
-      if ((e.target.parentNode.className === 'updateBalance') && (e.target.type === 'submit')) {
-        e.preventDefault();
-        let month = e.target.parentNode.querySelector('select[name="month"]').value;
-        let year = e.target.parentNode.querySelector('input[name="year"]').value;
-        let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-        month += '';
-        month += year;
-        let obj = {};
-        obj[month] = value;
-        ipcRenderer.send('balance-update', e.target.parentNode.id, obj);
-      }
+
+        function updateIncome() {
+            if (!activeIncomeEditing) {
+                return;
+            }
+
+            // todo: save result
+            incomeEditingRow.find('.js-date').html(moment(incomeEditingRow.find('.js-add-date').val()).format('DD.MM.YYYY'));
+            incomeEditingRow.find('.js-month').html(moment(incomeEditingRow.find('.js-add-month').val()).format('MMM YYYY'));
+            incomeEditingRow.find('.js-sum').html(incomeEditingRow.find('.js-add-sum').val());
+            incomeEditingRow.find('.js-payment-type').html(incomeEditingRow.find('.js-add-payment-type').val());
+            incomeEditingRow.find('.js-contact').html(incomeEditingRow.find('.js-add-contact').val());
+            incomeEditingRow.find('.js-description').html(incomeEditingRow.find('.js-add-description').val());
+
+            activeIncomeEditing = false;
+        }
+
+        if ($(e.target).closest('.js-income-row').length != 0) {
+            let row = $(e.target).closest('.js-income-row');
+
+            if (activeIncomeEditing === true && row !== incomeEditingRow ) {
+                updateIncome();
+            }
+
+            if (activeIncomeEditing === true) {
+                return;
+            }
+
+
+            function copyField(elementClass, fieldClass) {
+                let element = row.find(elementClass);
+                let field = $(fieldClass).clone().val(element.text());
+                element.html('').append(field);
+            }
+
+            function copyDateField(elementClass, fieldClass, format) {
+                let element = row.find(elementClass);
+                let time = element.data('time');
+                let field = $(fieldClass).clone().val(moment.unix(time).format(format));
+                element.html('').append(field);
+            }
+
+            copyDateField('.js-date', '.js-add-date', "YYYY-MM-DD");
+            copyDateField('.js-month', '.js-add-month', "YYYY-MM");
+            copyField('.js-sum', '.js-add-sum');
+            copyField('.js-payment-type', '.js-add-payment-type');
+            copyField('.js-contact', '.js-add-contact');
+            copyField('.js-description', '.js-add-description');
+
+            activeIncomeEditing = true;
+            incomeEditingRow = row;
+            return;
+        }
+
+        updateIncome();
+
+        if ((e.target.parentNode.className === 'updateBalance') && (e.target.type === 'submit')) {
+            e.preventDefault();
+            let month = e.target.parentNode.querySelector('select[name="month"]').value;
+            let year = e.target.parentNode.querySelector('input[name="year"]').value;
+            let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
+            month += '';
+            month += year;
+            let obj = {};
+            obj[month] = value;
+            ipcRenderer.send('balance-update', e.target.parentNode.id, obj);
+        }
     });
 
     $('.js-tab').click(function () {
@@ -106,9 +164,9 @@ $(document).ready(function () {
 
     //Adding balance source
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
-    balanceIncrement.addEventListener('click', function() {
-      const source = new Balance(document.getElementById('balancesource').value);
-      ipcRenderer.send('balance-add', source);
+    balanceIncrement.addEventListener('click', function () {
+        const source = new Balance(document.getElementById('balancesource').value);
+        ipcRenderer.send('balance-add', source);
     });
 
     $(".js-settings-button").click(function () {

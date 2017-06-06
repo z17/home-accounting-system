@@ -278,7 +278,9 @@ function insertIncomeToPage(item) {
     row.dataset.id = id;
     row.querySelector('.js-delete').dataset.id = id;
     row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
+    row.querySelector('.js-date').dataset.time = item.date;
     row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
+    row.querySelector('.js-month').dataset.time = item.month;
     row.querySelector('.js-sum').textContent = item.sum;
     row.querySelector('.js-payment-type').textContent = item.paymentType;
     row.querySelector('.js-contact').textContent = item.contact;

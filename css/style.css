@@ -38,7 +38,6 @@ table.data-table td {
 table.data-table input, table.data-table select {
     width: 100%;
     border: 0;
-    padding: 3px 10px 3px 10px;
 }
 
 table.data-table input.submit {
@@ -53,9 +52,6 @@ table.data-table td, table.data-table th {
     border: 1px solid #ccc;
 }
 
-table.data-table .form td {
-    padding: 0;
-}
 
 table.data-table td:last-child, table.data-table th:last-child {
     border-right: 0;

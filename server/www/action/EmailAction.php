@@ -12,10 +12,14 @@ class EmailAction extends Action
 
     public function process()
     {
+        if (!isset($data)) {
+            echo "invalid request";
+            return;
+        }
 
-        switch ($this -> data['action']) {
+        switch ($this->data->action) {
             case 'add':
-                $email = $this -> data['email'];
+                $email = $this->data->email;
                 if ($this->db->emailExists($email)) {
                     $this->db->enableEmail($email);
                 } else {
@@ -23,10 +27,10 @@ class EmailAction extends Action
                 }
                 break;
             case 'update' :
-                $this->db->updateEmail($this -> data['email'], $this -> data['oldEmail']);
+                $this->db->updateEmail($this->data->email, $this->data->oldEmail);
                 break;
             case 'delete':
-                $this->db->disableEmail($this -> data['email']);
+                $this->db->disableEmail($this->data->email);
                 break;
             default:
                 // todo: log this

@@ -2,13 +2,21 @@
 
 class NotifyAction extends Action
 {
-    public function __construct()
+    private $key;
+
+    public function __construct($key)
     {
         parent::__construct();
+        $this -> key = $key;
     }
 
     public function process()
     {
+        if ($this -> key !== Config::$notify_key) {
+            echo "invalid key";
+            return;
+        }
+
         $this->db->fillNotificationTable();
     }
 }

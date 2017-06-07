@@ -11,7 +11,7 @@ class Base
 
     public function addEmail($email)
     {
-        $query = "INSERT INTO emails (uuid, email, deleted) VALUES (:uuid, :email, TRUE)";
+        $query = "INSERT INTO emails (uuid, email, deleted) VALUES (:uuid, :email, FALSE)";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':uuid', uniqid());
         $sql->bindParam(':email', $email);
@@ -96,6 +96,6 @@ class Base
           reminders (email_uuid) 
         SELECT uuid FROM emails WHERE deleted = FALSE";
         $sql = $this->base->prepare($query);
-        $sql->execute($query);
+        $sql->execute();
     }
 }

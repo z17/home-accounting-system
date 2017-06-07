@@ -1,0 +1,13 @@
+<?php
+class Config
+{
+	// Base
+	static $host = 'localhost';
+	static $db_name = 'accountingsystem';
+	static $db_user = '';
+	static $db_password = '';
+
+	static $log_file = 'log.txt';
+
+	static $notify_key = 'some random key';
+}

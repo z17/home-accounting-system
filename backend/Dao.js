@@ -20,6 +20,10 @@ Dao.prototype.insertIncome = function (income, callback) {
     this.database.insert(income, Tables.INCOME, callback);
 };
 
+Dao.prototype.updateIncome = function (income, callback) {
+    this.database.update(income.id, Tables.INCOME, income, callback);
+};
+
 Dao.prototype.deleteIncome = function (incomeId, callback) {
     this.database.delete(Tables.INCOME, incomeId, callback);
 };
@@ -31,11 +35,11 @@ Dao.prototype.getBalances = function (callback) {
 
 Dao.prototype.insertBalance = function (source, callback) {
     this.database.insert(source, Tables.BALANCE, callback);
-}
+};
 
 Dao.prototype.updateBalance = function (id, data, callback) {
     this.database.updateBalance({'id': id}, data, callback);
-}
+};
 
 // Settings
 Dao.prototype.getSettings = function (callback) {

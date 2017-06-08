@@ -1,4 +1,5 @@
 const functions = require('../backend/functions');
+const Income = require('../models/income');
 
 function IncomeView() {
     this.data = {};
@@ -69,25 +70,52 @@ IncomeView.prototype.insertIncome = function (item) {
 };
 
 IncomeView.prototype.deleteIncome = function (id) {
-    for (let i = 0; i < this.data.length; i++) {
-        if (this.data[i]['id'] === id) {
-            this.data.splice(i, 1);
-            document.querySelector('tr[data-id="'+id+'"]').remove();
-            break;
-        }
-    }
+    let index = getIndexById(id, this.data);
+    this.data.splice(index, 1);
+    document.querySelector('tr[data-id="'+id+'"]').remove();
 
     updateGraphData(this);
     this.reloadGraph();
+};
 
+IncomeView.prototype.updateIncome = function(income) {
+    let index = getIndexById(income.id, this.data);
+    this.data[index] = income;
 
-    // todo: delete row here
+    let row = document.querySelector('.js-income-row[data-id="'+income.id+'"]');
+    this.setRowFromItem(income, row);
+
+    updateGraphData(this);
+    this.reloadGraph();
 };
 
 IncomeView.prototype.reloadGraph = function () {
     drawByMonth(this);
     drawByYear(this);
     drawAverage(this);
+};
+
+IncomeView.prototype.getItemFromForm = function (row) {
+    let date = row.find('input.js-add-date').val();
+    let month = row.find('input.js-add-month').val();
+    let sum = row.find('input.js-add-sum').val();
+    let type = row.find('input.js-add-payment-type').val();
+    let contact = row.find('input.js-add-contact').val();
+    let description = row.find('input.js-add-description').val();
+    if (date.length === 0 || month.length === 0 || sum.length === 0) {
+        alert("Error");
+        return;
+    }
+    let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+    let id = row.data('id');
+    if (id != undefined) {
+        income.id = id;
+    }
+    return income;
+};
+
+IncomeView.prototype.setRowFromItem = function (item, row) {
+    setupIncomeRow(item, row);
 };
 
 function drawByMonth(incomeItem) {
@@ -271,21 +299,35 @@ function prepareChartData(chartData) {
 
 //ok to stay
 function insertIncomeToPage(item) {
-    let id = item.id.toString();
     let rowExample = document.querySelector('.js-income-page .js-row');
     let row = rowExample.cloneNode(true);
-    row.classList.remove('js-row');
-    row.dataset.id = id;
-    row.querySelector('.js-delete').dataset.id = id;
-    row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
-    row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
-    row.querySelector('.js-sum').textContent = item.sum;
-    row.querySelector('.js-payment-type').textContent = item.paymentType;
-    row.querySelector('.js-contact').textContent = item.contact;
-    row.querySelector('.js-description').textContent = item.description;
+    setupIncomeRow(item, row);
     let rowParent = rowExample.parentNode;
     rowParent.insertBefore(row, rowExample);
 }
 
+function setupIncomeRow(item, row) {
+    let id = item.id.toString();
+    row.classList.remove('js-row');
+    row.dataset.id = id;
+    row.querySelector('.js-delete').dataset.id = id;
+    row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
+    row.querySelector('.js-date').dataset.time = item.date;
+    row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
+    row.querySelector('.js-month').dataset.time = item.month;
+    row.querySelector('.js-sum').textContent = item.sum;
+    row.querySelector('.js-payment-type').textContent = item.paymentType;
+    row.querySelector('.js-contact').textContent = item.contact;
+    row.querySelector('.js-description').textContent = item.description;
+}
+
+function getIndexById(id, data) {
+    for (let i = 0; i < data.length; i++) {
+        if (data[i]['id'] === id) {
+            return i;
+        }
+    }
+    return null;
+}
 
 module.exports = IncomeView;

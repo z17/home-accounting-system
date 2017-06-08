@@ -89,7 +89,12 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-edit', (event, income) => {
-        event.returnValue = true;
+        dao.updateIncome(income, (err) => {
+            if (err != null) {
+                throw new Error("Update error");
+            }
+            mainWindow.webContents.send('income-edited', income);
+        });
     });
 
     ipcMain.on('balance-add', (event, source) => {

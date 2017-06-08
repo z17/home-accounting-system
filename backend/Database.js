@@ -24,6 +24,20 @@ Database.prototype.insert = function (data, type, callback) {
     });
 };
 
+Database.prototype.update = function (id, type, data, callback) {
+    this.db.update({
+            _id: id,
+            type: type,
+        },
+        {
+            type: type,
+            data: data
+        },
+        {},
+        callback
+    );
+};
+
 Database.prototype.updateBalance = function (query, data, callback) {
     this.db.update(query, {$push: {value: data }}, function (err, num, doc, upsert) {
         callback(query, data);

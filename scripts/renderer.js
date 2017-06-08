@@ -1,9 +1,8 @@
 const ipcRenderer = require('electron').ipcRenderer;
 const IncomeView = require('../controllers/IncomeView');
 const SettingsView = require('../controllers/SettingsView');
-const BalanceView = require('../controllers/BalanceView')
+const BalanceView = require('../controllers/BalanceView');
 const shell = require('electron').shell;
-const Income = require('../models/income');
 const Settings = require('../models/settings');
 const Balance = require('../models/balance.js');
 
@@ -35,6 +34,10 @@ ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
 
 ipcRenderer.on('income-data-deleted', function (event, incomeId) {
     incomeView.deleteIncome(incomeId);
+});
+
+ipcRenderer.on('income-edited', function (event, income) {
+    incomeView.updateIncome(income);
 });
 
 ipcRenderer.on('balance-inserted', function (event, source) {
@@ -72,26 +75,23 @@ $(document).ready(function () {
             return;
         }
 
-        function updateIncome() {
+        let updateIncome = () => {
             if (!activeIncomeEditing) {
                 return;
             }
 
-            // todo: save result
-            incomeEditingRow.find('.js-date').html(moment(incomeEditingRow.find('.js-add-date').val()).format('DD.MM.YYYY'));
-            incomeEditingRow.find('.js-month').html(moment(incomeEditingRow.find('.js-add-month').val()).format('MMM YYYY'));
-            incomeEditingRow.find('.js-sum').html(incomeEditingRow.find('.js-add-sum').val());
-            incomeEditingRow.find('.js-payment-type').html(incomeEditingRow.find('.js-add-payment-type').val());
-            incomeEditingRow.find('.js-contact').html(incomeEditingRow.find('.js-add-contact').val());
-            incomeEditingRow.find('.js-description').html(incomeEditingRow.find('.js-add-description').val());
+            const incomeItem = incomeView.getItemFromForm($(incomeEditingRow));
+            ipcRenderer.send('income-edit', incomeItem);
+
+            // todo: spinner here
 
             activeIncomeEditing = false;
-        }
+        };
 
         if ($(e.target).closest('.js-income-row').length != 0) {
-            let row = $(e.target).closest('.js-income-row');
+            let row = $(e.target).closest('.js-income-row').get(0);
 
-            if (activeIncomeEditing === true && row !== incomeEditingRow ) {
+            if (activeIncomeEditing === true && row !== incomeEditingRow) {
                 updateIncome();
             }
 
@@ -100,18 +100,18 @@ $(document).ready(function () {
             }
 
 
-            function copyField(elementClass, fieldClass) {
-                let element = row.find(elementClass);
-                let field = $(fieldClass).clone().val(element.text());
+            let copyField = (elementClass, fieldClass) => {
+                let element = $(row).find(elementClass);
+                let field = $(fieldClass).clone().val(element.text()).get(0);
                 element.html('').append(field);
-            }
+            };
 
-            function copyDateField(elementClass, fieldClass, format) {
-                let element = row.find(elementClass);
+            let copyDateField = (elementClass, fieldClass, format) => {
+                let element = $(row).find(elementClass);
                 let time = element.data('time');
-                let field = $(fieldClass).clone().val(moment.unix(time).format(format));
+                let field = $(fieldClass).clone().val(moment.unix(time).format(format)).get(0);
                 element.html('').append(field);
-            }
+            };
 
             copyDateField('.js-date', '.js-add-date', "YYYY-MM-DD");
             copyDateField('.js-month', '.js-add-month', "YYYY-MM");
@@ -147,18 +147,7 @@ $(document).ready(function () {
     //Adding income
     $(".js-income-page .js-income-add").on('submit', function (e) {
         e.preventDefault();
-        let date = $('.js-income-page input.js-add-date').val();
-        let month = $('.js-income-page input.js-add-month').val();
-        let sum = $('.js-income-page input.js-add-sum').val();
-        let type = $('.js-income-page input.js-add-payment-type').val();
-        let contact = $('.js-income-page input.js-add-contact').val();
-        let description = $('.js-income-page input.js-add-description').val();
-        if (date.length === 0 || month.length === 0 || sum.length === 0 || type.length === 0 || contact.length === 0) {
-            alert("Error");
-            return;
-        }
-
-        const incomeItem = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+        const incomeItem = incomeView.getItemFromForm($('.js-income-page .form'));
         ipcRenderer.send('income-add', incomeItem);
     });
 

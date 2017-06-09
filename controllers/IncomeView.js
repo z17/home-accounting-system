@@ -96,19 +96,19 @@ IncomeView.prototype.reloadGraph = function () {
 };
 
 IncomeView.prototype.getItemFromForm = function (row) {
-    let date = row.find('input.js-add-date').val();
-    let month = row.find('input.js-add-month').val();
-    let sum = row.find('input.js-add-sum').val();
-    let type = row.find('input.js-add-payment-type').val();
-    let contact = row.find('input.js-add-contact').val();
-    let description = row.find('input.js-add-description').val();
+    let date = row.querySelector('input.js-add-date').value;
+    let month = row.querySelector('input.js-add-month').value;
+    let sum = row.querySelector('input.js-add-sum').value;
+    let type = row.querySelector('input.js-add-payment-type').value;
+    let contact = row.querySelector('input.js-add-contact').value;
+    let description = row.querySelector('input.js-add-description').value;
     if (date.length === 0 || month.length === 0 || sum.length === 0) {
         alert("Error");
         return;
     }
     let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
-    let id = row.data('id');
-    if (id != undefined) {
+    let id = row.dataset.id;
+    if (id !== undefined) {
         income.id = id;
     }
     return income;
@@ -282,10 +282,10 @@ function updateGraphData(incomeItem) {
     });
 
     incomeItem.average = Math.round(incomeItem.sum / Object.keys(incomeItem.dataByMonth.data).length);
-    $('.js-income-sum').text(functions.numberWithSpaces(incomeItem.sum));
-    $('.js-income-average').text(functions.numberWithSpaces(incomeItem.average));
-    $('.js-income-top').text(functions.numberWithSpaces(incomeItem.topMonth.value));
-    $('.js-income-worst').text(functions.numberWithSpaces(incomeItem.worstMonth.value));
+    document.getElementsByClassName('js-income-sum')[0].innerHTML = functions.numberWithSpaces(incomeItem.sum);
+    document.getElementsByClassName('js-income-average')[0].innerHTML = functions.numberWithSpaces(incomeItem.average);
+    document.getElementsByClassName('js-income-top')[0].innerHTML = functions.numberWithSpaces(incomeItem.topMonth.value);
+    document.getElementsByClassName('js-income-worst')[0].innerHTML = functions.numberWithSpaces(incomeItem.worstMonth.value);
 }
 
 //ok to stay

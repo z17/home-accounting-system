@@ -80,7 +80,7 @@ $(document).ready(function () {
                 return;
             }
 
-            const incomeItem = incomeView.getItemFromForm($(incomeEditingRow));
+            const incomeItem = incomeView.getItemFromForm(incomeEditingRow);
             ipcRenderer.send('income-edit', incomeItem);
 
             // todo: spinner here
@@ -88,8 +88,8 @@ $(document).ready(function () {
             activeIncomeEditing = false;
         };
 
-        if ($(e.target).closest('.js-income-row').length != 0) {
-            let row = $(e.target).closest('.js-income-row').get(0);
+        if ($(e.target).closest('.js-income-row').length !== 0) {
+            let row = e.target.closest('.js-income-row');
 
             if (activeIncomeEditing === true && row !== incomeEditingRow) {
                 updateIncome();
@@ -101,16 +101,20 @@ $(document).ready(function () {
 
 
             let copyField = (elementClass, fieldClass) => {
-                let element = $(row).find(elementClass);
-                let field = $(fieldClass).clone().val(element.text()).get(0);
-                element.html('').append(field);
+                let element = row.querySelector(elementClass);
+                let field = document.querySelector(fieldClass).cloneNode(true);
+                field.value = element.innerHTML;
+                element.innerHTML = '';
+                element.appendChild(field);
             };
 
             let copyDateField = (elementClass, fieldClass, format) => {
-                let element = $(row).find(elementClass);
-                let time = element.data('time');
-                let field = $(fieldClass).clone().val(moment.unix(time).format(format)).get(0);
-                element.html('').append(field);
+                let element = row.querySelector(elementClass);
+                let field = document.querySelector(fieldClass).cloneNode(true);
+                let time = element.dataset.time;
+                field.value = moment.unix(time).format(format);
+                element.innerHTML = '';
+                element.appendChild(field);
             };
 
             copyDateField('.js-date', '.js-add-date', "YYYY-MM-DD");
@@ -147,7 +151,7 @@ $(document).ready(function () {
     //Adding income
     $(".js-income-page .js-income-add").on('submit', function (e) {
         e.preventDefault();
-        const incomeItem = incomeView.getItemFromForm($('.js-income-page .form'));
+        const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
         ipcRenderer.send('income-add', incomeItem);
     });
 

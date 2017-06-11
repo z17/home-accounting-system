@@ -11,6 +11,20 @@
 </head>
 <body>
 <div class="wrapper">
+    <div class="settings-button js-settings-button">Settings</div>
+    <div class="settings-page js-settings-page">
+        <h1>Settings</h1>
+
+        <form class="setting-form js-settings-form">
+            <label>Remind me every month about balance:
+                <input type="checkbox" class="js-settings-remind"/>
+            </label>
+            <label>E-mail for reminds:
+                <input type="email" class="js-settings-email"/>
+            </label>
+            <input type="submit" value="Save" /> <span class="js-settings-response settings-response"></span>
+        </form>
+    </div>
     <div class="content">
         <div class="js-income-page js-page page" data-name="income">
             <h1>Income</h1>
@@ -41,14 +55,14 @@
                     <th>Contact</th>
                     <th>Description</th>
                 </tr>
-                <tr class="js-row row">
+                <tr class="js-row row js-income-row">
                     <td class="js-date"></td>
                     <td class="js-month"></td>
                     <td class="js-sum"></td>
                     <td class="js-payment-type"></td>
                     <td class="js-contact"></td>
                     <td>
-                        <span class="js-description"></span><span class="delete js-delete">&#10006;</span>
+                        <span class="js-description"></span><span data-id="" class="delete js-delete">&#10006;</span>
                     </td>
                 </tr>
                 <tr class="form">
@@ -72,15 +86,12 @@
         <div class="js-orders-page js-page page" data-name="balance">
             <h1>Баланс</h1>
             <form class="" action="" method="post">
-              <label for="balancesource">Введите место для хранения средств</label>
-              <input type="text" id="balancesource" name="balancesource" value="">
-              <button type="button" name="incrementsources">+</button>
+                <label for="balancesource">Введите место для хранения средств</label>
+                <input type="text" id="balancesource" name="balancesource" value="">
+                <button type="button" name="incrementsources">+</button>
             </form>
-            <table>
-              <tr class="head-row">
-                  <th></th>
-              </tr>
-            </table>
+            <article class="balance-items">
+            </article>
         </div>
     </div>
     <div class="footer">
@@ -97,7 +108,7 @@
 <script src="node_modules/moment/min/moment.min.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-  require('./scripts/renderer.js');
+    require('./scripts/renderer.js');
 </script>
 </body>
 </html>

@@ -1,0 +1,83 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Home accounting system
+    link(type='text/css', rel='stylesheet', href='node_modules/normalize.css/normalize.css')
+    link(type='text/css', rel='stylesheet', href='node_modules/jquery-ui-dist/jquery-ui.min.css')
+    link(rel='stylesheet', type='text/css', href='./css/style.css')
+  body
+    .wrapper
+      .content
+        .js-income-page.js-page.page(data-name='income')
+          h1 Income
+          .income-statistic
+            #js-income-month-chart.income-chart.income-month-chart
+            .inline-blocks
+              #js-income-year-chart.income-chart.income-year-chart
+              #js-income-average-chart.income-chart.income-middle-year-chart
+              .income-data
+                p.income-data-line
+                  span.income-data-name Sum:
+                  span.js-income-sum
+                p.income-data-line
+                  span.income-data-name Average:
+                  span.js-income-average
+                p.income-data-line
+                  span.income-data-name Top month:
+                  span.js-income-top
+                p.income-data-line
+                  span.income-data-name Worst month:
+                  span.js-income-worst
+          table.data-table
+            tr
+              th Date
+              th Month
+              th Sum
+              th Type
+              th Contact
+              th Description
+            tr.js-row.row
+              td.js-date
+              td.js-month
+              td.js-sum
+              td.js-payment-type
+              td.js-contact
+              td
+                span.js-description
+                span.delete.js-delete(data-id='') ✖
+            tr.form
+              td
+                input.js-add-date(form='income-form', type='date', placeholder='Date', required='')
+              td
+                input.js-add-month(form='income-form', type='month', placeholder='Month', required='')
+              td
+                input.js-add-sum(form='income-form', type='number', placeholder='Sum', required='')
+              td
+                input.js-add-payment-type(form='income-form', placeholder='Type', required='')
+              td
+                input.js-add-contact(form='income-form', type='text', placeholder='Contact', required='')
+              td
+                input.js-add-description(form='income-form', type='text', placeholder='Description')
+                input.submit.js-submit(form='income-form', type='submit')
+          form#income-form.js-income-add(action='#')
+        .js-orders-page.js-page.page(data-name='balance')
+          h1 Баланс
+          form(action='', method='post')
+            label(for='balancesource') Введите место для хранения средств
+            input#balancesource(type='text', name='balancesource', value='')
+            button(type='button', name='incrementsources') +
+          table
+            tr.head-row
+              th
+      .footer
+        .tabs
+          a.tab.js-tab.active(data-name='income') Доход
+          a.tab.js-tab(data-name='balance') Баланс
+    script.
+      window.$ = window.jQuery = require('jquery');
+    script(src='node_modules/jquery-ui-dist/jquery-ui.min.js')
+    script(src='node_modules/moment/min/moment.min.js')
+    script(src='https://www.gstatic.com/charts/loader.js')
+    script.
+      require('./scripts/renderer.js');

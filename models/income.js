@@ -1,4 +1,4 @@
-module.exports = (date, month, sum, paymentType, contact, description) => {
+module.exports = function(date, month, sum, paymentType, contact, description) {
     this.id = null;
     this.date = date.unix();
     this.month = month.unix();

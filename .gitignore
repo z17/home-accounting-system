@@ -1,4 +1,5 @@
-.idea/
-tmp/
-node_modules/
-db/
+/.idea/
+/tmp/
+/node_modules/
+/db/
+/server/www/Config.php

@@ -1,11 +1,14 @@
 const electron = require('electron');
-const database = require('./backend/Database');
+const Dao = require('./backend/Dao');
 const functions = require('./backend/functions');
+const argv = require('minimist')(process.argv);
+const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-
+const dao = new Dao();
+const serverNotify = new ServerNotify();
 
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
@@ -23,13 +26,16 @@ app.on('window-all-closed', function () {
 // Этот метод будет вызван когда Electron закончит инициализацию
 // и будет готов к созданию браузерных окон.
 app.on('ready', function () {
-    const Database = new database.Database();
+    if (argv.reset) {
+      dao.drop();
+    }
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {
-        Database.get('income', function (data) {
+        dao.getIncomes(function (data) {
             mainWindow.webContents.send('income-data', data);
 
             let paymentTypes = data.map(function (e) {
@@ -46,10 +52,16 @@ app.on('ready', function () {
 
         });
 
+        dao.getSettings(function (settings) {
+            mainWindow.webContents.send('settings', settings);
+        });
+
+        dao.getBalances(function(types) {
+            mainWindow.webContents.send('balance-types', types);
+        });
+
     });
 
-    // и загружаем файл index.html нашего веб приложения.
-    mainWindow.loadURL('file://' + __dirname + '/index.html');
     // mainWindow.setMenu(null);
 
     // TODO hide it in prod mode
@@ -64,19 +76,52 @@ app.on('ready', function () {
     });
 
     ipcMain.on('income-add', (event, income) => {
-        Database.insert(income, 'income',
+        dao.insertIncome(income,
             function (inserted) {
                 mainWindow.webContents.send('income-data-inserted', inserted);
             });
     });
 
     ipcMain.on('income-delete', (event, incomeId) => {
-        Database.deleteIncome(incomeId);
+        dao.deleteIncome(incomeId, () => {
+          mainWindow.webContents.send('income-data-deleted', incomeId);
+        });
     });
 
     ipcMain.on('income-edit', (event, income) => {
-        console.log(income);
-        event.returnValue = true;
+        dao.updateIncome(income, (err) => {
+            if (err != null) {
+                throw new Error("Update error");
+            }
+            mainWindow.webContents.send('income-edited', income);
+        });
     });
 
+    ipcMain.on('balance-add', (event, source) => {
+        dao.insertBalance(source, insertedSource => {
+          mainWindow.webContents.send('balance-inserted', insertedSource);
+        });
+    });
+
+    ipcMain.on('balance-update', (event, id, data) => {
+        dao.updateBalance(id, data, (query, source) => {
+          mainWindow.webContents.send('balance-updated', query, source);
+        });
+    });
+    ipcMain.on('balance-month-remove', (event, id, month) => {
+        dao.reupdateBalance(id, month, (query, month) => {
+          mainWindow.webContents.send('balance-reupdated', query, month);
+        });
+    });
+
+    ipcMain.on('update-settings', (event, settings) => {
+        dao.getSettings((oldSettings) => {
+            serverNotify.notify(oldSettings, settings);
+            dao.updateSettings(settings, () => {
+                mainWindow.webContents.send('settings-saved', settings);
+            });
+        });
+
+        event.returnValue = true;
+    });
 });

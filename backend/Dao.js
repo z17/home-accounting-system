@@ -38,7 +38,11 @@ Dao.prototype.insertBalance = function (source, callback) {
 };
 
 Dao.prototype.updateBalance = function (id, data, callback) {
-    this.database.updateBalance({'id': id}, data, callback);
+    this.database.updateBalance({'_id': id, 'type': Tables.BALANCE}, data, callback);
+};
+
+Dao.prototype.reupdateBalance = function (id, month, callback) {
+    this.database.reupdateBalance({'_id': id, 'type': Tables.BALANCE}, month, callback);
 };
 
 // Settings

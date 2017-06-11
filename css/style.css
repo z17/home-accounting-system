@@ -167,3 +167,12 @@ table.data-table tr.row:hover .delete {
 .settings-response.error {
     color:#ff0000;
 }
+.delete-month-balance {
+    width: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+    margin-top: -5px;
+    margin-left: 10px;
+    background: url(../images/delete.svg) no-repeat;
+}

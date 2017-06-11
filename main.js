@@ -104,9 +104,13 @@ app.on('ready', function () {
     });
 
     ipcMain.on('balance-update', (event, id, data) => {
-        console.log(data);
         dao.updateBalance(id, data, (query, source) => {
           mainWindow.webContents.send('balance-updated', query, source);
+        });
+    });
+    ipcMain.on('balance-month-remove', (event, id, month) => {
+        dao.reupdateBalance(id, month, (query, month) => {
+          mainWindow.webContents.send('balance-reupdated', query, month);
         });
     });
 

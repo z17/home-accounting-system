@@ -39,8 +39,21 @@ Database.prototype.update = function (id, type, data, callback) {
 };
 
 Database.prototype.updateBalance = function (query, data, callback) {
-    this.db.update(query, {$push: {value: data }}, function (err, num, doc, upsert) {
+    let key = 'data.'+Object.keys(data)[0];
+    let obj = {};
+    obj[key] = data[Object.keys(data)[0]];
+    this.db.update(query, { $set: obj }, {upsert: true}, function (err, num, doc, upsert) {
         callback(query, data);
+    });
+};
+
+Database.prototype.reupdateBalance = function (query, month, callback) {
+    let key = month.replace(/\./g, '').replace(/ /g, '');
+    key = 'data.'+ key;
+    let obj = {};
+    obj[key] = true;
+    this.db.update(query, { $unset: obj }, { }, (err, num, upsert) => {
+      callback(query, month);
     });
 };
 

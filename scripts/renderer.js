@@ -4,7 +4,6 @@ const SettingsView = require('../controllers/SettingsView');
 const BalanceView = require('../controllers/BalanceView');
 const shell = require('electron').shell;
 const Settings = require('../models/settings');
-const Balance = require('../models/balance.js');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -45,7 +44,11 @@ ipcRenderer.on('balance-inserted', function (event, source) {
 });
 
 ipcRenderer.on('balance-updated', function (event, query, source) {
-    balanceView.updateBalance(query['id'], source);
+    balanceView.updateBalance(query['_id'], source);
+});
+
+ipcRenderer.on('balance-reupdated', function (event, query, month) {
+    balanceView.reupdateBalance(query['_id'], month);
 });
 
 ipcRenderer.on('balance-types', function (event, types) {
@@ -142,6 +145,13 @@ $(document).ready(function () {
             obj[month] = value;
             ipcRenderer.send('balance-update', e.target.parentNode.id, obj);
         }
+
+        if (e.target.className === 'delete-month-balance') {
+          let month = e.target.parentNode.textContent.split(':')[0];
+          console.log(e.target.parentNode.parentNode);
+          let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
+          ipcRenderer.send('balance-month-remove', element.id, month);
+        }
     });
 
     $('.js-tab').click(function () {
@@ -154,11 +164,11 @@ $(document).ready(function () {
         const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
         ipcRenderer.send('income-add', incomeItem);
     });
-
     //Adding balance source
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
     balanceIncrement.addEventListener('click', function () {
-        const source = new Balance(document.getElementById('balancesource').value);
+        const source = {'name': document.getElementById('balancesource').value };
+        console.log(source);
         ipcRenderer.send('balance-add', source);
     });
 

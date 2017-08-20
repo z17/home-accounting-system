@@ -1,4 +1,5 @@
 <?php
+
 class Base
 {
     private $base;
@@ -85,7 +86,7 @@ class Base
     {
         $query = "SELECT email FROM emails WHERE deleted = FALSE";
         $sql = $this->base->prepare($query);
-        $sql->execute($query);
+        $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -97,5 +98,29 @@ class Base
         SELECT uuid FROM emails WHERE deleted = FALSE";
         $sql = $this->base->prepare($query);
         $sql->execute();
+    }
+
+    public function getNotifyEmailsList($limit)
+    {
+        $query = "
+        SELECT e.email, r.id FROM reminders r
+          INNER JOIN  emails e ON e.uuid = r.email_uuid
+        WHERE r.done = 0
+        ORDER BY r.id
+        LIMIT :limit
+        ";
+
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function markAsCompleted($id)
+    {
+        $query = 'UPDATE reminders SET done = 1 WHERE id = :id';
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':id', $id);
+        return $sql->execute();
     }
 }

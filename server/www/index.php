@@ -6,8 +6,9 @@ require_once 'Base.php';
 require_once 'action/Action.php';
 require_once 'action/EmailAction.php';
 require_once 'action/NotifyAction.php';
+require_once 'action/SendNotifyAction.php';
 
-$path = $_SERVER["REDIRECT_URL"];
+$path = $_SERVER["PATH_INFO"];
 
 switch ($path) {
     case '/email':
@@ -21,7 +22,8 @@ switch ($path) {
         $action->process();
         break;
     case '/send-notify':
-        // todo: send some emails
+        $action = new SendNotifyAction();
+        $action->process();
         break;
     default:
         break;

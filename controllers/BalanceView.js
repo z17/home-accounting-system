@@ -5,7 +5,7 @@ function BalanceView() {
   return this;
 }
 
-BalanceView.prototype.insertBalance = function (source) {
+BalanceView.prototype.addBalanceSource = function (source) {
     this.data[source.id] = {
         'name': source.name,
         'value': [],
@@ -13,7 +13,7 @@ BalanceView.prototype.insertBalance = function (source) {
     this.addBalanceSourceToDOM(source);
 };
 
-BalanceView.prototype.updateBalance = function(id, source) {
+BalanceView.prototype.addBalance = function(id, source) {
   if (typeof this.data[id] === 'undefined') {
     this.data[id] = {'value': []};
   }
@@ -21,31 +21,30 @@ BalanceView.prototype.updateBalance = function(id, source) {
   this.data[id]['value'][key] = source[key];
   this.updateDOM(id, source);
 };
-BalanceView.prototype.reupdateBalance = function(id, month) {
+
+BalanceView.prototype.deleteBalance = function(id, month) {
   if (typeof this.data[id] === 'undefined') {
     throw new Error('this id does not exist');
-    return;
   }
-  let key = month.replace(/\./g, '').replace(/ /g, '');
-  delete this.data[id]['value'][key];
-  this.reupdateDOM(id, key);
-}
+  delete this.data[id]['value'][month];
+  this.reupdateDOM(id, month);
+};
+
 BalanceView.prototype.addBalanceSourceToDOM = function(source) {
-  console.log(this);
   let section = document.createElement('SECTION');
   let h2 = document.createElement('H2');
   let remove = document.createElement('A');
   let form = document.createElement('FORM');
-  let select = document.createElement('SELECT');
   let input = document.createElement('INPUT');
   let balanceVal = document.createElement('INPUT');
   let submit = document.createElement('INPUT');
 
   let id = source.id;
   this.data[id] = {};
-  h2.id = source.id;
-  form.className = "updateBalance";
-  form.id = source.id;
+  h2.dataset.id = source.id;
+
+  form.className = 'addBalance';
+  form.dataset.id = source.id;
   delete source.id;
 
   h2.textContent = source.name;
@@ -57,27 +56,14 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   h2.appendChild(remove);
   section.appendChild(h2);
 
-  select.name = 'month';
-  select.required = 'required';
-  for (let i = 0; i < 12; i++) {
-    let month = i+1;
-    let option = document.createElement('OPTION');
-    option.textContent = i < 10?'0'+month:month;
-    option.value = option.textContent;
-    select.appendChild(option);
-  }
-  form.appendChild(select);
-
-
-  input.type = 'number';
-  input.name = 'year';
-  input.placeholder = 'Enter year(e.g. 2017)';
+  input.type = 'month';
+  input.name = 'month';
   input.required = 'required';
   form.appendChild(input);
 
 
   balanceVal.type = 'number';
-  balanceVal.name = 'balanceValue'
+  balanceVal.name = 'balanceValue';
   balanceVal.placeholder = 'Enter balance for this month';
   balanceVal.required = 'required';
   form.appendChild(balanceVal);
@@ -100,7 +86,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
 };
 
 BalanceView.prototype.updateDOM = function(id, source) {
-  let form = document.querySelector('form[id="'+id+'"');
+  let form = document.querySelector('form[data-id="'+id+'"');
   let section = form.parentNode;
   let month = Object.keys(source)[0].replace(/ /g, '');
   let value = source[month];
@@ -116,7 +102,7 @@ BalanceView.prototype.updateDOM = function(id, source) {
 };
 
 BalanceView.prototype.reupdateDOM = function(id, month) {
-  let block = document.querySelector('h2#'+id).parentNode;
+  let block = document.querySelector('h2[data-id="'+id+'"').parentNode;
   block.querySelector('p[data-month="'+month+'"]').remove();
 };
 

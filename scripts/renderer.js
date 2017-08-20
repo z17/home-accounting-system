@@ -4,6 +4,7 @@ const SettingsView = require('../controllers/SettingsView');
 const BalanceView = require('../controllers/BalanceView');
 const shell = require('electron').shell;
 const Settings = require('../models/settings');
+const moment = require('moment');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -40,15 +41,15 @@ ipcRenderer.on('income-edited', function (event, income) {
 });
 
 ipcRenderer.on('balance-inserted', function (event, source) {
-    balanceView.insertBalance(source);
+    balanceView.addBalanceSource(source);
 });
 
-ipcRenderer.on('balance-updated', function (event, query, source) {
-    balanceView.updateBalance(query['_id'], source);
+ipcRenderer.on('balance-updated', function (event, id, source) {
+    balanceView.addBalance(id, source);
 });
 
-ipcRenderer.on('balance-reupdated', function (event, query, month) {
-    balanceView.reupdateBalance(query['_id'], month);
+ipcRenderer.on('balance-reupdated', function (event, id, month) {
+    balanceView.deleteBalance(id, month);
 });
 
 ipcRenderer.on('balance-types', function (event, types) {
@@ -134,23 +135,19 @@ $(document).ready(function () {
 
         updateIncome();
 
-        if ((e.target.parentNode.className === 'updateBalance') && (e.target.type === 'submit')) {
+        if ((e.target.parentNode.className === 'addBalance') && (e.target.type === 'submit')) {
             e.preventDefault();
-            let month = e.target.parentNode.querySelector('select[name="month"]').value;
-            let year = e.target.parentNode.querySelector('input[name="year"]').value;
+            let month = e.target.parentNode.querySelector('input[name="month"]').value;
             let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-            month += '';
-            month += year;
             let obj = {};
-            obj[month] = value;
-            ipcRenderer.send('balance-update', e.target.parentNode.id, obj);
+            obj[moment(month).format("MMYYYY")] = value;
+            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, obj);
         }
 
         if (e.target.className === 'delete-month-balance') {
-          let month = e.target.parentNode.textContent.split(':')[0];
-          console.log(e.target.parentNode.parentNode);
+          let month = e.target.parentNode.dataset.month;
           let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
-          ipcRenderer.send('balance-month-remove', element.id, month);
+          ipcRenderer.send('balance-month-remove', element.dataset.id, month);
         }
     });
 

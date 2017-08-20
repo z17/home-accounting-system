@@ -33,16 +33,16 @@ Dao.prototype.getBalances = function (callback) {
     this.database.get(Tables.BALANCE, callback);
 };
 
-Dao.prototype.insertBalance = function (source, callback) {
+Dao.prototype.addBalanceSource = function (source, callback) {
     this.database.insert(source, Tables.BALANCE, callback);
 };
 
-Dao.prototype.updateBalance = function (id, data, callback) {
-    this.database.updateBalance({'_id': id, 'type': Tables.BALANCE}, data, callback);
+Dao.prototype.addBalance = function (id, data, callback) {
+    this.database.addBalance({'_id': id, 'type': Tables.BALANCE}, data, callback);
 };
 
-Dao.prototype.reupdateBalance = function (id, month, callback) {
-    this.database.reupdateBalance({'_id': id, 'type': Tables.BALANCE}, month, callback);
+Dao.prototype.deleteBalance = function (id, month, callback) {
+    this.database.deleteBalance({'_id': id, 'type': Tables.BALANCE}, month, callback);
 };
 
 // Settings

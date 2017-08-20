@@ -1,5 +1,6 @@
 const functions = require('../backend/functions');
 const Income = require('../models/income');
+const moment = require('moment');
 
 function IncomeView() {
     this.data = {};

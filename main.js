@@ -98,19 +98,19 @@ app.on('ready', function () {
     });
 
     ipcMain.on('balance-add', (event, source) => {
-        dao.insertBalance(source, insertedSource => {
+        dao.addBalanceSource(source, insertedSource => {
           mainWindow.webContents.send('balance-inserted', insertedSource);
         });
     });
 
     ipcMain.on('balance-update', (event, id, data) => {
-        dao.updateBalance(id, data, (query, source) => {
-          mainWindow.webContents.send('balance-updated', query, source);
+        dao.addBalance(id, data, (source) => {
+          mainWindow.webContents.send('balance-updated', id, source);
         });
     });
     ipcMain.on('balance-month-remove', (event, id, month) => {
-        dao.reupdateBalance(id, month, (query, month) => {
-          mainWindow.webContents.send('balance-reupdated', query, month);
+        dao.deleteBalance(id, month, (month) => {
+          mainWindow.webContents.send('balance-reupdated', id, month);
         });
     });
 

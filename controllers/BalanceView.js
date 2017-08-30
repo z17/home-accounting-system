@@ -1,5 +1,7 @@
 'use strict';
 
+const moment = require('moment');
+
 function BalanceView() {
   this.data = {};
   return this;
@@ -8,7 +10,7 @@ function BalanceView() {
 BalanceView.prototype.addBalanceSource = function (source) {
     this.data[source.id] = {
         'name': source.name,
-        'value': [],
+        'value': source.value,
     };
     this.addBalanceSourceToDOM(source);
 };
@@ -19,7 +21,7 @@ BalanceView.prototype.addBalance = function(id, source) {
   }
   let key = Object.keys(source)[0];
   this.data[id]['value'][key] = source[key];
-  this.updateDOM(id, source);
+  this.updateDOM(id, key, source[key]);
 };
 
 BalanceView.prototype.deleteBalance = function(id, month) {
@@ -45,11 +47,9 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
 
   form.className = 'addBalance';
   form.dataset.id = source.id;
-  delete source.id;
 
   h2.textContent = source.name;
   this.data[id]['name'] = source.name;
-  delete source.name;
 
   remove.className = 'delete-balance-item';
 
@@ -74,26 +74,19 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   section.appendChild(form);
   document.querySelector('.balance-items').appendChild(section);
 
-  this.data[id]['value'] = source;
-  let months = Object.keys(source);
-  if (months.length > 0) {
-    for (let i = 0; i < months.length; i++) {
-      let month = {};
-      month[months[i]] = source[months[i]];
-      this.updateDOM(id, month);
-    }
+  this.data[id]['value'] = source.value;
+  let months = Object.keys(source.value);
+  for (let i = 0; i < months.length; i++) {
+    this.updateDOM(id, months[i], source.value[months[i]]);
   }
 };
 
-BalanceView.prototype.updateDOM = function(id, source) {
+BalanceView.prototype.updateDOM = function(id, month, sum) {
   let form = document.querySelector('form[data-id="'+id+'"');
   let section = form.parentNode;
-  let month = Object.keys(source)[0].replace(/ /g, '');
-  let value = source[month];
   let p = document.createElement('P');
   p.dataset.month = month;
-  month = month.substr(0, 2) + '.' + month.substr(2);
-  p.textContent = month + ' : ' + value;
+  p.textContent = moment(month, "MMYYYY").format("MMM YYYY") + ' : ' + sum;
   let deleteIcon = document.createElement('A');
   deleteIcon.className = 'delete-month-balance';
   deleteIcon.href = '#';

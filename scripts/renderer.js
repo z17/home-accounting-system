@@ -161,11 +161,14 @@ $(document).ready(function () {
         const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
         ipcRenderer.send('income-add', incomeItem);
     });
+
     //Adding balance source
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
     balanceIncrement.addEventListener('click', function () {
-        const source = {'name': document.getElementById('balancesource').value };
-        console.log(source);
+        const source = {
+            name : document.getElementById('balancesource').value,
+            value : {},
+        };
         ipcRenderer.send('balance-add', source);
     });
 

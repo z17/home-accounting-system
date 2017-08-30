@@ -39,7 +39,7 @@ Database.prototype.update = function (id, type, data, callback) {
 };
 
 Database.prototype.addBalance = function (query, data, callback) {
-    let key = 'data.'+Object.keys(data)[0];
+    let key = 'data.value.'+Object.keys(data)[0];
     let obj = {};
     obj[key] = data[Object.keys(data)[0]];
     this.db.update(query, { $set: obj }, {upsert: true}, function (err, num, doc, upsert) {
@@ -48,7 +48,7 @@ Database.prototype.addBalance = function (query, data, callback) {
 };
 
 Database.prototype.deleteBalance = function (query, month, callback) {
-    let key = 'data.'+ month;
+    let key = 'data.value.'+ month;
     let obj = {};
     obj[key] = true;
     this.db.update(query, { $unset: obj }, { }, (err, num, upsert) => {

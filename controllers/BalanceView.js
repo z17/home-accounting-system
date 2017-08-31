@@ -15,13 +15,13 @@ BalanceView.prototype.addBalanceSource = function (source) {
     this.addBalanceSourceToDOM(source);
 };
 
-BalanceView.prototype.addBalance = function(id, source) {
+BalanceView.prototype.addBalance = function(id, month, sum) {
   if (typeof this.data[id] === 'undefined') {
     this.data[id] = {'value': []};
   }
-  let key = Object.keys(source)[0];
-  this.data[id]['value'][key] = source[key];
-  this.updateDOM(id, key, source[key]);
+
+  this.data[id]['value'][month] = sum;
+  this.updateDOM(id, month, sum);
 };
 
 BalanceView.prototype.deleteBalance = function(id, month) {

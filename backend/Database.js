@@ -16,7 +16,7 @@ Database.prototype.insert = function (data, type, callback) {
           throw new Error(err);
         }
 
-        if (callback == undefined) {
+        if (callback === undefined) {
             return;
         }
 
@@ -38,21 +38,19 @@ Database.prototype.update = function (id, type, data, callback) {
     );
 };
 
-Database.prototype.addBalance = function (query, data, callback) {
-    let key = 'data.value.'+Object.keys(data)[0];
+Database.prototype.addProperty = function (query, key, value, callback) {
     let obj = {};
-    obj[key] = data[Object.keys(data)[0]];
+    obj[key] = value;
     this.db.update(query, { $set: obj }, {upsert: true}, function (err, num, doc, upsert) {
-        callback(data);
+        callback();
     });
 };
 
-Database.prototype.deleteBalance = function (query, month, callback) {
-    let key = 'data.value.'+ month;
+Database.prototype.deleteProperty = function (query, key, callback) {
     let obj = {};
     obj[key] = true;
     this.db.update(query, { $unset: obj }, { }, (err, num, upsert) => {
-      callback(month);
+      callback();
     });
 };
 
@@ -72,7 +70,7 @@ Database.prototype.delete = function (type, id, callback) {
             throw new Error(err);
         }
 
-        if (callback == undefined) {
+        if (callback === undefined) {
             return;
         }
 

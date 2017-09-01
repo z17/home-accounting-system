@@ -20,6 +20,10 @@ BalanceView.prototype.addBalance = function(id, month, sum) {
     this.data[id] = {'value': []};
   }
 
+  if (this.data[id]['value'].hasOwnProperty(month)) {
+    this.deleteBalance(id, month);
+  }
+
   this.data[id]['value'][month] = sum;
   this.updateDOM(id, month, sum);
 };

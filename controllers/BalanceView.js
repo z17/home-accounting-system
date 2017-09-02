@@ -65,7 +65,6 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   input.required = 'required';
   form.appendChild(input);
 
-
   balanceVal.type = 'number';
   balanceVal.name = 'balanceValue';
   balanceVal.placeholder = 'Enter balance for this month';
@@ -78,11 +77,24 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   section.appendChild(form);
   document.querySelector('.balance-items').appendChild(section);
 
-  this.data[id]['value'] = source.value;
-  let months = Object.keys(source.value);
-  for (let i = 0; i < months.length; i++) {
-    this.updateDOM(id, months[i], source.value[months[i]]);
-  }
+    this.data[id]['value'] = source.value;
+    let months = Object.keys(source.value);
+    let data = [];
+    for (let i = 0; i < months.length; i++) {
+        data.push({
+            timestamp: moment(months[i], "MMYYYY").unix(),
+            month: months[i],
+            value: source.value[months[i]]
+        });
+    }
+
+    data.sort((a, b) => {
+        return a.timestamp - b.timestamp;
+    });
+
+    data.forEach(v => {
+        this.updateDOM(id, v.month, v.value);
+    });
 };
 
 BalanceView.prototype.updateDOM = function(id, month, sum) {

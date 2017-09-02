@@ -41,7 +41,7 @@ function IncomeView() {
 }
 
 IncomeView.prototype.setData = function (data) {
-    data.sort(function (a, b) {
+    data.sort((a, b) => {
         return a.date - b.date;
     });
     this.data = data;
@@ -140,7 +140,7 @@ function draw(chartData, width, height, chartId) {
 
     function drawChart() {
         let dataTable = prepareChartData(chartData);
-        if (chartData.chart != null) {
+        if (chartData.chart !== null) {
             chartData.chart.draw(dataTable, chartData.chartOptions);
             chartData.chartData = dataTable;
             return
@@ -183,7 +183,7 @@ function updateGraphData(incomeItem) {
     let firstYear = moment().startOf('year');
     let lastMonth = moment().startOf('month');
     let lastYear = moment().startOf('year');
-    if (data.length != 0) {
+    if (data.length !== 0) {
         firstMonth = moment.unix(data[0]['month']).startOf('month');
         firstYear = moment.unix(data[0]['month']).startOf('year');
         lastMonth = moment.unix(data[data.length - 1]['month']).startOf('month');
@@ -224,7 +224,7 @@ function updateGraphData(incomeItem) {
         }
 
         // если 0, значит сейчас январь и можно пропустить его
-        if (monthDiff == 0) {
+        if (monthDiff === 0) {
             return;
         }
 

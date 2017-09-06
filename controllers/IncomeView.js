@@ -176,7 +176,6 @@ function insertIncomeData(data) {
     data.forEach(insertIncomeToPage);
 }
 
-//ok to stay
 function updateGraphData(incomeItem) {
     let data = incomeItem.data;
     let firstMonth = moment().startOf('month');

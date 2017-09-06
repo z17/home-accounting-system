@@ -15,25 +15,25 @@ BalanceView.prototype.addBalanceSource = function (source) {
     this.addBalanceSourceToDOM(source);
 };
 
-BalanceView.prototype.addBalance = function(id, month, sum) {
-  if (typeof this.data[id] === 'undefined') {
-    this.data[id] = {'value': []};
-  }
+BalanceView.prototype.addBalance = function (id, month, sum) {
+    if (typeof this.data[id] === 'undefined') {
+        this.data[id] = {'value': []};
+    }
 
-  if (this.data[id]['value'].hasOwnProperty(month)) {
-    this.deleteBalance(id, month);
-  }
-
-  this.data[id]['value'][month] = sum;
-  this.updateDOM(id, month, sum);
+    if (this.data[id]['value'].hasOwnProperty(month)) {
+        this.updateSumDOM(id, month, sum);
+    } else {
+        this.addMonthDOM(id, month, sum);
+    }
+    this.data[id]['value'][month] = sum;
 };
 
 BalanceView.prototype.deleteBalance = function(id, month) {
   if (typeof this.data[id] === 'undefined') {
     throw new Error('this id does not exist');
   }
-  delete this.data[id]['value'][month];
-  this.reupdateDOM(id, month);
+  this.data[id]['value'][month] = 0;
+  this.updateSumDOM(id, month, 0);
 };
 
 BalanceView.prototype.addBalanceSourceToDOM = function(source) {
@@ -82,27 +82,48 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
     let data = [];
     for (let i = 0; i < months.length; i++) {
         data.push({
-            timestamp: moment(months[i], "MMYYYY").unix(),
-            month: months[i],
-            value: source.value[months[i]]
+            time: moment(months[i], "MMYYYY"),
         });
     }
 
     data.sort((a, b) => {
-        return a.timestamp - b.timestamp;
+        return a.time.unix() - b.time.unix();
     });
 
-    data.forEach(v => {
-        this.updateDOM(id, v.month, v.value);
-    });
+    // todo: check this moment at IncomeView and create common function for this
+    let firstMonth = moment().startOf('month');
+    let lastMonth = moment().startOf('month');
+
+    if (lastMonth.isBefore(data[data.length - 1].time)) {
+        lastMonth = data[data.length - 1].time;
+    }
+    if (firstMonth.isAfter(data[0].time)) {
+        firstMonth = data[0].time;
+    }
+
+    let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
+    let currentMonth = firstMonth;
+    for (let i = 0; i < countMonths; i++) {
+        let strMonth = currentMonth.format("MMYYYY");
+
+        if (!source.value.hasOwnProperty(strMonth)) {
+            source.value[strMonth] = 0;
+        }
+        this.addMonthDOM(id, strMonth, source.value[strMonth]);
+        currentMonth.add(1, 'M');
+    }
 };
 
-BalanceView.prototype.updateDOM = function(id, month, sum) {
+BalanceView.prototype.addMonthDOM = function(id, month, sum) {
   let form = document.querySelector('form[data-id="'+id+'"');
   let section = form.parentNode;
   let p = document.createElement('P');
+  let sumTag = document.createElement('span');
+  sumTag.className = ' sum';
+  sumTag.textContent = sum;
   p.dataset.month = month;
-  p.textContent = moment(month, "MMYYYY").format("MMM YYYY") + ' : ' + sum;
+  p.textContent = moment(month, "MMYYYY").format("MMM YYYY") + ' : ';
+  p.appendChild(sumTag);
   let deleteIcon = document.createElement('A');
   deleteIcon.className = 'delete-month-balance';
   deleteIcon.href = '#';
@@ -110,9 +131,9 @@ BalanceView.prototype.updateDOM = function(id, month, sum) {
   section.insertBefore(p, form);
 };
 
-BalanceView.prototype.reupdateDOM = function(id, month) {
+BalanceView.prototype.updateSumDOM = function(id, month, sum) {
   let block = document.querySelector('h2[data-id="'+id+'"').parentNode;
-  block.querySelector('p[data-month="'+month+'"]').remove();
+  block.querySelector('p[data-month="'+month+'"] span.sum').textContent = sum;
 };
 
 BalanceView.prototype.setBalance = function (balanceSources) {

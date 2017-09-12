@@ -33,6 +33,7 @@ class EmailAction extends Action
                 $this->db->disableEmail($this->data->email);
                 break;
             default:
+                echo "invalid action";
                 // todo: log this
         }
     }

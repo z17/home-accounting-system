@@ -6,7 +6,7 @@ class Base
 
     public function __construct()
     {
-        $this->base = new PDO("mysql:host=" . Config::$host . ";dbname=" . Config::$db_name, Config::$db_user, Config::$db_password);
+        $this->base = new PDO("mysql:host=" . Config::$db_host . ";dbname=" . Config::$db_name, Config::$db_user, Config::$db_password);
         $this->base->query("set names utf8");
     }
 
@@ -103,7 +103,7 @@ class Base
     public function getNotifyEmailsList($limit)
     {
         $query = "
-        SELECT e.email, r.id FROM reminders r
+        SELECT e.email, r.id, e.uuid FROM reminders r
           INNER JOIN  emails e ON e.uuid = r.email_uuid
         WHERE r.done = 0
         ORDER BY r.id
@@ -122,5 +122,14 @@ class Base
         $sql = $this->base->prepare($query);
         $sql->bindParam(':id', $id);
         return $sql->execute();
+    }
+
+    public function getEmailByUuid($uuid)
+    {
+        $query = 'SELECT * FROM emails 	WHERE uuid = :uuid';
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':uuid', $uuid);
+        $sql->execute();
+        return $sql->fetch(PDO::FETCH_ASSOC);
     }
 }

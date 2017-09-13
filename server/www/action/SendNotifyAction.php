@@ -21,7 +21,7 @@ class SendNotifyAction extends Action
         $unsubscribeLink = Config::$domain_url . '/unsubscribe?uuid=' . $uuid;
 
         $subject = 'Напоминание от Cromberg';
-        $message = TemplateHelper::getTemplate('email-notification');
+        $message = TemplateHelper::getTemplate(Template::EMAIL_NOTIFICATION);
         $message = TemplateHelper::replaceKey('unsubscribe_link', $unsubscribeLink, $message);
         $headers = 'From: noreply@' . Config::$domain_url . "\r\n" .
             'Reply-To: noreply@' . Config::$domain_url . "\r\n" .

@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-size: 100%;
+    line-height: 1.6
+}
+
+body {
+    background-color: #f1f1f1;
+}
+
+.wrapper {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    width:1000px;
+    margin:0 auto;
+}
+
+h1 {
+    margin:20px 0;
+    font-size:150%;
+}
+
+p {
+    margin:10px 0;
+}

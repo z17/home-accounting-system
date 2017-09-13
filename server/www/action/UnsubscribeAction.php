@@ -14,7 +14,7 @@ class UnsubscribeAction extends Action
     {
         $this->db->disableEmailByUuid($this->uuid);
         $emailData = $this->db->getEmailByUuid($this->uuid);
-        $page = TemplateHelper::getTemplate('page-unsubscribe');
+        $page = TemplateHelper::getPageTemplate(Template::PAGE_UNSUBSCRIBE, 'Отписаться');
         $page = TemplateHelper::replaceKey('email', $emailData['email'], $page);
         echo $page;
     }

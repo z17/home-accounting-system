@@ -4,6 +4,7 @@ require_once 'Config.php';
 require_once 'functions.php';
 require_once 'Base.php';
 require_once 'TemplateHelper.php';
+require_once 'Template.php';
 require_once 'action/Action.php';
 require_once 'action/EmailAction.php';
 require_once 'action/NotifyAction.php';
@@ -33,9 +34,11 @@ switch ($path) {
         $action->process();
         break;
     case '/';
-        // todo: show page-index.html
+        // todo: transfer this from index.php
+        echo TemplateHelper::getPageTemplate(Template::PAGE_INDEX, 'Cromberg');
         break;
     default:
-        // todo: show page-404.html
+        // todo: transfer this from index.php
+        echo TemplateHelper::getPageTemplate(Template::PAGE_404, '404 error');
         break;
 }

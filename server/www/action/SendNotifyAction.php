@@ -18,15 +18,16 @@ class SendNotifyAction extends Action
 
     private function sendEmail($email, $uuid)
     {
-        $unsubscribeLink = Config::$domain_url . '/unsubscribe?uuid=' . $uuid;
+        $unsubscribeLink = Config::$domain_link . '/unsubscribe?uuid=' . $uuid;
 
         $subject = 'Напоминание от Cromberg';
         $message = TemplateHelper::getTemplate(Template::EMAIL_NOTIFICATION);
         $message = TemplateHelper::replaceKey('unsubscribe_link', $unsubscribeLink, $message);
-        $headers = 'From: noreply@' . Config::$domain_url . "\r\n" .
-            'Reply-To: noreply@' . Config::$domain_url . "\r\n" .
+        $headers = 'From: noreply@' . Config::$domain . "\r\n" .
+            'Reply-To: noreply@' . Config::$domain . "\r\n" .
             'X-Mailer: Cromberg mailer' . "\r\n" .
-            'List-Unsubscribe: <' . $unsubscribeLink . '>';
+            'List-Unsubscribe: <' . $unsubscribeLink . '>' . "\r\n" .
+            'Content-type: text/html; charset=utf-8' . "\r\n";
 
         mail($email, $subject, $message, $headers);
     }

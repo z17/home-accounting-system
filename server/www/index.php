@@ -11,7 +11,7 @@ require_once 'action/NotifyAction.php';
 require_once 'action/SendNotifyAction.php';
 require_once 'action/UnsubscribeAction.php';
 
-$path = $_SERVER["PATH_INFO"];
+$path = $_SERVER["REDIRECT_URL"];
 
 switch ($path) {
     case '/email':
@@ -33,12 +33,14 @@ switch ($path) {
         $action = new UnsubscribeAction($uuid);
         $action->process();
         break;
-    case '/';
+    case '';
         // todo: transfer this from index.php
         echo TemplateHelper::getPageTemplate(Template::PAGE_INDEX, 'Cromberg');
         break;
     default:
         // todo: transfer this from index.php
+        // todo: 404 header
         echo TemplateHelper::getPageTemplate(Template::PAGE_404, '404 error');
+        writeLog("404 error: ". $path);
         break;
 }

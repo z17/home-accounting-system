@@ -1,6 +1,6 @@
 const electron = require('electron');
 const Dao = require('./backend/Dao');
-const functions = require('./backend/functions');
+const functions = require('./scripts/functions');
 const argv = require('minimist')(process.argv);
 const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 

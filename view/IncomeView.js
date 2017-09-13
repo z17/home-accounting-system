@@ -1,4 +1,4 @@
-const functions = require('../backend/functions');
+const functions = require('../scripts/functions');
 const Income = require('../models/income');
 const moment = require('moment');
 

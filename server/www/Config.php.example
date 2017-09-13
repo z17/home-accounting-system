@@ -11,5 +11,6 @@ class Config
 	static $log_file = 'log.txt';
 	static $notify_key = 'some random key';
 	static $notify_count = 10;
-	static $domain_url = 'http://localhost';
+	static $domain_link = 'http://localhost';
+	static $domain = 'localhost';
 }

@@ -1,4 +1,4 @@
-const functions = require('../backend/functions');
+const functions = require('../scripts/functions');
 
 function SettingsView() {
     this.data = {};

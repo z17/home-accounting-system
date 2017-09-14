@@ -52,7 +52,6 @@ table.data-table td, table.data-table th {
     border: 1px solid #ccc;
 }
 
-
 table.data-table td:last-child, table.data-table th:last-child {
     border-right: 0;
 }
@@ -114,7 +113,6 @@ table.data-table tr.row:hover .delete {
     text-align: left;
 }
 
-
 .inline-blocks .income-data {
     padding-top: 30px;
 }
@@ -133,22 +131,23 @@ table.data-table tr.row:hover .delete {
 
 .settings-button {
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     cursor: pointer;
-    border:1px solid #aaa;
+    border: 1px solid #aaa;
     margin: 20px 20px 0 0;
     padding: 5px 8px;
     z-index: 100;
 }
+
 .settings-button.active {
-    background:#aaa;
+    background: #aaa;
 }
 
 .settings-page {
     display: none;
     position: fixed;
-    width:100%;
+    width: 100%;
     height: 100%;
     background: #fff;
     z-index: 50;
@@ -161,20 +160,66 @@ table.data-table tr.row:hover .delete {
 
 .setting-form label {
     display: block;
-    margin:15px 0;
+    margin: 15px 0;
 }
 
 .settings-response.error {
-    color:#ff0000;
+    color: #ff0000;
 }
 
 .delete-month-balance {
+    float:right;
     cursor: pointer;
     width: 20px;
     display: inline-block;
     vertical-align: middle;
     height: 20px;
     margin-top: -5px;
-    margin-left: 10px;
+    margin-right: 10px;
     background: url(../images/delete.svg) no-repeat;
+}
+
+.balance-source {
+    margin: 30px;
+    float: left;
+    padding: 10px;
+    width: 400px;
+}
+
+.balance-items .balance-item {
+    margin: 3px 0;
+    padding: 4px 0;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.balance-items .balance-item .month {
+    display: inline-block;
+    width: 120px;
+}
+
+.balance-items .balance-item .sum {
+    display: inline-block;
+    width: 70px;
+    float: right;
+    text-align: right;
+    margin-right: 20px;
+}
+
+form.addBalance {
+    margin-top: 15px;
+}
+
+form.addBalance input.month {
+    width: 160px;
+}
+
+form.addBalance input.sum {
+    padding: 2px;
+    width: 110px;
+    margin-left: 5px;
+}
+
+form.addBalance input.submit {
+    padding: 2px;
+    margin-left: 5px;
 }

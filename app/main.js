@@ -10,6 +10,9 @@ const ipcMain = electron.ipcMain;
 const dao = new Dao();
 const serverNotify = new ServerNotify();
 
+// require('./tmp/converter').exportBalanceData();
+// require('./tmp/converter').exportIncomeData();
+
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
 let mainWindow = null;

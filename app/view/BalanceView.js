@@ -1,5 +1,6 @@
 'use strict';
 
+const functions = require('../scripts/functions');
 const moment = require('moment');
 
 function BalanceView() {
@@ -38,11 +39,12 @@ BalanceView.prototype.deleteBalance = function(id, month) {
 
 BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   let section = document.createElement('SECTION');
+  section.className = 'balance-source';
   let h2 = document.createElement('H2');
   let remove = document.createElement('A');
   let form = document.createElement('FORM');
-  let input = document.createElement('INPUT');
-  let balanceVal = document.createElement('INPUT');
+  let monthInput = document.createElement('INPUT');
+  let sumInput = document.createElement('INPUT');
   let submit = document.createElement('INPUT');
 
   let id = source.id;
@@ -60,18 +62,21 @@ BalanceView.prototype.addBalanceSourceToDOM = function(source) {
   h2.appendChild(remove);
   section.appendChild(h2);
 
-  input.type = 'month';
-  input.name = 'month';
-  input.required = 'required';
-  form.appendChild(input);
+  monthInput.type = 'month';
+  monthInput.name = 'month';
+  monthInput.required = 'required';
+  monthInput.className = 'month';
+  form.appendChild(monthInput);
 
-  balanceVal.type = 'number';
-  balanceVal.name = 'balanceValue';
-  balanceVal.placeholder = 'Enter balance for this month';
-  balanceVal.required = 'required';
-  form.appendChild(balanceVal);
+  sumInput.type = 'number';
+  sumInput.name = 'balanceValue';
+  sumInput.placeholder = 'Enter balance';
+  sumInput.required = 'required';
+  sumInput.className = 'sum';
+  form.appendChild(sumInput);
 
   submit.type = 'submit';
+  submit.className = 'submit';
   form.appendChild(submit);
 
   section.appendChild(form);
@@ -118,16 +123,22 @@ BalanceView.prototype.addMonthDOM = function(id, month, sum) {
   let form = document.querySelector('form[data-id="'+id+'"');
   let section = form.parentNode;
   let p = document.createElement('P');
+  p.className = 'balance-item';
+
+  let monthTag = document.createElement('span');
+  monthTag.className = 'month';
+  monthTag.textContent = moment(month, "MMYYYY").format("MMM YYYY") + ':';
+
   let sumTag = document.createElement('span');
   sumTag.className = ' sum';
-  sumTag.textContent = sum;
+  sumTag.textContent = functions.numberWithSpaces(sum);
   p.dataset.month = month;
-  p.textContent = moment(month, "MMYYYY").format("MMM YYYY") + ' : ';
-  p.appendChild(sumTag);
+  p.appendChild(monthTag);
   let deleteIcon = document.createElement('A');
   deleteIcon.className = 'delete-month-balance';
   deleteIcon.href = '#';
   p.appendChild(deleteIcon);
+  p.appendChild(sumTag);
   section.insertBefore(p, form);
 };
 

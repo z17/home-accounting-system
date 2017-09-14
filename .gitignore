@@ -1,5 +1,5 @@
 /.idea/
-/tmp/
-/node_modules/
-/db/
+/app/tmp/
+/app/node_modules/
+/app/db/
 /server/www/Config.php

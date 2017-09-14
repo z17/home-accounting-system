@@ -223,3 +223,8 @@ form.addBalance input.submit {
     padding: 2px;
     margin-left: 5px;
 }
+
+.balance-statistic {
+    text-align: center;
+    margin-bottom: 40px;
+}

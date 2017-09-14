@@ -218,6 +218,7 @@ function makeActive(tab) {
             incomeView.reloadGraph();
             break;
         case 'balance':
+            balanceView.reloadGraph();
             break;
         default:
             alert('Unknown tab name');

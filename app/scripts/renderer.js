@@ -143,6 +143,7 @@ $(document).ready(function () {
         }
 
         if (e.target.className === 'delete-month-balance') {
+            e.preventDefault();
           let month = e.target.parentNode.dataset.month;
           let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
           ipcRenderer.send('balance-month-remove', element.dataset.id, month);

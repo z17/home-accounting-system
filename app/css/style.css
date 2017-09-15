@@ -15,12 +15,6 @@ body,
     min-height: 100%;
 }
 
-.footer {
-    height: 40px;
-    padding: 10px 0;
-    margin-top: -60px;
-}
-
 .js-row {
     display: none;
 }
@@ -89,15 +83,44 @@ table.data-table tr.row:hover .delete {
     display: block;
 }
 
-.tabs .tab {
+.page:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.tabs {
+    display: inline-block;
+}
+
+.tabs .tab.active {
+    cursor: default;
+}
+
+.tabs .tab, .settings-button {
     padding: 5px 10px;
     cursor: pointer;
     background: #f1f1f1;
     display: inline-block;
 }
 
-.tabs .tab.active {
+.tabs .tab.active, .settings-button.active {
     background: #ffffff;
+    border: 1px solid #f1f1f1;
+}
+
+.buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 20px 0 0;
+}
+
+.settings-button {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .income-statistic {
@@ -129,21 +152,6 @@ table.data-table tr.row:hover .delete {
     display: inline-block;
 }
 
-.settings-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    border: 1px solid #aaa;
-    margin: 20px 20px 0 0;
-    padding: 5px 8px;
-    z-index: 100;
-}
-
-.settings-button.active {
-    background: #aaa;
-}
-
 .settings-page {
     display: none;
     position: fixed;
@@ -168,7 +176,7 @@ table.data-table tr.row:hover .delete {
 }
 
 .delete-month-balance {
-    float:right;
+    float: right;
     cursor: pointer;
     width: 20px;
     display: inline-block;
@@ -183,7 +191,7 @@ table.data-table tr.row:hover .delete {
     margin: 30px;
     float: left;
     padding: 10px;
-    width: 400px;
+    width: 350px;
 }
 
 .balance-items .balance-item {
@@ -219,8 +227,8 @@ form.addBalance input.sum {
     margin-left: 5px;
 }
 
-form.addBalance input.submit {
-    padding: 2px;
+form.addBalance button.submit {
+    padding: 2px 6px;
     margin-left: 5px;
 }
 

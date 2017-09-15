@@ -22,12 +22,15 @@ BalanceView.prototype.addBalance = function (id, month, sum) {
         this.data[id] = {'value': []};
     }
 
-    if (this.data[id].value.hasOwnProperty(month)) {
+    if (isMonthInDOM(id, month)) {
         this.updateSumDOM(id, month, sum);
     } else {
         this.addMonthDOM(id, month, sum);
     }
     this.data[id]['value'][month] = sum;
+
+    this.dataByMonth = convertData(this.data);
+    this.reloadGraph();
 };
 
 BalanceView.prototype.deleteBalance = function(id, month) {
@@ -36,6 +39,9 @@ BalanceView.prototype.deleteBalance = function(id, month) {
   }
   this.data[id]['value'][month] = 0;
   this.updateSumDOM(id, month, 0);
+
+    this.dataByMonth = convertData(this.data);
+    this.reloadGraph();
 };
 
 BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, dataByMonth) {
@@ -46,7 +52,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     let form = document.createElement('FORM');
     let monthInput = document.createElement('INPUT');
     let sumInput = document.createElement('INPUT');
-    let submit = document.createElement('INPUT');
+    let submit = document.createElement('BUTTON');
 
     let id = sourceId;
     h2.dataset.id = sourceId;
@@ -76,6 +82,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
 
     submit.type = 'submit';
     submit.className = 'submit';
+    submit.textContent = '+';
     form.appendChild(submit);
 
     section.appendChild(form);
@@ -111,56 +118,25 @@ BalanceView.prototype.addMonthDOM = function(id, month, sum) {
 
 BalanceView.prototype.updateSumDOM = function(id, month, sum) {
   let block = document.querySelector('h2[data-id="'+id+'"').parentNode;
-  block.querySelector('p[data-month="'+month+'"] span.sum').textContent = sum;
+  block.querySelector('p[data-month="'+month+'"] span.sum').textContent = functions.numberWithSpaces(sum);
 };
 
 BalanceView.prototype.setBalance = function (balanceSources) {
-    let firstMonth = moment().startOf('month');
-    let lastMonth = moment().startOf('month');
-
     balanceSources.forEach(balanceSource => {
-        let months = Object.keys(balanceSource.value);
-        let monthData = [];
-        for (let i = 0; i < months.length; i++) {
-            monthData.push(moment(months[i], "MMYYYY"));
-        }
-
-        [firstMonth, lastMonth] = functions.calcStartEndDates(firstMonth, lastMonth, monthData);
+        this.data[balanceSource.id] = {
+            name : balanceSource.name,
+            value : balanceSource.value
+        };
     });
 
-    let data = [];
-
-    let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
-    let currentMonth = firstMonth;
-    for (let i = 0; i < countMonths; i++) {
-
-        let monthData = {
-            month : currentMonth.clone(),
-            value : []
-        };
-
-        let str = '';
-        balanceSources.forEach(balanceSource => {
-            str += ', ' + balanceSource.name;
-            if (balanceSource.value[currentMonth.format("MMYYYY")] !== undefined) {
-                monthData.value.push(balanceSource.value[currentMonth.format("MMYYYY")]);
-            } else {
-                monthData.value.push(0);
-            }
-        });
-
-        currentMonth.add(1, 'M');
-        data.push(monthData);
-    }
-
-    this.dataByMonth = data;
+    this.dataByMonth = convertData(this.data);
 
     let sourceIndex = 0;
     balanceSources.forEach(balanceSource => {
-        let dataByMonth = [];
+        let dataByMonthForCurrentSource = [];
 
-        data.forEach(month => {
-           dataByMonth.push(
+        this.dataByMonth.forEach(month => {
+           dataByMonthForCurrentSource.push(
                {
                    month : month.month,
                    sum : month.value[sourceIndex]
@@ -168,11 +144,7 @@ BalanceView.prototype.setBalance = function (balanceSources) {
            );
         });
 
-        this.data[balanceSource.id] = {
-            name : balanceSource.name,
-            value : balanceSource.value
-        };
-        this.addBalanceSourceToDOM(balanceSource.id, balanceSource.name, dataByMonth);
+        this.addBalanceSourceToDOM(balanceSource.id, balanceSource.name, dataByMonthForCurrentSource);
 
         sourceIndex++;
     });
@@ -227,6 +199,60 @@ function prepareDataForChart(balanceData, dataByMonth) {
     });
 
     return [chartPartNames].concat(dataChart);
+}
+
+function convertData(balanceSources) {
+    let firstMonth = moment().startOf('month');
+    let lastMonth = moment().startOf('month');
+
+    for (let balanceId in balanceSources) {
+        if (!balanceSources.hasOwnProperty(balanceId)) {
+            continue;
+        }
+
+        let currentSource = balanceSources[balanceId];
+        let months = Object.keys(currentSource.value);
+        let monthData = [];
+        for (let i = 0; i < months.length; i++) {
+            monthData.push(moment(months[i], "MMYYYY"));
+        }
+
+        [firstMonth, lastMonth] = functions.calcStartEndDates(firstMonth, lastMonth, monthData);
+    }
+
+    let data = [];
+
+    let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
+    let currentMonth = firstMonth;
+    for (let i = 0; i < countMonths; i++) {
+
+        let monthData = {
+            month : currentMonth.clone(),
+            value : []
+        };
+
+        for (let balanceId in balanceSources) {
+            if (!balanceSources.hasOwnProperty(balanceId)) {
+                continue;
+            }
+
+            let currentSource = balanceSources[balanceId];
+            if (currentSource.value[currentMonth.format("MMYYYY")] !== undefined) {
+                monthData.value.push(currentSource.value[currentMonth.format("MMYYYY")]);
+            } else {
+                monthData.value.push(0);
+            }
+        }
+
+        currentMonth.add(1, 'M');
+        data.push(monthData);
+    }
+    return data;
+}
+
+function isMonthInDOM(sourceId, monthStr) {
+    let block = document.querySelector('h2[data-id="'+sourceId+'"').parentNode;
+    return block.querySelector('p[data-month="'+monthStr+'"] span.sum') !== null
 }
 
 module.exports = BalanceView;

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Home accounting system</title>
+    <title>[[title]]</title>
 
     <link type="text/css" rel="stylesheet" href="node_modules/normalize.css/normalize.css">
     <link type="text/css" rel="stylesheet" href="node_modules/jquery-ui-dist/jquery-ui.min.css">
@@ -13,27 +13,27 @@
 <div class="wrapper">
     <div class="buttons">
         <div class="tabs">
-            <a class="tab js-tab active" data-name="income">Доход</a>
-            <a class="tab js-tab" data-name="balance">Баланс</a>
+            <a class="tab js-tab active" data-name="income">[[income]]</a>
+            <a class="tab js-tab" data-name="balance">[[balance]]</a>
         </div>
-        <div class="settings-button js-settings-button">Settings</div>
+        <div class="settings-button js-settings-button">[[settings]]</div>
     </div>
     <div class="settings-page js-settings-page">
-        <h1>Settings</h1>
+        <h1>[[settings]]</h1>
 
         <form class="setting-form js-settings-form">
-            <label>Remind me every month about balance:
+            <label>[[remind]]:
                 <input type="checkbox" class="js-settings-remind"/>
             </label>
-            <label>E-mail for reminds:
+            <label>[[remind-email]]:
                 <input type="email" class="js-settings-email"/>
             </label>
-            <input type="submit" value="Save"/> <span class="js-settings-response settings-response"></span>
+            <input type="submit" value="[[save]]"/> <span class="js-settings-response settings-response"></span>
         </form>
     </div>
     <div class="content">
         <div class="js-income-page js-page page" data-name="income">
-            <h1>Income</h1>
+            <h1>[[income]]</h1>
 
             <div class="income-statistic">
                 <div class="income-chart income-month-chart" id="js-income-month-chart"></div>
@@ -41,13 +41,13 @@
                     <div class="income-chart income-year-chart" id="js-income-year-chart"></div>
                     <div class="income-chart income-middle-year-chart" id="js-income-average-chart"></div>
                     <div class="income-data">
-                        <p class="income-data-line"><span class="income-data-name">Sum:</span> <span
+                        <p class="income-data-line"><span class="income-data-name">[[sum]]:</span> <span
                                 class="js-income-sum"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">Average:</span> <span
+                        <p class="income-data-line"><span class="income-data-name">[[average]]:</span> <span
                                 class="js-income-average"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">Top month:</span> <span
+                        <p class="income-data-line"><span class="income-data-name">[[top-month]]:</span> <span
                                 class="js-income-top"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">Worst month:</span> <span
+                        <p class="income-data-line"><span class="income-data-name">[[worst-month]]:</span> <span
                                 class="js-income-worst"></span></p>
                     </div>
                 </div>
@@ -55,12 +55,12 @@
             <div class="income-table">
                 <table class="data-table">
                     <tr>
-                        <th>Date</th>
-                        <th>Month</th>
-                        <th>Sum</th>
-                        <th>Type</th>
-                        <th>Contact</th>
-                        <th>Description</th>
+                        <th>[[date]]</th>
+                        <th>[[month]]</th>
+                        <th>[[sum]]</th>
+                        <th>[[type]]</th>
+                        <th>[[contact]]</th>
+                        <th>[[description]]</th>
                     </tr>
                     <tr class="js-row row js-income-row">
                         <td class="js-date"></td>
@@ -77,15 +77,15 @@
                         <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
                         <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" required/>
                         </td>
-                        <td><input class="js-add-sum" form="income-form" type="number" placeholder="Sum" required/></td>
+                        <td><input class="js-add-sum" form="income-form" type="number" placeholder="[[sum]]" required/></td>
                         <td>
-                            <input class="js-add-payment-type" form="income-form" placeholder="Type" required/>
+                            <input class="js-add-payment-type" form="income-form" placeholder="[[type]]" required/>
                         </td>
-                        <td><input class="js-add-contact" form="income-form" type="text" placeholder="Contact"
+                        <td><input class="js-add-contact" form="income-form" type="text" placeholder="[[contact]]"
                                    required/>
                         </td>
                         <td>
-                            <input class="js-add-description" form="income-form" type="text" placeholder="Description"/>
+                            <input class="js-add-description" form="income-form" type="text" placeholder="[[description]]"/>
                             <input class="submit js-submit" form="income-form" type="submit"/>
                         </td>
                     </tr>
@@ -95,12 +95,12 @@
             </form>
         </div>
         <div class="js-balance-page js-page page" data-name="balance">
-            <h1>Баланс</h1>
+            <h1>[[balance]]</h1>
             <div class="balance-statistic">
                 <div class="balance-chart" id="js-balance-chart"></div>
             </div>
             <form class="" action="" method="post">
-                <label for="balancesource">Введите место для хранения средств</label>
+                <label for="balancesource">[[balance-source-input]]</label>
                 <input type="text" id="balancesource" name="balancesource" value="">
                 <button type="button" name="incrementsources">+</button>
             </form>

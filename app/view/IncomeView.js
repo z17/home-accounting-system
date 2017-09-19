@@ -1,11 +1,12 @@
 const functions = require('../scripts/functions');
 const Income = require('../models/income');
 const moment = require('moment');
+const languages = require('../scripts/languages');
 
 function IncomeView() {
     this.data = {};
     this.dataByMonth = {
-        title: "Income by month",
+        title: languages.getText('income-month'),
         cols: ["Month", "Sum"],
         data: [],
         chart: null,
@@ -13,7 +14,7 @@ function IncomeView() {
         chartOptions: null,
     };
     this.dataByYear = {
-        title: "Income by year",
+        title: languages.getText('income-year'),
         cols: ["Year", "Sum"],
         data: [],
         chart: null,
@@ -21,7 +22,7 @@ function IncomeView() {
         chartOptions: null,
     };
     this.dataAverage = {
-        title: "Average income by year",
+        title: languages.getText('income-average'),
         cols: ["Year", "Middle sum"],
         data: [],
         chart: null,

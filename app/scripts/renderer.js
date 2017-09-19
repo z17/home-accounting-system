@@ -5,6 +5,7 @@ const BalanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
 const Settings = require('../models/settings');
 const moment = require('moment');
+const languages = require('../scripts/languages');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -65,6 +66,14 @@ ipcRenderer.on('settings-saved', function (event, data) {
 });
 
 $(document).ready(function () {
+    let regex = /\[\[([\w-]*?)\]\]/g;
+    let words = document.documentElement.innerHTML.match(regex);
+    words.forEach((value) => {
+        let word = value.substr(2, value.length - 4);
+        let text = languages.getText(word);
+        document.documentElement.innerHTML = document.documentElement.innerHTML.replace(value, text);
+    });
+
     makeActive($('.js-tab.active'));
 
     $('a').click(onLinkClick);

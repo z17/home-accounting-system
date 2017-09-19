@@ -1,9 +1,9 @@
 const Datastore = require('nedb');
 
-const databaseFile = 'db/database';
+const databaseFileName = '\\db\\database';
 
-function Database() {
-    this.db = new Datastore({filename: databaseFile});
+function Database(path) {
+    this.db = new Datastore({filename: path + databaseFileName});
     this.db.loadDatabase();
 }
 

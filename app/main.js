@@ -6,7 +6,7 @@ const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-const dao = new Dao();
+const dao = new Dao(app.getPath('userData'));
 const serverNotify = new ServerNotify();
 
 // require('./tmp/converter').exportBalanceData();

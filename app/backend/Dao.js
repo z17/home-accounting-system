@@ -7,8 +7,8 @@ let Tables = {
     BALANCE: 'balance'
 };
 
-function Dao() {
-    this.database = new Database();
+function Dao(path) {
+    this.database = new Database(path);
 }
 
 // Incomes

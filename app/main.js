@@ -1,7 +1,6 @@
 const electron = require('electron');
 const Dao = require('./backend/Dao');
 const functions = require('./scripts/functions');
-const argv = require('minimist')(process.argv);
 const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 
 const app = electron.app;
@@ -26,12 +25,7 @@ app.on('window-all-closed', function () {
     }
 });
 
-// Этот метод будет вызван когда Electron закончит инициализацию
-// и будет готов к созданию браузерных окон.
 app.on('ready', function () {
-    if (argv.reset) {
-      dao.drop();
-    }
     // Создаем окно браузера.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.maximize();

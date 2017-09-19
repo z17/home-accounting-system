@@ -1,6 +1,7 @@
 const electron = require('electron');
 const Dao = require('./backend/Dao');
 const functions = require('./scripts/functions');
+const argv = require('minimist')(process.argv);
 const ServerNotify = require('./backend/ServerNotify').ServerNotify;
 
 const app = electron.app;
@@ -21,7 +22,7 @@ app.on('window-all-closed', function () {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 });
 
@@ -59,10 +60,11 @@ app.on('ready', function () {
 
     });
 
-    // mainWindow.setMenu(null);
-
-    // TODO hide it in prod mode
-    mainWindow.webContents.openDevTools();
+    if (argv.dev) {
+        mainWindow.webContents.openDevTools();
+    } else {
+        mainWindow.setMenu(null);
+    }
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.
     mainWindow.on('closed', function () {

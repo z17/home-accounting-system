@@ -108,9 +108,9 @@ BalanceView.prototype.addMonthDOM = function(id, month, sum) {
   sumTag.textContent = functions.numberWithSpaces(sum);
   p.dataset.month = month;
   p.appendChild(monthTag);
-  let deleteIcon = document.createElement('A');
+  let deleteIcon = document.createElement('span');
   deleteIcon.className = 'delete-month-balance';
-  deleteIcon.href = '#';
+  deleteIcon.innerHTML = '&#10006;';
   p.appendChild(deleteIcon);
   p.appendChild(sumTag);
   section.insertBefore(p, form);

@@ -1,8 +1,10 @@
 html,
-body,
-.wrapper {
-    height: 100%;
+body {
     margin: 0;
+}
+
+.wrapper {
+    padding: 20px 40px;
 }
 
 * {
@@ -10,7 +12,6 @@ body,
 }
 
 .content {
-    padding: 10px 10px 60px 10px;
     box-sizing: border-box;
     min-height: 100%;
 }
@@ -23,6 +24,11 @@ table.data-table {
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    margin-bottom: 35px;
+}
+
+    table.data-table tr:hover td {
+    background: #f1f1f1;
 }
 
 table.data-table td {
@@ -38,12 +44,26 @@ table.data-table input.submit {
     position: absolute;
     right: 0;
     width: 80px;
-    top: 30px;
+    top: 40px;
 }
 
 table.data-table td, table.data-table th {
-    padding: 3px 10px 3px 10px;
-    border: 1px solid #ccc;
+    padding: 7px 10px 7px 10px;
+    border: 1px dashed #e1e1e1;
+    border-right: 0;
+    border-left: 0;
+}
+
+table.data-table tr.form td {
+    padding: 0;
+}
+
+table.data-table tr.form input {
+    padding: 7px 10px 7px 10px;
+}
+
+table.data-table tr.form:hover td {
+    background: #fff;
 }
 
 table.data-table td:last-child, table.data-table th:last-child {
@@ -68,7 +88,6 @@ table.data-table tr.row .delete {
     padding: 0 15px;
     display: none;
     cursor: pointer;
-    background: #fff;
 }
 
 table.data-table tr.row:hover .delete {
@@ -100,13 +119,13 @@ table.data-table tr.row:hover .delete {
 .tabs .tab, .settings-button {
     padding: 5px 10px;
     cursor: pointer;
-    background: #f1f1f1;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
     display: inline-block;
 }
 
 .tabs .tab.active, .settings-button.active {
-    background: #ffffff;
-    border: 1px solid #f1f1f1;
+    background: #f1f1f1;
 }
 
 .buttons {
@@ -142,14 +161,20 @@ table.data-table tr.row:hover .delete {
 
 .income-data-line {
     margin: 0;
-    padding: 10px 0;
-    border-bottom: 1px solid #aaa;
+    padding: 10px;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.income-data-line:hover {
+    background: #f1f1f1;
 }
 
 .income-data-name {
     font-weight: bold;
-    width: 120px;
-    display: inline-block;
+}
+
+.income-data-value {
+    float: right;
 }
 
 .settings-page {
@@ -175,29 +200,36 @@ table.data-table tr.row:hover .delete {
     color: #ff0000;
 }
 
+.balance-source {
+    margin: 15px 30px 15px 0;
+    float: left;
+    width: 320px;
+}
+
+.balance-items .balance-item {
+    padding: 7px 10px 7px 10px;
+    margin: 0;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.balance-items .balance-item:hover {
+    background: #f1f1f1;
+}
+
+.balance-items .balance-item:hover .delete-month-balance {
+    display: inline-block;
+}
+
+.balance-items .balance-item:hover .sum {
+    margin-right: 20px;
+}
+
 .delete-month-balance {
     float: right;
     cursor: pointer;
     width: 20px;
-    display: inline-block;
+    display: none;
     vertical-align: middle;
-    height: 20px;
-    margin-top: -5px;
-    margin-right: 10px;
-    background: url(../images/delete.svg) no-repeat;
-}
-
-.balance-source {
-    margin: 30px;
-    float: left;
-    padding: 10px;
-    width: 350px;
-}
-
-.balance-items .balance-item {
-    margin: 3px 0;
-    padding: 4px 0;
-    border-bottom: 1px dashed #e1e1e1;
 }
 
 .balance-items .balance-item .month {
@@ -210,7 +242,7 @@ table.data-table tr.row:hover .delete {
     width: 70px;
     float: right;
     text-align: right;
-    margin-right: 20px;
+    margin-right: 40px;
 }
 
 form.addBalance {

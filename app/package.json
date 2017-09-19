@@ -16,6 +16,7 @@
   "dependencies": {
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
+    "minimist": "^1.2.0",
     "moment": "^2.18.1",
     "nedb": "^1.8.0",
     "normalize.css": "^6.0.0"
@@ -26,6 +27,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "dev": "electron . --dev",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },

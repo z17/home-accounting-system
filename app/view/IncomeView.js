@@ -316,7 +316,7 @@ function setupIncomeRow(item, row) {
     row.querySelector('.js-date').dataset.time = item.date;
     row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
     row.querySelector('.js-month').dataset.time = item.month;
-    row.querySelector('.js-sum').textContent = item.sum;
+    row.querySelector('.js-sum').textContent = functions.numberWithSpaces(item.sum);
     row.querySelector('.js-payment-type').textContent = item.paymentType;
     row.querySelector('.js-contact').textContent = item.contact;
     row.querySelector('.js-description').textContent = item.description;

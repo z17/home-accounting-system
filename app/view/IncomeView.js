@@ -1,10 +1,12 @@
-const functions = require('../backend/functions');
+const functions = require('../scripts/functions');
 const Income = require('../models/income');
+const moment = require('moment');
+const languages = require('../scripts/languages');
 
 function IncomeView() {
     this.data = {};
     this.dataByMonth = {
-        title: "Income by month",
+        title: languages.getText('income-month'),
         cols: ["Month", "Sum"],
         data: [],
         chart: null,
@@ -12,7 +14,7 @@ function IncomeView() {
         chartOptions: null,
     };
     this.dataByYear = {
-        title: "Income by year",
+        title: languages.getText('income-year'),
         cols: ["Year", "Sum"],
         data: [],
         chart: null,
@@ -20,7 +22,7 @@ function IncomeView() {
         chartOptions: null,
     };
     this.dataAverage = {
-        title: "Average income by year",
+        title: languages.getText('income-average'),
         cols: ["Year", "Middle sum"],
         data: [],
         chart: null,
@@ -40,7 +42,7 @@ function IncomeView() {
 }
 
 IncomeView.prototype.setData = function (data) {
-    data.sort(function (a, b) {
+    data.sort((a, b) => {
         return a.date - b.date;
     });
     this.data = data;
@@ -139,7 +141,7 @@ function draw(chartData, width, height, chartId) {
 
     function drawChart() {
         let dataTable = prepareChartData(chartData);
-        if (chartData.chart != null) {
+        if (chartData.chart !== null) {
             chartData.chart.draw(dataTable, chartData.chartOptions);
             chartData.chartData = dataTable;
             return
@@ -175,14 +177,13 @@ function insertIncomeData(data) {
     data.forEach(insertIncomeToPage);
 }
 
-//ok to stay
 function updateGraphData(incomeItem) {
     let data = incomeItem.data;
     let firstMonth = moment().startOf('month');
     let firstYear = moment().startOf('year');
     let lastMonth = moment().startOf('month');
     let lastYear = moment().startOf('year');
-    if (data.length != 0) {
+    if (data.length !== 0) {
         firstMonth = moment.unix(data[0]['month']).startOf('month');
         firstYear = moment.unix(data[0]['month']).startOf('year');
         lastMonth = moment.unix(data[data.length - 1]['month']).startOf('month');
@@ -223,7 +224,7 @@ function updateGraphData(incomeItem) {
         }
 
         // если 0, значит сейчас январь и можно пропустить его
-        if (monthDiff == 0) {
+        if (monthDiff === 0) {
             return;
         }
 
@@ -315,7 +316,7 @@ function setupIncomeRow(item, row) {
     row.querySelector('.js-date').dataset.time = item.date;
     row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
     row.querySelector('.js-month').dataset.time = item.month;
-    row.querySelector('.js-sum').textContent = item.sum;
+    row.querySelector('.js-sum').textContent = functions.numberWithSpaces(item.sum);
     row.querySelector('.js-payment-type').textContent = item.paymentType;
     row.querySelector('.js-contact').textContent = item.contact;
     row.querySelector('.js-description').textContent = item.description;

@@ -1,6 +1,6 @@
 const http = require('http');
 
-const host = 'accounting-system.blweb.ru';
+const host = 'cromberg.blweb.ru';
 
 function ServerNotify() {
 }

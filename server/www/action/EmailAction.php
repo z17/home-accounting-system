@@ -12,8 +12,8 @@ class EmailAction extends Action
 
     public function process()
     {
-        if (!isset($data)) {
-            echo "invalid request";
+        if (!isset($this->data)) {
+            writeLog("invalid request with email");
             return;
         }
 
@@ -33,7 +33,7 @@ class EmailAction extends Action
                 $this->db->disableEmail($this->data->email);
                 break;
             default:
-                // todo: log this
+                writeLog("invalid action with email");
         }
     }
 }

@@ -1,9 +1,11 @@
 const ipcRenderer = require('electron').ipcRenderer;
-const IncomeView = require('../controllers/IncomeView');
-const SettingsView = require('../controllers/SettingsView');
-const BalanceView = require('../controllers/BalanceView');
+const IncomeView = require('../view/IncomeView');
+const SettingsView = require('../view/SettingsView');
+const BalanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
 const Settings = require('../models/settings');
+const moment = require('moment');
+const languages = require('../scripts/languages');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
@@ -40,15 +42,15 @@ ipcRenderer.on('income-edited', function (event, income) {
 });
 
 ipcRenderer.on('balance-inserted', function (event, source) {
-    balanceView.insertBalance(source);
+    balanceView.addBalanceSource(source);
 });
 
-ipcRenderer.on('balance-updated', function (event, query, source) {
-    balanceView.updateBalance(query['_id'], source);
+ipcRenderer.on('balance-updated', function (event, id, month, sum) {
+    balanceView.addBalance(id, month, sum);
 });
 
-ipcRenderer.on('balance-reupdated', function (event, query, month) {
-    balanceView.reupdateBalance(query['_id'], month);
+ipcRenderer.on('balance-reupdated', function (event, id, month) {
+    balanceView.deleteBalance(id, month);
 });
 
 ipcRenderer.on('balance-types', function (event, types) {
@@ -64,6 +66,14 @@ ipcRenderer.on('settings-saved', function (event, data) {
 });
 
 $(document).ready(function () {
+    let regex = /\[\[([\w-]*?)\]\]/g;
+    let words = document.documentElement.innerHTML.match(regex);
+    words.forEach((value) => {
+        let word = value.substr(2, value.length - 4);
+        let text = languages.getText(word);
+        document.documentElement.innerHTML = document.documentElement.innerHTML.replace(value, text);
+    });
+
     makeActive($('.js-tab.active'));
 
     $('a').click(onLinkClick);
@@ -134,23 +144,18 @@ $(document).ready(function () {
 
         updateIncome();
 
-        if ((e.target.parentNode.className === 'updateBalance') && (e.target.type === 'submit')) {
+        if ((e.target.parentNode.className === 'addBalance') && (e.target.type === 'submit')) {
             e.preventDefault();
-            let month = e.target.parentNode.querySelector('select[name="month"]').value;
-            let year = e.target.parentNode.querySelector('input[name="year"]').value;
+            let month = e.target.parentNode.querySelector('input[name="month"]').value;
             let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-            month += '';
-            month += year;
-            let obj = {};
-            obj[month] = value;
-            ipcRenderer.send('balance-update', e.target.parentNode.id, obj);
+            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, moment(month).format("MMYYYY"), value);
         }
 
         if (e.target.className === 'delete-month-balance') {
-          let month = e.target.parentNode.textContent.split(':')[0];
-          console.log(e.target.parentNode.parentNode);
+            e.preventDefault();
+          let month = e.target.parentNode.dataset.month;
           let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
-          ipcRenderer.send('balance-month-remove', element.id, month);
+          ipcRenderer.send('balance-month-remove', element.dataset.id, month);
         }
     });
 
@@ -164,11 +169,14 @@ $(document).ready(function () {
         const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
         ipcRenderer.send('income-add', incomeItem);
     });
+
     //Adding balance source
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
     balanceIncrement.addEventListener('click', function () {
-        const source = {'name': document.getElementById('balancesource').value };
-        console.log(source);
+        const source = {
+            name : document.getElementById('balancesource').value,
+            value : {},
+        };
         ipcRenderer.send('balance-add', source);
     });
 
@@ -220,6 +228,7 @@ function makeActive(tab) {
             incomeView.reloadGraph();
             break;
         case 'balance':
+            balanceView.reloadGraph();
             break;
         default:
             alert('Unknown tab name');

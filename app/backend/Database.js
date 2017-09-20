@@ -1,9 +1,9 @@
 const Datastore = require('nedb');
 
-const databaseFile = 'db/database';
+const databaseFileName = '\\db\\database';
 
-function Database() {
-    this.db = new Datastore({filename: databaseFile});
+function Database(path) {
+    this.db = new Datastore({filename: path + databaseFileName});
     this.db.loadDatabase();
 }
 
@@ -16,7 +16,7 @@ Database.prototype.insert = function (data, type, callback) {
           throw new Error(err);
         }
 
-        if (callback == undefined) {
+        if (callback === undefined) {
             return;
         }
 
@@ -38,22 +38,19 @@ Database.prototype.update = function (id, type, data, callback) {
     );
 };
 
-Database.prototype.updateBalance = function (query, data, callback) {
-    let key = 'data.'+Object.keys(data)[0];
+Database.prototype.addProperty = function (query, key, value, callback) {
     let obj = {};
-    obj[key] = data[Object.keys(data)[0]];
+    obj[key] = value;
     this.db.update(query, { $set: obj }, {upsert: true}, function (err, num, doc, upsert) {
-        callback(query, data);
+        callback();
     });
 };
 
-Database.prototype.reupdateBalance = function (query, month, callback) {
-    let key = month.replace(/\./g, '').replace(/ /g, '');
-    key = 'data.'+ key;
+Database.prototype.deleteProperty = function (query, key, callback) {
     let obj = {};
     obj[key] = true;
     this.db.update(query, { $unset: obj }, { }, (err, num, upsert) => {
-      callback(query, month);
+      callback();
     });
 };
 
@@ -73,7 +70,7 @@ Database.prototype.delete = function (type, id, callback) {
             throw new Error(err);
         }
 
-        if (callback == undefined) {
+        if (callback === undefined) {
             return;
         }
 

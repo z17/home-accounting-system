@@ -7,8 +7,8 @@ let Tables = {
     BALANCE: 'balance'
 };
 
-function Dao() {
-    this.database = new Database();
+function Dao(path) {
+    this.database = new Database(path);
 }
 
 // Incomes
@@ -33,16 +33,18 @@ Dao.prototype.getBalances = function (callback) {
     this.database.get(Tables.BALANCE, callback);
 };
 
-Dao.prototype.insertBalance = function (source, callback) {
+Dao.prototype.addBalanceSource = function (source, callback) {
     this.database.insert(source, Tables.BALANCE, callback);
 };
 
-Dao.prototype.updateBalance = function (id, data, callback) {
-    this.database.updateBalance({'_id': id, 'type': Tables.BALANCE}, data, callback);
+Dao.prototype.addBalance = function (id, month, sum, callback) {
+    let key = 'data.value.' + month;
+    this.database.addProperty({'_id': id, 'type': Tables.BALANCE}, key, sum, callback);
 };
 
-Dao.prototype.reupdateBalance = function (id, month, callback) {
-    this.database.reupdateBalance({'_id': id, 'type': Tables.BALANCE}, month, callback);
+Dao.prototype.deleteBalance = function (id, month, callback) {
+    let key = 'data.value.'+ month;
+    this.database.deleteProperty({'_id': id, 'type': Tables.BALANCE}, key, callback);
 };
 
 // Settings

@@ -2,12 +2,15 @@
 class Config
 {
 	// Base
-	static $host = 'localhost';
-	static $db_name = 'accountingsystem';
+	static $db_host = 'localhost';
+	static $db_name = '';
 	static $db_user = '';
 	static $db_password = '';
 
+	// Other
 	static $log_file = 'log.txt';
-
 	static $notify_key = 'some random key';
+	static $notify_count = 10;
+	static $domain_link = 'http://localhost';
+	static $domain = 'localhost';
 }

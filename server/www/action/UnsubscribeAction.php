@@ -12,6 +12,10 @@ class UnsubscribeAction extends Action
 
     public function process()
     {
-        $this->db->disableEmailByUuid($this -> uuid);
+        $this->db->disableEmailByUuid($this->uuid);
+        $emailData = $this->db->getEmailByUuid($this->uuid);
+        $page = TemplateHelper::getPageTemplate(Template::PAGE_UNSUBSCRIBE, 'Отписаться');
+        $page = TemplateHelper::replaceKey('email', $emailData['email'], $page);
+        echo $page;
     }
 }

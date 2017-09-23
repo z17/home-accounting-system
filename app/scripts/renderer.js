@@ -153,14 +153,18 @@ $(document).ready(function () {
 
         if (e.target.className === 'delete-month-balance') {
             e.preventDefault();
-          let month = e.target.parentNode.dataset.month;
-          let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
-          ipcRenderer.send('balance-month-remove', element.dataset.id, month);
+            let month = e.target.parentNode.dataset.month;
+            let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
+            ipcRenderer.send('balance-month-remove', element.dataset.id, month);
         }
     });
 
     $('.js-tab').click(function () {
         makeActive($(this));
+    });
+
+    $('.settings-close-button').click(() => {
+        toggleSettingsWindow();
     });
 
     //Adding income
@@ -174,15 +178,14 @@ $(document).ready(function () {
     const balanceIncrement = document.querySelector('button[name="incrementsources"]');
     balanceIncrement.addEventListener('click', function () {
         const source = {
-            name : document.getElementById('balancesource').value,
-            value : {},
+            name: document.getElementById('balancesource').value,
+            value: {},
         };
         ipcRenderer.send('balance-add', source);
     });
 
-    $(".js-settings-button").click(function () {
-        $(".js-settings-button").toggleClass("active");
-        $(".js-settings-page").toggleClass("active");
+    $(".js-settings-button").click(() => {
+        toggleSettingsWindow();
     });
 
     $(".js-settings-form").on('submit', function (e) {
@@ -231,6 +234,11 @@ function makeActive(tab) {
             balanceView.reloadGraph();
             break;
         default:
-            alert('Unknown tab name');
+            alert('Unknown tab name: ' + name);
     }
+}
+
+function toggleSettingsWindow() {
+    $(".js-settings-button").toggleClass("active");
+    $(".js-settings-window").toggleClass("active");
 }

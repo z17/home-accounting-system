@@ -156,7 +156,6 @@ BalanceView.prototype.reloadGraph = function () {
 
 function drawChart(balanceData, dataByMonth) {
     let chartData = prepareDataForChart(balanceData, dataByMonth);
-
     google.charts.setOnLoadCallback(drawBalanceChart);
 
     function drawBalanceChart() {
@@ -168,6 +167,9 @@ function drawChart(balanceData, dataByMonth) {
             legend: {position: 'top', maxLines: 3},
             bar: {groupWidth: '75%'},
             isStacked: true,
+            vAxis: {
+                minValue: 0
+            }
         };
 
         let view = new google.visualization.DataView(data);

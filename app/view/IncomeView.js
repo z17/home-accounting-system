@@ -159,6 +159,9 @@ function draw(chartData, width, height, chartId) {
                 duration: 500,
                 easing: 'out',
             },
+            vAxis: {
+                minValue: 0
+            }
             // chartArea: {
             //     width: '80%',
             //     height: '80%'

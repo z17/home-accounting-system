@@ -148,7 +148,7 @@ $(document).ready(function () {
             e.preventDefault();
             let month = e.target.parentNode.querySelector('input[name="month"]').value;
             let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, moment(month).format("MMYYYY"), value);
+            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, moment(month).format("MMYYYY"), parseFloat(value));
         }
 
         if (e.target.className === 'delete-month-balance') {

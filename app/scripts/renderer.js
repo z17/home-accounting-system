@@ -195,6 +195,7 @@ $(document).ready(function () {
 
         let remindFlag = $('.js-settings-remind').is(":checked");
         let remindEmail = $('.js-settings-email').val();
+        let backupFolder = $('.js-settings-backup-text').val();
 
         if (remindFlag === true && remindEmail.length === 0) {
             response.text("Empty email");
@@ -202,7 +203,7 @@ $(document).ready(function () {
             return;
         }
 
-        let settings = new Settings(remindFlag, remindEmail);
+        let settings = new Settings(remindFlag, remindEmail, backupFolder);
 
         ipcRenderer.send('update-settings', settings);
 
@@ -210,6 +211,11 @@ $(document).ready(function () {
         response.text("");
     });
 
+
+    $('.js-settings-backup').change(function (e) {
+        let path = e.target.files[0].path;
+        $('.js-settings-backup-text').val(path);
+    });
 });
 
 function onLinkClick(e) {

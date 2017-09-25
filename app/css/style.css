@@ -203,9 +203,23 @@ table.data-table tr.row:hover .delete {
     cursor:pointer;
 }
 
-.setting-form label {
+.settings-form label {
     display: block;
     margin: 15px 0;
+}
+
+.settings-form .settings-backup {
+    position: absolute;
+    z-index: 100;
+    opacity: 0;
+    width:410px;
+    margin:10px 0;
+}
+
+.settings-form .settings-backup-text {
+    position: relative;
+    width:100%;
+    margin:10px 0;
 }
 
 .settings-response.error {

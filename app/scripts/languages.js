@@ -64,6 +64,12 @@ const legend = {
         ru: 'Средний доход по годам',
         en: 'Average income by year'
     },
+    'backup-folder': {
+        ru: 'Папка для бекапов'
+    },
+    'choose-folder': {
+        ru: 'Выберите папку'
+    }
 };
 
 function getText(word) {

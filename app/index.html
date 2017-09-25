@@ -22,12 +22,16 @@
             <div class="settings-close-button js-settings-close-button">&#10006;</div>
             <h1>[[settings]]</h1>
 
-            <form class="setting-form js-settings-form">
+            <form class="settings-form js-settings-form">
                 <label>[[remind]]:
                     <input type="checkbox" class="js-settings-remind"/>
                 </label>
                 <label>[[remind-email]]:
                     <input type="email" class="js-settings-email"/>
+                </label>
+                <label>[[backup-folder]]:<br>
+                    <input type="file" class="js-settings-backup settings-backup" value="folder" webkitdirectory directory multiple/>
+                    <input type="text" class="js-settings-backup-text settings-backup-text" placeholder="[[choose-folder]]"/>
                 </label>
                 <input type="submit" value="[[save]]"/> <span class="js-settings-response settings-response"></span>
             </form>

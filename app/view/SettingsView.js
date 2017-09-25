@@ -18,6 +18,7 @@ SettingsView.prototype.updateData = function (data) {
 function updateData(data) {
     $('.js-settings-remind').prop("checked", data.remind);
     $('.js-settings-email').val(data.email);
+    $('.js-settings-backup-text').val(data.backupFolder);
 }
 
 

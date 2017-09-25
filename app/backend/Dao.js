@@ -11,6 +11,10 @@ function Dao(path) {
     this.database = new Database(path);
 }
 
+Dao.prototype.getDatabasePath = function () {
+  return this.database.filename;
+};
+
 // Incomes
 Dao.prototype.getIncomes = function (callback) {
     this.database.get(Tables.INCOME, callback);

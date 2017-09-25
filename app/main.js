@@ -1,5 +1,6 @@
 const electron = require('electron');
 const Dao = require('./backend/Dao');
+const Backup = require('./backend/Backup');
 const functions = require('./scripts/functions');
 const argv = require('minimist')(process.argv);
 const ServerNotify = require('./backend/ServerNotify').ServerNotify;
@@ -52,6 +53,9 @@ app.on('ready', function () {
 
         dao.getSettings(function (settings) {
             mainWindow.webContents.send('settings', settings);
+
+            let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
+            backup.makeBackup();
         });
 
         dao.getBalances(function(types) {

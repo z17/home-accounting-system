@@ -3,13 +3,13 @@ const IncomeView = require('../view/IncomeView');
 const SettingsView = require('../view/SettingsView');
 const BalanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
-const Settings = require('../models/settings');
 const moment = require('moment');
-const languages = require('../scripts/languages');
+const Languages = require('../scripts/languages');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
 const settingsView = new SettingsView();
+const languages = new Languages();
 
 google.charts.load("current", {packages: ['corechart']});
 
@@ -66,13 +66,7 @@ ipcRenderer.on('settings-saved', function (event, data) {
 });
 
 $(document).ready(function () {
-    let regex = /\[\[([\w-]*?)\]\]/g;
-    let words = document.documentElement.innerHTML.match(regex);
-    words.forEach((value) => {
-        let word = value.substr(2, value.length - 4);
-        let text = languages.getText(word);
-        document.documentElement.innerHTML = document.documentElement.innerHTML.replace(value, text);
-    });
+    document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
 
     makeActive($('.js-tab.active'));
 
@@ -95,8 +89,6 @@ $(document).ready(function () {
 
             const incomeItem = incomeView.getItemFromForm(incomeEditingRow);
             ipcRenderer.send('income-edit', incomeItem);
-
-            // todo: spinner here
 
             activeIncomeEditing = false;
         };
@@ -163,58 +155,17 @@ $(document).ready(function () {
         makeActive($(this));
     });
 
-    $('.settings-close-button').click(() => {
-        toggleSettingsWindow();
-    });
-
-    //Adding income
-    $(".js-income-page .js-income-add").on('submit', function (e) {
-        e.preventDefault();
-        const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
+    incomeView.preparePage((incomeItem) => {
         ipcRenderer.send('income-add', incomeItem);
+
     });
 
-    //Adding balance source
-    const balanceIncrement = document.querySelector('button[name="incrementsources"]');
-    balanceIncrement.addEventListener('click', function () {
-        const source = {
-            name: document.getElementById('balancesource').value,
-            value: {},
-        };
+    balanceView.preparePage((source) => {
         ipcRenderer.send('balance-add', source);
     });
 
-    $(".js-settings-button").click(() => {
-        toggleSettingsWindow();
-    });
-
-    $(".js-settings-form").on('submit', function (e) {
-        e.preventDefault();
-
-        let response = $('.js-settings-response');
-
-        let remindFlag = $('.js-settings-remind').is(":checked");
-        let remindEmail = $('.js-settings-email').val();
-        let backupFolder = $('.js-settings-backup-text').val();
-
-        if (remindFlag === true && remindEmail.length === 0) {
-            response.text("Empty email");
-            response.addClass("error");
-            return;
-        }
-
-        let settings = new Settings(remindFlag, remindEmail, backupFolder);
-
+    settingsView.preparePage((settings) => {
         ipcRenderer.send('update-settings', settings);
-
-        response.removeClass("error");
-        response.text("");
-    });
-
-
-    $('.js-settings-backup').change(function (e) {
-        let path = e.target.files[0].path;
-        $('.js-settings-backup-text').val(path);
     });
 });
 
@@ -242,9 +193,4 @@ function makeActive(tab) {
         default:
             alert('Unknown tab name: ' + name);
     }
-}
-
-function toggleSettingsWindow() {
-    $(".js-settings-button").toggleClass("active");
-    $(".js-settings-window").toggleClass("active");
 }

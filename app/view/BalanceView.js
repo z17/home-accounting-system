@@ -154,6 +154,18 @@ BalanceView.prototype.reloadGraph = function () {
     drawChart(this.data, this.dataByMonth);
 };
 
+BalanceView.prototype.preparePage = function(addBalanceSourceFunction) {
+    //Adding balance source
+    const balanceIncrement = document.querySelector('button[name="incrementsources"]');
+    balanceIncrement.addEventListener('click', function () {
+        const source = {
+            name: document.getElementById('balancesource').value,
+            value: {},
+        };
+        addBalanceSourceFunction(source);
+    });
+};
+
 function drawChart(balanceData, dataByMonth) {
     let chartData = prepareDataForChart(balanceData, dataByMonth);
     google.charts.setOnLoadCallback(drawBalanceChart);

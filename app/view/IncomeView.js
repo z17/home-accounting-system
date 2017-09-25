@@ -1,7 +1,9 @@
 const functions = require('../scripts/functions');
 const Income = require('../models/income');
 const moment = require('moment');
-const languages = require('../scripts/languages');
+const Languages = require('../scripts/languages');
+
+const languages = new Languages();
 
 function IncomeView() {
     this.data = {};
@@ -118,6 +120,15 @@ IncomeView.prototype.getItemFromForm = function (row) {
 
 IncomeView.prototype.setRowFromItem = function (item, row) {
     setupIncomeRow(item, row);
+};
+
+IncomeView.prototype.preparePage = function (addIncomeFunction) {
+    //Adding income
+    $(".js-income-page .js-income-add").on('submit', (e) => {
+        e.preventDefault();
+        const incomeItem = this.getItemFromForm(document.querySelector('.js-income-page .form'));
+        addIncomeFunction(incomeItem);
+    });
 };
 
 function drawByMonth(incomeItem) {

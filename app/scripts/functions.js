@@ -9,6 +9,9 @@ function numberWithSpaces(x) {
 }
 
 function calcStartEndDates(startDate, endDate, dateArray) {
+    if (dateArray.length === 0) {
+        return [startDate, endDate];
+    }
     dateArray.sort((a, b) => {
         return a.unix() - b.unix();
     });

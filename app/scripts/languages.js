@@ -72,11 +72,26 @@ const legend = {
     }
 };
 
-function getText(word) {
+function Languages() {
+}
+
+Languages.prototype.getText = function (word) {
     if (legend.hasOwnProperty(word)) {
         return legend[word].ru;
     }
     return word;
-}
+};
 
-module.exports.getText = getText;
+Languages.prototype.replacePlaceholders = function (pageText) {
+    let regex = /\[\[([\w-]*?)\]\]/g;
+    let words = pageText.match(regex);
+    words.forEach((value) => {
+        let word = value.substr(2, value.length - 4);
+        let text = this.getText(word);
+        pageText = pageText.replace(value, text);
+    });
+    return pageText;
+};
+
+
+module.exports = Languages;

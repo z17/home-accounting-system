@@ -69,7 +69,13 @@ const legend = {
     },
     'choose-folder': {
         ru: 'Выберите папку'
-    }
+    },
+    'balance-chart-title': {
+        ru: 'Доходы по месяцам'
+    },
+    'costs-chart-title': {
+        ru: 'Расходы по месяцам'
+    },
 };
 
 function Languages() {

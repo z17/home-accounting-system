@@ -19,6 +19,7 @@ ipcRenderer.on('error', function (event, data) {
 
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
+    balanceView.setIncomeData(data);
 });
 
 ipcRenderer.on('income-payment-types', function (event, data) {
@@ -136,19 +137,6 @@ $(document).ready(function () {
 
         updateIncome();
 
-        if ((e.target.parentNode.className === 'addBalance') && (e.target.type === 'submit')) {
-            e.preventDefault();
-            let month = e.target.parentNode.querySelector('input[name="month"]').value;
-            let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, moment(month).format("MMYYYY"), parseFloat(value));
-        }
-
-        if (e.target.className === 'delete-month-balance') {
-            e.preventDefault();
-            let month = e.target.parentNode.dataset.month;
-            let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
-            ipcRenderer.send('balance-month-remove', element.dataset.id, month);
-        }
     });
 
     $('.js-tab').click(function () {
@@ -160,9 +148,17 @@ $(document).ready(function () {
 
     });
 
-    balanceView.preparePage((source) => {
-        ipcRenderer.send('balance-add', source);
-    });
+    balanceView.preparePage(
+        (source) => {
+            ipcRenderer.send('balance-add', source);
+        },
+        (id, month, value) => {
+            ipcRenderer.send('balance-update', id, month, value);
+        },
+        (id, month) => {
+            ipcRenderer.send('balance-month-remove', id, month);
+        }
+    );
 
     settingsView.preparePage((settings) => {
         ipcRenderer.send('update-settings', settings);

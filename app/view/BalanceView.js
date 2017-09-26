@@ -4,9 +4,12 @@ const functions = require('../scripts/functions');
 const moment = require('moment');
 
 function BalanceView() {
-  this.data = {};
-  this.dataByMonth = [];
-  return this;
+    this.data = {};
+    this.dataByMonth = [];
+    this.addBalanceFunction = undefined;
+    this.removeBalanceFunction = undefined;
+    this.incomeByMonth = {};
+    return this;
 }
 
 BalanceView.prototype.addBalanceSource = function (source) {
@@ -33,12 +36,12 @@ BalanceView.prototype.addBalance = function (id, month, sum) {
     this.reloadGraph();
 };
 
-BalanceView.prototype.deleteBalance = function(id, month) {
-  if (typeof this.data[id] === 'undefined') {
-    throw new Error('this id does not exist');
-  }
-  this.data[id]['value'][month] = 0;
-  this.updateSumDOM(id, month, 0);
+BalanceView.prototype.deleteBalance = function (id, month) {
+    if (typeof this.data[id] === 'undefined') {
+        throw new Error('this id does not exist');
+    }
+    this.data[id]['value'][month] = 0;
+    this.updateSumDOM(id, month, 0);
 
     this.dataByMonth = convertData(this.data);
     this.reloadGraph();
@@ -59,6 +62,9 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
 
     form.className = 'addBalance';
     form.dataset.id = sourceId;
+    form.onsubmit = (e) => {
+        onBalanceSubmit(e, this.addBalanceFunction);
+    };
 
     h2.textContent = sourceName;
 
@@ -70,18 +76,20 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     monthInput.type = 'month';
     monthInput.name = 'month';
     monthInput.required = 'required';
-    monthInput.className = 'month';
+    monthInput.className = 'js-balance-month month';
+    monthInput.min = '1900-01-01';
+    monthInput.max = '2100-01-01';
     form.appendChild(monthInput);
 
     sumInput.type = 'number';
     sumInput.name = 'balanceValue';
     sumInput.placeholder = 'Enter balance';
     sumInput.required = 'required';
-    sumInput.className = 'sum';
+    sumInput.className = 'js-balance-sum sum';
     form.appendChild(sumInput);
 
     submit.type = 'submit';
-    submit.className = 'submit';
+    submit.className = 'js-balance-submit submit';
     submit.textContent = '+';
     form.appendChild(submit);
 
@@ -111,6 +119,9 @@ BalanceView.prototype.addMonthDOM = function(id, month, sum) {
   let deleteIcon = document.createElement('span');
   deleteIcon.className = 'delete-month-balance';
   deleteIcon.innerHTML = '&#10006;';
+  deleteIcon.onclick = (e) => {
+      onDeleteClick(e, this.removeBalanceFunction);
+  };
   p.appendChild(deleteIcon);
   p.appendChild(sumTag);
   section.insertBefore(p, form);
@@ -151,23 +162,67 @@ BalanceView.prototype.setBalance = function (balanceSources) {
 };
 
 BalanceView.prototype.reloadGraph = function () {
-    drawChart(this.data, this.dataByMonth);
+    let chartData = prepareDataForBalanceChart(this.data, this.dataByMonth);
+    drawChart(chartData, 'js-balance-chart');
+
+    let costsChartData = prepareDataForCostsChart(this.dataByMonth, this.incomeByMonth);
+    drawChart(costsChartData, 'js-costs-chart');
 };
 
-BalanceView.prototype.preparePage = function(addBalanceSourceFunction) {
-    //Adding balance source
-    const balanceIncrement = document.querySelector('button[name="incrementsources"]');
-    balanceIncrement.addEventListener('click', function () {
+BalanceView.prototype.preparePage = function(addBalanceSourceFunction, addBalanceFunction, removeBalanceFunction) {
+    $('.js-balance-source-form').on('submit', (e) => {
+        e.preventDefault();
         const source = {
             name: document.getElementById('balancesource').value,
             value: {},
         };
         addBalanceSourceFunction(source);
     });
+
+    this.addBalanceFunction = addBalanceFunction;
+    this.removeBalanceFunction = removeBalanceFunction;
 };
 
-function drawChart(balanceData, dataByMonth) {
-    let chartData = prepareDataForChart(balanceData, dataByMonth);
+BalanceView.prototype.setIncomeData = function (data) {
+    let incomeByMonth = [];
+    data.forEach((value) => {
+        let monthStr = moment.unix(value.date).format("YYYY-MM");
+
+        if (!incomeByMonth.hasOwnProperty(monthStr)) {
+            incomeByMonth[monthStr] = value.sum;
+        } else {
+            incomeByMonth[monthStr] += value.sum;
+        }
+    });
+    this.incomeByMonth = incomeByMonth;
+};
+
+function onBalanceSubmit(e, addBalanceFunction) {
+    e.preventDefault();
+
+    let id = e.target.dataset.id;
+    let month = moment(e.target.querySelector('.js-balance-month').value).format("MMYYYY");
+    let value =  parseFloat(e.target.querySelector('.js-balance-sum').value);
+    if (addBalanceFunction === undefined) {
+        alert("error");
+        return;
+    }
+    addBalanceFunction(id, month, value);
+}
+
+function onDeleteClick(e, removeBalanceFunction) {
+    e.preventDefault();
+    let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
+    let id = element.dataset.id;
+    let month = e.target.parentNode.dataset.month;
+    if (removeBalanceFunction === undefined) {
+        alert("error");
+        return;
+    }
+    removeBalanceFunction(id, month);
+}
+
+function drawChart(chartData, chartId) {
     google.charts.setOnLoadCallback(drawBalanceChart);
 
     function drawBalanceChart() {
@@ -186,12 +241,34 @@ function drawChart(balanceData, dataByMonth) {
 
         let view = new google.visualization.DataView(data);
 
-        let chart = new google.visualization.ColumnChart(document.getElementById('js-balance-chart'));
+        let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
         chart.draw(view, options);
     }
 }
 
-function prepareDataForChart(balanceData, dataByMonth) {
+function prepareDataForCostsChart(balanceByMonth, incomeByMonth) {
+    let prevBalance = undefined;
+    let costsData = [
+        ['month', 'Расходы']
+    ];
+    for (let i = 0; i < balanceByMonth.length; i++) {
+        let currentMonth = balanceByMonth[i];
+        let currentBalance = currentMonth.value.reduce(function(total, val) {
+            return total + val;
+        });
+
+        let monthStr = currentMonth.month.format('YYYY-MM');
+        let currentIncome = incomeByMonth.hasOwnProperty(monthStr) ? incomeByMonth[monthStr] : 0;
+        let currentCosts = prevBalance != undefined ? currentIncome - (currentBalance - prevBalance): 0;
+        costsData.push(
+            [currentMonth.month.format('MMM YYYY'), currentCosts]
+        );
+        prevBalance = currentBalance;
+    }
+    return costsData;
+}
+
+function prepareDataForBalanceChart(balanceData, dataByMonth) {
 
     let chartPartNames = ['month'];
     for (let source in balanceData) {

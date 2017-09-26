@@ -99,34 +99,14 @@ IncomeView.prototype.reloadGraph = function () {
     drawAverage(this);
 };
 
-IncomeView.prototype.getItemFromForm = function (row) {
-    let date = row.querySelector('input.js-add-date').value;
-    let month = row.querySelector('input.js-add-month').value;
-    let sum = row.querySelector('input.js-add-sum').value;
-    let type = row.querySelector('input.js-add-payment-type').value;
-    let contact = row.querySelector('input.js-add-contact').value;
-    let description = row.querySelector('input.js-add-description').value;
-    if (date.length === 0 || month.length === 0 || sum.length === 0) {
-        alert("Error");
-        return;
-    }
-    let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
-    let id = row.dataset.id;
-    if (id !== undefined) {
-        income.id = id;
-    }
-    return income;
-};
-
 IncomeView.prototype.setRowFromItem = function (item, row) {
     setupIncomeRow(item, row);
 };
 
 IncomeView.prototype.preparePage = function (addIncomeFunction) {
-    //Adding income
     $(".js-income-page .js-income-add").on('submit', (e) => {
         e.preventDefault();
-        const incomeItem = this.getItemFromForm(document.querySelector('.js-income-page .form'));
+        const incomeItem = getItemFromForm(document.querySelector('.js-income-page .form'));
         addIncomeFunction(incomeItem);
     });
 };
@@ -343,6 +323,25 @@ function getIndexById(id, data) {
         }
     }
     return null;
+}
+
+function getItemFromForm(row) {
+    let date = row.querySelector('input.js-add-date').value;
+    let month = row.querySelector('input.js-add-month').value;
+    let sum = row.querySelector('input.js-add-sum').value;
+    let type = row.querySelector('input.js-add-payment-type').value;
+    let contact = row.querySelector('input.js-add-contact').value;
+    let description = row.querySelector('input.js-add-description').value;
+    if (date.length === 0 || month.length === 0 || sum.length === 0) {
+        alert("Error");
+        return;
+    }
+    let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+    let id = row.dataset.id;
+    if (id !== undefined) {
+        income.id = id;
+    }
+    return income;
 }
 
 module.exports = IncomeView;

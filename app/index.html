@@ -79,9 +79,8 @@
                         </td>
                     </tr>
                     <tr class="form">
-                        <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" required/></td>
-                        <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" required/>
-                        </td>
+                        <td><input class="js-add-date" form="income-form" type="date" placeholder="Date" min="1900-01-01" max="2100-01-01" required/></td>
+                        <td><input class="js-add-month" form="income-form" type="month" placeholder="Month" min="1900-01" max="2100-01" required/></td>
                         <td><input class="js-add-sum" form="income-form" type="number" placeholder="[[sum]]" required/></td>
                         <td>
                             <input class="js-add-payment-type" form="income-form" placeholder="[[type]]" required/>
@@ -96,18 +95,22 @@
                     </tr>
                 </table>
             </div>
+
             <form action="#" id="income-form" class="js-income-add">
             </form>
         </div>
         <div class="js-balance-page js-page page" data-name="balance">
             <h1>[[balance]]</h1>
             <div class="balance-statistic">
+                <h2>[[balance-chart-title]]</h2>
                 <div class="balance-chart" id="js-balance-chart"></div>
+                <h2>[[costs-chart-title]]</h2>
+                <div class="costs-chart" id="js-costs-chart"></div>
             </div>
-            <form class="" action="" method="post">
+            <form class="js-balance-source-form" action="" method="post">
                 <label for="balancesource">[[balance-source-input]]:</label>
                 <input type="text" id="balancesource" name="balancesource" value="">
-                <button type="button" name="incrementsources">+</button>
+                <button type="submit" name="incrementsources">+</button>
             </form>
             <article class="balance-items">
             </article>

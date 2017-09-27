@@ -222,7 +222,6 @@ function updateGraphData(incomeItem) {
             monthDiff = moment().month() + 1;
         } else if (year === firstYearStr) {
             monthDiff = firstYearMonthCount;
-            console.log(firstYearMonthCount);
         }
 
         dataAverage[year] += element.sum / monthDiff;

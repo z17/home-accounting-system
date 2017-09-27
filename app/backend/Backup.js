@@ -6,13 +6,21 @@ function Backup(databasePath, folder) {
     this.databasePath = databasePath;
 }
 
-Backup.prototype.makeBackup = function () {
+Backup.prototype.makeBackup = function (lastBackupTimestamp) {
     if (this.folder === undefined) {
         console.log('cant find a folder for backup');
-        return;
+        return undefined;
+    }
+
+    let currentDayTimestamp = moment().startOf('day').unix();
+    if (currentDayTimestamp === lastBackupTimestamp) {
+        console.log('backup already was made today');
+        return undefined;
     }
 
     fs.createReadStream(this.databasePath).pipe(fs.createWriteStream(this.folder + generateBackupName()));
+
+    return currentDayTimestamp;
 };
 
 function generateBackupName() {

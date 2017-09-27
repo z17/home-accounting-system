@@ -55,7 +55,12 @@ app.on('ready', function () {
             mainWindow.webContents.send('settings', settings);
 
             let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
-            backup.makeBackup();
+            let backupTimestamp = backup.makeBackup(settings.lastBackupDateTimestamp);
+
+            if (backupTimestamp != undefined) {
+                settings.lastBackupDateTimestamp = backupTimestamp;
+                dao.updateSettings(settings, () => {});
+            }
         });
 
         dao.getBalances(function(types) {

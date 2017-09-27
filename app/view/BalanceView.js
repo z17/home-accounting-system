@@ -77,8 +77,8 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     monthInput.name = 'month';
     monthInput.required = 'required';
     monthInput.className = 'js-balance-month month';
-    monthInput.min = '1900-01-01';
-    monthInput.max = '2100-01-01';
+    monthInput.min = '1900-01';
+    monthInput.max = '2100-01';
     form.appendChild(monthInput);
 
     sumInput.type = 'number';
@@ -251,7 +251,9 @@ function prepareDataForCostsChart(balanceByMonth, incomeByMonth) {
     let costsData = [
         ['month', 'Расходы']
     ];
-    for (let i = 0; i < balanceByMonth.length; i++) {
+
+    // balanceByMonth.length - 1 : skip last month
+    for (let i = 0; i < balanceByMonth.length - 1; i++) {
         let currentMonth = balanceByMonth[i];
         let currentBalance = currentMonth.value.reduce(function(total, val) {
             return total + val;
@@ -265,6 +267,10 @@ function prepareDataForCostsChart(balanceByMonth, incomeByMonth) {
         );
         prevBalance = currentBalance;
     }
+
+    costsData.push(
+        [moment().format('MMM YYYY'), 0]
+    );
     return costsData;
 }
 

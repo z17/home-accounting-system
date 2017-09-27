@@ -109,7 +109,11 @@ $(document).ready(function () {
             let copyField = (elementClass, fieldClass) => {
                 let element = row.querySelector(elementClass);
                 let field = document.querySelector(fieldClass).cloneNode(true);
-                field.value = element.innerHTML;
+                let val  = element.innerHTML;
+                if (field.type == 'number') {
+                    val = parseFloat(val.replace(' ', ''));
+                }
+                field.value = val;
                 element.innerHTML = '';
                 element.appendChild(field);
             };

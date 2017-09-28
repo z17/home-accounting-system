@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /action
+Disallow: /resources/template
+
+Host: cromberg.blweb.ru

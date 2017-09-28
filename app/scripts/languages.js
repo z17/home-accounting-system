@@ -76,6 +76,9 @@ const legend = {
     'costs-chart-title': {
         ru: 'Расход по месяцам'
     },
+    'no-internet': {
+        ru: 'Без подключения к интернету работа программы невозможна'
+    }
 };
 
 function Languages() {

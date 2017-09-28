@@ -11,6 +11,11 @@ const incomeView = new IncomeView();
 const settingsView = new SettingsView();
 const languages = new Languages();
 
+if (typeof google === 'undefined') {
+    alert(languages.getText('no-internet'));
+    throw new Error('no internet');
+}
+
 google.charts.load("current", {packages: ['corechart']});
 
 ipcRenderer.on('error', function (event, data) {

@@ -11,7 +11,7 @@ require_once 'action/NotifyAction.php';
 require_once 'action/SendNotifyAction.php';
 require_once 'action/UnsubscribeAction.php';
 
-$path = $_SERVER["REDIRECT_URL"];
+$path = isset($_SERVER["REDIRECT_URL"]) ? $_SERVER["REDIRECT_URL"] : '';
 
 switch ($path) {
     case '/email':
@@ -39,7 +39,7 @@ switch ($path) {
         break;
     default:
         // todo: transfer this from index.php
-        // todo: 404 header
+        header("HTTP/1.0 404 Not Found");
         echo TemplateHelper::getPageTemplate(Template::PAGE_404, '404 error');
         writeLog("404 error: ". $path);
         break;

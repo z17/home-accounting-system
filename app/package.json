@@ -40,7 +40,7 @@
     },
     "mac": {
       "category": "finance",
-      "icon": "build/icon.ico"
+      "icon": "build/icon.icns"
     }
   }
 }

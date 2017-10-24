@@ -79,6 +79,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     monthInput.className = 'js-balance-month month';
     monthInput.min = '1900-01';
     monthInput.max = '2100-01';
+    monthInput.value = moment().format('YYYY-MM');
     form.appendChild(monthInput);
 
     sumInput.type = 'number';

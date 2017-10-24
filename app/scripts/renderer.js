@@ -154,7 +154,6 @@ $(document).ready(function () {
 
     incomeView.preparePage((incomeItem) => {
         ipcRenderer.send('income-add', incomeItem);
-
     });
 
     balanceView.preparePage(

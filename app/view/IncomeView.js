@@ -104,6 +104,9 @@ IncomeView.prototype.setRowFromItem = function (item, row) {
 };
 
 IncomeView.prototype.preparePage = function (addIncomeFunction) {
+    $('.js-add-month').val(moment().format("YYYY-MM"));
+    $('.js-add-date').val(moment().format("YYYY-MM-DD"));
+
     $(".js-income-page .js-income-add").on('submit', (e) => {
         e.preventDefault();
         const incomeItem = this.getItemFromForm(document.querySelector('.js-income-page .form'));
@@ -293,7 +296,6 @@ function prepareChartData(chartData) {
     return google.visualization.arrayToDataTable(data);
 }
 
-//ok to stay
 function insertIncomeToPage(item) {
     let rowExample = document.querySelector('.js-income-page .js-row');
     let row = rowExample.cloneNode(true);

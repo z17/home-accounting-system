@@ -1,5 +1,6 @@
 /.idea/
 /app/tmp/
+/data
 /app/dist/
 /app/node_modules/
 /app/db/

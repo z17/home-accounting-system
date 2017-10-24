@@ -32,7 +32,7 @@ const legend = {
         ru: 'Худший месяц'
     },
     date: {
-        ru: 'Дата'
+        ru: 'Дата поступления средств'
     },
     month: {
         ru: 'Месяц'
@@ -64,13 +64,43 @@ const legend = {
         ru: 'Средний доход по годам',
         en: 'Average income by year'
     },
+    'backup-folder': {
+        ru: 'Папка для бекапов'
+    },
+    'choose-folder': {
+        ru: 'Выберите папку'
+    },
+    'balance-chart-title': {
+        ru: 'Баланс по месяцам'
+    },
+    'costs-chart-title': {
+        ru: 'Расход по месяцам'
+    },
+    'no-internet': {
+        ru: 'Без подключения к интернету работа программы невозможна'
+    }
 };
 
-function getText(word) {
+function Languages() {
+}
+
+Languages.prototype.getText = function (word) {
     if (legend.hasOwnProperty(word)) {
         return legend[word].ru;
     }
     return word;
-}
+};
 
-module.exports.getText = getText;
+Languages.prototype.replacePlaceholders = function (pageText) {
+    let regex = /\[\[([\w-]*?)\]\]/g;
+    let words = pageText.match(regex);
+    words.forEach((value) => {
+        let word = value.substr(2, value.length - 4);
+        let text = this.getText(word);
+        pageText = pageText.replace(value, text);
+    });
+    return pageText;
+};
+
+
+module.exports = Languages;

@@ -3,13 +3,18 @@ const IncomeView = require('../view/IncomeView');
 const SettingsView = require('../view/SettingsView');
 const BalanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
-const Settings = require('../models/settings');
 const moment = require('moment');
-const languages = require('../scripts/languages');
+const Languages = require('../scripts/languages');
 
 const balanceView = new BalanceView();
 const incomeView = new IncomeView();
 const settingsView = new SettingsView();
+const languages = new Languages();
+
+if (typeof google === 'undefined') {
+    alert(languages.getText('no-internet'));
+    throw new Error('no internet');
+}
 
 google.charts.load("current", {packages: ['corechart']});
 
@@ -19,6 +24,7 @@ ipcRenderer.on('error', function (event, data) {
 
 ipcRenderer.on('income-data', function (event, data) {
     incomeView.setData(data);
+    balanceView.setIncomeData(data);
 });
 
 ipcRenderer.on('income-payment-types', function (event, data) {
@@ -66,13 +72,7 @@ ipcRenderer.on('settings-saved', function (event, data) {
 });
 
 $(document).ready(function () {
-    let regex = /\[\[([\w-]*?)\]\]/g;
-    let words = document.documentElement.innerHTML.match(regex);
-    words.forEach((value) => {
-        let word = value.substr(2, value.length - 4);
-        let text = languages.getText(word);
-        document.documentElement.innerHTML = document.documentElement.innerHTML.replace(value, text);
-    });
+    document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
 
     makeActive($('.js-tab.active'));
 
@@ -96,8 +96,6 @@ $(document).ready(function () {
             const incomeItem = incomeView.getItemFromForm(incomeEditingRow);
             ipcRenderer.send('income-edit', incomeItem);
 
-            // todo: spinner here
-
             activeIncomeEditing = false;
         };
 
@@ -116,7 +114,11 @@ $(document).ready(function () {
             let copyField = (elementClass, fieldClass) => {
                 let element = row.querySelector(elementClass);
                 let field = document.querySelector(fieldClass).cloneNode(true);
-                field.value = element.innerHTML;
+                let val  = element.innerHTML;
+                if (field.type == 'number') {
+                    val = parseFloat(val.replace(' ', ''));
+                }
+                field.value = val;
                 element.innerHTML = '';
                 element.appendChild(field);
             };
@@ -144,69 +146,31 @@ $(document).ready(function () {
 
         updateIncome();
 
-        if ((e.target.parentNode.className === 'addBalance') && (e.target.type === 'submit')) {
-            e.preventDefault();
-            let month = e.target.parentNode.querySelector('input[name="month"]').value;
-            let value = e.target.parentNode.querySelector('input[name="balanceValue"]').value;
-            ipcRenderer.send('balance-update', e.target.parentNode.dataset.id, moment(month).format("MMYYYY"), value);
-        }
-
-        if (e.target.className === 'delete-month-balance') {
-            e.preventDefault();
-          let month = e.target.parentNode.dataset.month;
-          let element = e.target.parentNode.parentNode.getElementsByTagName('h2')[0];
-          ipcRenderer.send('balance-month-remove', element.dataset.id, month);
-        }
     });
 
     $('.js-tab').click(function () {
         makeActive($(this));
     });
 
-    //Adding income
-    $(".js-income-page .js-income-add").on('submit', function (e) {
-        e.preventDefault();
-        const incomeItem = incomeView.getItemFromForm(document.querySelector('.js-income-page .form'));
+    incomeView.preparePage((incomeItem) => {
         ipcRenderer.send('income-add', incomeItem);
     });
 
-    //Adding balance source
-    const balanceIncrement = document.querySelector('button[name="incrementsources"]');
-    balanceIncrement.addEventListener('click', function () {
-        const source = {
-            name : document.getElementById('balancesource').value,
-            value : {},
-        };
-        ipcRenderer.send('balance-add', source);
-    });
-
-    $(".js-settings-button").click(function () {
-        $(".js-settings-button").toggleClass("active");
-        $(".js-settings-page").toggleClass("active");
-    });
-
-    $(".js-settings-form").on('submit', function (e) {
-        e.preventDefault();
-
-        let response = $('.js-settings-response');
-
-        let remindFlag = $('.js-settings-remind').is(":checked");
-        let remindEmail = $('.js-settings-email').val();
-
-        if (remindFlag === true && remindEmail.length === 0) {
-            response.text("Empty email");
-            response.addClass("error");
-            return;
+    balanceView.preparePage(
+        (source) => {
+            ipcRenderer.send('balance-add', source);
+        },
+        (id, month, value) => {
+            ipcRenderer.send('balance-update', id, month, value);
+        },
+        (id, month) => {
+            ipcRenderer.send('balance-month-remove', id, month);
         }
+    );
 
-        let settings = new Settings(remindFlag, remindEmail);
-
+    settingsView.preparePage((settings) => {
         ipcRenderer.send('update-settings', settings);
-
-        response.removeClass("error");
-        response.text("");
     });
-
 });
 
 function onLinkClick(e) {
@@ -231,6 +195,6 @@ function makeActive(tab) {
             balanceView.reloadGraph();
             break;
         default:
-            alert('Unknown tab name');
+            alert('Unknown tab name: ' + name);
     }
 }

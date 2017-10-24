@@ -5,6 +5,7 @@ const databaseFileName = '\\db\\database';
 function Database(path) {
     this.db = new Datastore({filename: path + databaseFileName});
     this.db.loadDatabase();
+    this.filename = this.db.filename;
 }
 
 Database.prototype.insert = function (data, type, callback) {

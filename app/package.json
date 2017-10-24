@@ -35,7 +35,12 @@
     "appId": "ru.blweb.cromberg",
     "buildVersion": "0.1",
     "win": {
-      "target": "portable"
+      "target": "portable",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "category": "finance",
+      "icon": "build/icon.icns"
     }
   }
 }

@@ -17,6 +17,11 @@ class NotifyAction extends Action
             return;
         }
 
+        if (date('t') !== date('d')) {
+            echo "today isn't last day of month";
+            return;
+        }
+
         $this->db->fillNotificationTable();
     }
 }

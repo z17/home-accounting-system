@@ -1,8 +1,10 @@
 const electron = require('electron');
 const Dao = require('./backend/Dao');
+const Backup = require('./backend/Backup');
 const functions = require('./scripts/functions');
 const argv = require('minimist')(process.argv);
 const ServerNotify = require('./backend/ServerNotify').ServerNotify;
+const path = require('path');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -28,8 +30,23 @@ app.on('window-all-closed', function () {
 
 app.on('ready', function () {
     // Создаем окно браузера.
-    mainWindow = new BrowserWindow({width: 800, height: 600});
-    mainWindow.maximize();
+    mainWindow = new BrowserWindow(
+        {
+            minWidth: 800,
+            minHeight: 600,
+            width: 1024,
+            height: 600,
+            icon: path.join(__dirname, 'build/icon.ico')
+        }
+    );
+
+    if (argv.dev) {
+        mainWindow.webContents.openDevTools();
+    } else {
+        mainWindow.setMenu(null);
+    }
+
+    // mainWindow.maximize();
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {
@@ -52,6 +69,14 @@ app.on('ready', function () {
 
         dao.getSettings(function (settings) {
             mainWindow.webContents.send('settings', settings);
+
+            let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
+            let backupTimestamp = backup.makeBackup(settings.lastBackupDateTimestamp);
+
+            if (backupTimestamp != undefined) {
+                settings.lastBackupDateTimestamp = backupTimestamp;
+                dao.updateSettings(settings, () => {});
+            }
         });
 
         dao.getBalances(function(types) {
@@ -59,12 +84,6 @@ app.on('ready', function () {
         });
 
     });
-
-    if (argv.dev) {
-        mainWindow.webContents.openDevTools();
-    } else {
-        mainWindow.setMenu(null);
-    }
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.
     mainWindow.on('closed', function () {

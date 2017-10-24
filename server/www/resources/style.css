@@ -17,6 +17,12 @@ body {
     margin:0 auto;
 }
 
+.wrapper:after {
+    content: '';
+    display: block;
+    clear:both;
+}
+
 h1 {
     margin:20px 0;
     font-size:150%;
@@ -24,4 +30,9 @@ h1 {
 
 p {
     margin:10px 0;
+}
+
+.logo {
+    float:left;
+    margin:0 20px 0 0;
 }

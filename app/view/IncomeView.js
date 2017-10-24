@@ -1,7 +1,9 @@
 const functions = require('../scripts/functions');
 const Income = require('../models/income');
 const moment = require('moment');
-const languages = require('../scripts/languages');
+const Languages = require('../scripts/languages');
+
+const languages = new Languages();
 
 function IncomeView() {
     this.data = {};
@@ -97,27 +99,19 @@ IncomeView.prototype.reloadGraph = function () {
     drawAverage(this);
 };
 
-IncomeView.prototype.getItemFromForm = function (row) {
-    let date = row.querySelector('input.js-add-date').value;
-    let month = row.querySelector('input.js-add-month').value;
-    let sum = row.querySelector('input.js-add-sum').value;
-    let type = row.querySelector('input.js-add-payment-type').value;
-    let contact = row.querySelector('input.js-add-contact').value;
-    let description = row.querySelector('input.js-add-description').value;
-    if (date.length === 0 || month.length === 0 || sum.length === 0) {
-        alert("Error");
-        return;
-    }
-    let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
-    let id = row.dataset.id;
-    if (id !== undefined) {
-        income.id = id;
-    }
-    return income;
-};
-
 IncomeView.prototype.setRowFromItem = function (item, row) {
     setupIncomeRow(item, row);
+};
+
+IncomeView.prototype.preparePage = function (addIncomeFunction) {
+    $('.js-add-month').val(moment().format("YYYY-MM"));
+    $('.js-add-date').val(moment().format("YYYY-MM-DD"));
+
+    $(".js-income-page .js-income-add").on('submit', (e) => {
+        e.preventDefault();
+        const incomeItem = this.getItemFromForm(document.querySelector('.js-income-page .form'));
+        addIncomeFunction(incomeItem);
+    });
 };
 
 function drawByMonth(incomeItem) {
@@ -159,6 +153,9 @@ function draw(chartData, width, height, chartId) {
                 duration: 500,
                 easing: 'out',
             },
+            vAxis: {
+                minValue: 0
+            }
             // chartArea: {
             //     width: '80%',
             //     height: '80%'
@@ -179,6 +176,7 @@ function insertIncomeData(data) {
 
 function updateGraphData(incomeItem) {
     let data = incomeItem.data;
+
     let firstMonth = moment().startOf('month');
     let firstYear = moment().startOf('year');
     let lastMonth = moment().startOf('month');
@@ -189,6 +187,9 @@ function updateGraphData(incomeItem) {
         lastMonth = moment.unix(data[data.length - 1]['month']).startOf('month');
         lastYear = moment.unix(data[data.length - 1]['month']).startOf('year');
     }
+    let firstYearStr = firstYear.format('YYYY');
+    let firstYearMonthCount = 12 - firstMonth.month();
+
     let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
     let countYears = lastYear.diff(firstYear, 'years', false) + 1;
 
@@ -218,14 +219,12 @@ function updateGraphData(incomeItem) {
 
         // если разница меньше нуля, значит анализируется месяц за прошлые годы
         let monthDiff = 12;
-        let isPreviousYear = moment.unix(element.month).startOf('month').diff(moment().startOf('year'), 'months', false) < 0;
-        if (!isPreviousYear) {
-            monthDiff = moment().month();
-        }
 
-        // если 0, значит сейчас январь и можно пропустить его
-        if (monthDiff === 0) {
-            return;
+        let isPreviousYear = moment().format("YYYY") !== year;
+        if (!isPreviousYear) {
+            monthDiff = moment().month() + 1;
+        } else if (year === firstYearStr) {
+            monthDiff = firstYearMonthCount;
         }
 
         dataAverage[year] += element.sum / monthDiff;
@@ -289,7 +288,6 @@ function updateGraphData(incomeItem) {
     document.getElementsByClassName('js-income-worst')[0].innerHTML = functions.numberWithSpaces(incomeItem.worstMonth.value);
 }
 
-//ok to stay
 function prepareChartData(chartData) {
     let data = [chartData.cols];
     data = data.concat(chartData.data.map(function (element) {
@@ -298,7 +296,6 @@ function prepareChartData(chartData) {
     return google.visualization.arrayToDataTable(data);
 }
 
-//ok to stay
 function insertIncomeToPage(item) {
     let rowExample = document.querySelector('.js-income-page .js-row');
     let row = rowExample.cloneNode(true);
@@ -330,5 +327,24 @@ function getIndexById(id, data) {
     }
     return null;
 }
+
+IncomeView.prototype.getItemFromForm = function(row) {
+    let date = row.querySelector('input.js-add-date').value;
+    let month = row.querySelector('input.js-add-month').value;
+    let sum = row.querySelector('input.js-add-sum').value;
+    let type = row.querySelector('input.js-add-payment-type').value;
+    let contact = row.querySelector('input.js-add-contact').value;
+    let description = row.querySelector('input.js-add-description').value;
+    if (date.length === 0 || month.length === 0 || sum.length === 0) {
+        alert("Error");
+        return;
+    }
+    let income = new Income(moment(date), moment(month), parseInt(sum), type, contact, description);
+    let id = row.dataset.id;
+    if (id !== undefined) {
+        income.id = id;
+    }
+    return income;
+};
 
 module.exports = IncomeView;

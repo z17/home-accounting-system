@@ -25,6 +25,4 @@ function calcStartEndDates(startDate, endDate, dateArray) {
     return [startDate, endDate];
 }
 
-module.exports.uniqueArrayFilter = uniqueArrayFilter;
-module.exports.numberWithSpaces = numberWithSpaces;
-module.exports.calcStartEndDates = calcStartEndDates;
+module.exports = {uniqueArrayFilter, numberWithSpaces, calcStartEndDates};

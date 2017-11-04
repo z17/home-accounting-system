@@ -82,12 +82,12 @@ window.onresize = resizeThrottler;
 
 $('a').click(onLinkClick);
 
-$('.js-tab').click(function () {
-  makeActive($(this).data('name'));
-});
 
 function init() {
   document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
+  $('.js-tab').click(function () {
+    makeActive($(this).data('name'));
+  });
   makeActive('income');
 
   incomeView.preparePage((incomeItem) => {

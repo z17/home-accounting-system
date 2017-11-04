@@ -1,9 +1,10 @@
 const electron = require('electron');
+const compareVersions = require('compare-versions');
 const Dao = require('./backend/Dao');
 const Backup = require('./backend/Backup');
 const functions = require('./scripts/functions');
 const argv = require('minimist')(process.argv);
-const ServerNotify = require('./backend/ServerNotify').ServerNotify;
+const ServerNotify = require('./backend/ServerRequester').ServerNotify;
 const path = require('path');
 
 const app = electron.app;
@@ -53,6 +54,12 @@ app.on('ready', function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {
+        serverNotify.getServerVersion((version) => {
+            if (compareVersions(version, app.getVersion()) > 0) {
+                mainWindow.webContents.send('new-version', app.getVersion(), version);
+            }
+        });
+
         dao.getIncomes(function (data) {
             mainWindow.webContents.send('income-data', data);
 

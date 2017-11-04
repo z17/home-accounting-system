@@ -106,7 +106,11 @@ const legend = {
     'statistic': {
         ru: 'Статистика',
         en: 'Statistic',
-    }
+    },
+    'new-version': {
+        ru: 'Вышла новая версия приложения. Текущая версия: ?, новая версия: ?.',
+        en: 'A new version of the application has been released. Current: ?, new: ?.'
+    },
 };
 
 function Languages() {
@@ -133,6 +137,14 @@ Languages.prototype.getText = function (word) {
     }
 
     return word;
+};
+
+Languages.prototype.getTextWithPlaceholders = function (word, array) {
+    let text = this.getText(word);
+    array.forEach(function (element) {
+        text = text.replace('?', element);
+    });
+    return text;
 };
 
 Languages.prototype.setLanguage = function (lang) {

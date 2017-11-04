@@ -132,4 +132,11 @@ class Base
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function logVersionRequest($ip) {
+        $query = "INSERT INTO log (ip, type) VALUES (INET_ATON(:ip), 'version')";
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':ip', $ip);
+        $sql->execute();
+    }
 }

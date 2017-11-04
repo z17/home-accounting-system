@@ -10,9 +10,9 @@ require_once 'action/EmailAction.php';
 require_once 'action/NotifyAction.php';
 require_once 'action/SendNotifyAction.php';
 require_once 'action/UnsubscribeAction.php';
+require_once 'action/VersionAction.php';
 
 $path = isset($_SERVER["REDIRECT_URL"]) ? $_SERVER["REDIRECT_URL"] : '';
-
 switch ($path) {
     case '/email':
         $data = isset($_POST['data']) ? json_decode($_POST['data']) : null;
@@ -31,6 +31,10 @@ switch ($path) {
     case '/unsubscribe':
         $uuid = isset($_GET['uuid']) ? $_GET['uuid'] : null;
         $action = new UnsubscribeAction($uuid);
+        $action->process();
+        break;
+    case '/version':
+        $action = new VersionAction();
         $action->process();
         break;
     case '';

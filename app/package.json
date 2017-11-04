@@ -14,6 +14,7 @@
   },
   "license": "GPL",
   "dependencies": {
+    "compare-versions": "^3.1.0",
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
     "minimist": "^1.2.0",

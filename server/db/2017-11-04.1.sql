@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `log` (
+  `id`   INT(11)          NOT NULL AUTO_INCREMENT,
+  `date` DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip`   INT UNSIGNED,
+  `type` ENUM ('version') NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;

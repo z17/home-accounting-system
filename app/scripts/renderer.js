@@ -25,6 +25,10 @@ ipcRenderer.on('error', function (event, data) {
   alert(data);
 });
 
+ipcRenderer.on('new-version', function (event, oldVersion, newVersion) {
+  alert(languages.getTextWithPlaceholders('new-version', [oldVersion, newVersion]));
+});
+
 ipcRenderer.on('income-data', function (event, data) {
   incomeView.setData(data);
   balanceView.setIncomeData(data);

@@ -63,20 +63,47 @@ ipcRenderer.on('balance-types', function (event, types) {
     balanceView.setBalance(types);
 });
 
-ipcRenderer.on('settings', function (event, data) {
-    settingsView.setData(data);
-});
-
 ipcRenderer.on('settings-saved', function (event, data) {
     settingsView.updateData(data);
 });
 
+ipcRenderer.on('settings', function (event, data) {
+    languages.setLanguage(data.language);
+    settingsView.setData(data);
+    ready('settings');
+});
+
 $(document).ready(function () {
+    ready('document');
+});
+
+function ready(type) {
+    if (type == 'settings') {
+        this.settings = true;
+    }
+
+    if (type == 'document') {
+        this.document = true;
+    }
+
+    if (this.settings && this.document) {
+        start();
+    }
+}
+
+function start() {
     document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
 
-    makeActive($('.js-tab.active'));
+    makeActive('income');
 
-    $('a').click(onLinkClick);
+    $('a').click(
+        function (e) {
+            if ($(this).attr('href') !== undefined) {
+                e.preventDefault();
+                shell.openExternal($(this).attr('href'));
+            }
+        }
+    );
 
     let activeIncomeEditing = false;
     let incomeEditingRow;
@@ -114,7 +141,7 @@ $(document).ready(function () {
             let copyField = (elementClass, fieldClass) => {
                 let element = row.querySelector(elementClass);
                 let field = document.querySelector(fieldClass).cloneNode(true);
-                let val  = element.innerHTML;
+                let val = element.innerHTML;
                 if (field.type == 'number') {
                     val = parseFloat(val.replace(' ', ''));
                 }
@@ -149,7 +176,7 @@ $(document).ready(function () {
     });
 
     $('.js-tab').click(function () {
-        makeActive($(this));
+        makeActive($(this).data('name'));
     });
 
     incomeView.preparePage((incomeItem) => {
@@ -171,23 +198,18 @@ $(document).ready(function () {
     settingsView.preparePage((settings) => {
         ipcRenderer.send('update-settings', settings);
     });
-});
-
-function onLinkClick(e) {
-    if ($(this).attr('href') !== undefined) {
-        e.preventDefault();
-        shell.openExternal($(this).attr('href'));
-    }
 }
 
-function makeActive(tab) {
-    let name = tab.data('name');
+function makeActive(tabName) {
     $('.js-page').removeClass('active');
     $('.js-tab').removeClass('active');
-    tab.addClass('active');
-    $('.js-page[data-name="' + name + '"]').addClass('active');
+    $('.js-tab[data-name=' + tabName + ']').addClass('active');
+    $('.js-page[data-name="' + tabName + '"]').addClass('active');
+    reloadGraph(tabName);
+}
 
-    switch (name) {
+function reloadGraph(tabName) {
+    switch (tabName) {
         case 'income':
             incomeView.reloadGraph();
             break;
@@ -198,3 +220,23 @@ function makeActive(tab) {
             alert('Unknown tab name: ' + name);
     }
 }
+
+(function () {
+    window.addEventListener("resize", resizeThrottler, false);
+
+    let resizeTimeout;
+
+    function resizeThrottler() {
+        if (!resizeTimeout) {
+            resizeTimeout = setTimeout(function () {
+                resizeTimeout = null;
+                actualResizeHandler();
+            }, 250);
+        }
+    }
+
+    function actualResizeHandler() {
+        let name = $('.js-tab.active').data('name');
+        reloadGraph(name);
+    }
+}());

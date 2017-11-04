@@ -9,7 +9,6 @@ const path = require('path');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-const dao = new Dao(app.getPath('userData'));
 const serverNotify = new ServerNotify();
 
 // require('./tmp/converter').exportBalanceData();
@@ -40,11 +39,15 @@ app.on('ready', function () {
         }
     );
 
+    let dbPath = app.getPath('userData') + '\\db\\database';
     if (argv.dev) {
         mainWindow.webContents.openDevTools();
+        dbPath = "database-dev";
+
     } else {
         mainWindow.setMenu(null);
     }
+    const dao = new Dao(dbPath);
 
     // mainWindow.maximize();
     mainWindow.loadURL(`file://${__dirname}/index.html`);

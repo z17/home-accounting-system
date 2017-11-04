@@ -15,8 +15,8 @@ let incomeEditingRow;
 let resizeTimeout;
 
 if (typeof google === 'undefined') {
-  alert(languages.getText('no-internet'));
-  throw new Error('no internet');
+    alert(languages.getText('no-internet'));
+    throw new Error('no internet');
 }
 
 google.charts.load("current", {packages: ['corechart']});
@@ -88,7 +88,7 @@ $('.js-tab').click(function () {
 
 function init() {
   document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
-  makeActive($('.js-tab.active'));
+  makeActive('income');
 
   incomeView.preparePage((incomeItem) => {
     ipcRenderer.send('income-add', incomeItem);
@@ -172,7 +172,6 @@ function onLinkClick(e) {
 }
 
 function makeActive(tabName) {
-  const name = tab.data('name');
   $('.js-page').removeClass('active');
   $('.js-tab').removeClass('active');
   $('.js-tab[data-name=' + tabName + ']').addClass('active');

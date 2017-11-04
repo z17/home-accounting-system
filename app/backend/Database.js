@@ -1,9 +1,7 @@
 const Datastore = require('nedb');
 
-const databaseFileName = '\\db\\database';
-
 function Database(path) {
-    this.db = new Datastore({filename: path + databaseFileName});
+    this.db = new Datastore({filename: path});
     this.db.loadDatabase();
     this.filename = this.db.filename;
 }
@@ -42,7 +40,7 @@ Database.prototype.update = function (id, type, data, callback) {
 Database.prototype.addProperty = function (query, key, value, callback) {
     let obj = {};
     obj[key] = value;
-    this.db.update(query, { $set: obj }, {upsert: true}, function (err, num, doc, upsert) {
+    this.db.update(query, { $set: obj }, {upsert: true}, function () {
         callback();
     });
 };
@@ -50,8 +48,8 @@ Database.prototype.addProperty = function (query, key, value, callback) {
 Database.prototype.deleteProperty = function (query, key, callback) {
     let obj = {};
     obj[key] = true;
-    this.db.update(query, { $unset: obj }, { }, (err, num, upsert) => {
-      callback();
+    this.db.update(query, {$unset: obj}, {}, () => {
+        callback();
     });
 };
 

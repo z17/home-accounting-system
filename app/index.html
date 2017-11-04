@@ -13,7 +13,7 @@
 <div class="wrapper">
     <div class="buttons">
         <div class="tabs">
-            <a class="tab js-tab active" data-name="income">[[income]]</a>
+            <a class="tab js-tab" data-name="income">[[income]]</a>
             <a class="tab js-tab" data-name="balance">[[balance]]</a>
         </div>
         <div class="settings-button js-settings-button">[[settings]]</div>
@@ -33,6 +33,12 @@
                     <input type="file" class="js-settings-backup settings-backup" value="folder" webkitdirectory directory multiple/>
                     <input type="text" class="js-settings-backup-text settings-backup-text" placeholder="[[choose-folder]]"/>
                 </label>
+                <label>[[language]]:
+                    <select class="js-settings-language">
+                        <option value="ru">Русский</option>
+                        <option value="en">English</option>
+                    </select>
+                </label>
                 <input type="submit" value="[[save]]"/> <span class="js-settings-response settings-response"></span>
             </form>
         </div>
@@ -41,11 +47,19 @@
             <h1>[[income]]</h1>
 
             <div class="income-statistic">
+                <h2>[[income-month]]</h2>
                 <div class="income-chart income-month-chart" id="js-income-month-chart"></div>
                 <div class="inline-blocks">
-                    <div class="income-chart income-year-chart" id="js-income-year-chart"></div>
-                    <div class="income-chart income-middle-year-chart" id="js-income-average-chart"></div>
+                    <div class="income-chart income-year-chart">
+                        <h2>[[income-year]]</h2>
+                        <div id="js-income-year-chart"></div>
+                    </div>
+                    <div class="income-chart income-middle-year-chart">
+                        <h2>[[income-average]]</h2>
+                        <div id="js-income-average-chart"></div>
+                    </div>
                     <div class="income-data">
+                        <h2>[[statistic]]</h2>
                         <p class="income-data-line"><span class="income-data-name">[[sum]]:</span> <span
                                 class="js-income-sum income-data-value"></span></p>
                         <p class="income-data-line"><span class="income-data-name">[[average]]:</span> <span

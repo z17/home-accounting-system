@@ -7,7 +7,6 @@ function SettingsView() {
 
 SettingsView.prototype.setData = function (data) {
     this.data = data;
-    updateData(this.data);
 };
 
 SettingsView.prototype.updateData = function (data) {
@@ -17,6 +16,8 @@ SettingsView.prototype.updateData = function (data) {
 };
 
 SettingsView.prototype.preparePage = function(sendSettingsFunction) {
+    updateData(this.data);
+
     $('.settings-close-button').click(() => {
         toggleSettingsWindow();
     });
@@ -39,14 +40,14 @@ SettingsView.prototype.preparePage = function(sendSettingsFunction) {
         let remindFlag = $('.js-settings-remind').is(":checked");
         let remindEmail = $('.js-settings-email').val();
         let backupFolder = $('.js-settings-backup-text').val();
-
+        let language = $('.js-settings-language').val();
         if (remindFlag === true && remindEmail.length === 0) {
             response.text("Empty email");
             response.addClass("error");
             return;
         }
 
-        let settings = new Settings(remindFlag, remindEmail, backupFolder);
+        let settings = new Settings(remindFlag, remindEmail, backupFolder, language);
 
         sendSettingsFunction(settings);
 
@@ -59,6 +60,7 @@ function updateData(data) {
     $('.js-settings-remind').prop("checked", data.remind);
     $('.js-settings-email').val(data.email);
     $('.js-settings-backup-text').val(data.backupFolder);
+    $('.js-settings-language').val(data.language);
 }
 
 function toggleSettingsWindow() {

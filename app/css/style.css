@@ -155,10 +155,6 @@ table.data-table tr.row:hover .delete {
     text-align: left;
 }
 
-.inline-blocks .income-data {
-    padding-top: 30px;
-}
-
 .income-data-line {
     margin: 0;
     padding: 10px;

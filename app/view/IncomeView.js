@@ -144,7 +144,6 @@ function draw(chartData, width, height, chartId) {
         let view = new google.visualization.DataView(dataTable);
 
         let options = {
-            title: chartData.title,
             width: width,
             height: height,
             bar: {groupWidth: "95%"},

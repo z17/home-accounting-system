@@ -3,6 +3,7 @@
 /data
 /app/dist/
 /app/node_modules/
-/app/db/
+/app/database-dev
 /server/www/Config.php
-/npm-debug.log
+/*.log
+/*.db

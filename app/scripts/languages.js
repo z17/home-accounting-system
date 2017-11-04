@@ -1,15 +1,19 @@
 const legend = {
     title: {
-        ru: 'Cromberg - система личного учёта'
+        ru: 'Cromberg - система личного учёта',
+        en: 'Cromberg - personal finance accounting system'
     },
     income: {
-        ru: 'Доход'
+        ru: 'Доход',
+        en: 'Income'
     },
     balance: {
-        ru: 'Баланс'
+        ru: 'Баланс',
+        en: 'Balance',
     },
     settings: {
-        ru: 'Настройки'
+        ru: 'Настройки',
+        en: 'Settings',
     },
     remind: {
         ru: 'Присылать мне уведомления каждый месяц',
@@ -20,37 +24,48 @@ const legend = {
         en: 'E-mail for reminds',
     },
     sum: {
-        ru: 'Сумма'
+        ru: 'Сумма',
+        en: 'Sum'
     },
     average: {
-        ru: 'Средний'
+        ru: 'Средний',
+        en: 'Average',
     },
     'top-month': {
-        ru: 'Лучший месяц'
+        ru: 'Лучший месяц',
+        en: 'Best month',
     },
     'worst-month': {
-        ru: 'Худший месяц'
+        ru: 'Худший месяц',
+        en: 'Worst month'
     },
     date: {
-        ru: 'Дата поступления средств'
+        ru: 'Дата поступления средств',
+        en: 'Date of receive money'
     },
     month: {
-        ru: 'Месяц'
+        ru: 'Месяц',
+        en: 'Month'
     },
     type: {
-        ru: 'Тип'
+        ru: 'Тип',
+        en: 'Type'
     },
     contact: {
-        ru: 'Контакт'
+        ru: 'Контакт',
+        en: 'Contact'
     },
     description: {
-        ru: 'Описание'
+        ru: 'Описание',
+        en: 'Description'
     },
     'balance-source-input': {
-        ru: 'Введите место для хранения средств'
+        ru: 'Введите место для хранения средств',
+        en: 'Enter a place to storage money'
     },
     save: {
-        ru: 'Сохранить'
+        ru: 'Сохранить',
+        en: 'Save'
     },
     'income-month': {
         ru: 'Доход по месяцам',
@@ -65,30 +80,63 @@ const legend = {
         en: 'Average income by year'
     },
     'backup-folder': {
-        ru: 'Папка для бекапов'
+        ru: 'Папка для бекапов',
+        en: 'Backup folder'
     },
     'choose-folder': {
-        ru: 'Выберите папку'
+        ru: 'Выберите папку',
+        en: 'Choose folder'
     },
     'balance-chart-title': {
-        ru: 'Баланс по месяцам'
+        ru: 'Баланс по месяцам',
+        en: 'Balance by months'
     },
     'costs-chart-title': {
-        ru: 'Расход по месяцам'
+        ru: 'Расход по месяцам',
+        en: 'Costs by months'
     },
     'no-internet': {
-        ru: 'Без подключения к интернету работа программы невозможна'
+        ru: 'Без подключения к интернету работа программы невозможна',
+        en: 'Its need internet connection for correct work'
+    },
+    'language': {
+        ru: 'Язык',
+        en: 'Language'
+    },
+    'statistic': {
+        ru: 'Статистика',
+        en: 'Statistic',
     }
 };
 
 function Languages() {
+    if (navigator.language == 'ru') {
+        this.lang =  'ru';
+    } else {
+        this.lang = 'en';
+    }
 }
 
 Languages.prototype.getText = function (word) {
-    if (legend.hasOwnProperty(word)) {
-        return legend[word].ru;
+    const lang = this.lang;
+
+    if (!legend.hasOwnProperty(word)) {
+        return word;
     }
+
+    if (legend[word].hasOwnProperty(lang)) {
+        return legend[word][lang];
+    }
+
+    if (legend[word].hasOwnProperty('en')) {
+        return legend[word].en;
+    }
+
     return word;
+};
+
+Languages.prototype.setLanguage = function (lang) {
+    this.lang = lang;
 };
 
 Languages.prototype.replacePlaceholders = function (pageText) {
@@ -101,6 +149,5 @@ Languages.prototype.replacePlaceholders = function (pageText) {
     });
     return pageText;
 };
-
 
 module.exports = Languages;

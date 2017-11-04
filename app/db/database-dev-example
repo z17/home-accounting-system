@@ -1,0 +1,31 @@
+{"type":"income","data":{"contact":"Сбербанк","date":1500498000,"description":"","id":null,"month":1498856400,"paymentType":"Проценты по вкладу","sum":4211},"_id":"022vnnV5rP1VrQ7X"}
+{"type":"income","data":{"contact":"Ростелеком","date":1475787600,"description":"Остаток","id":null,"month":1472677200,"paymentType":"Зарплата","sum":40000},"_id":"17foQO5Ez113FXyu"}
+{"type":"income","data":{"contact":"Газпром","date":1499720400,"description":"Остаток за июнь","id":null,"month":1496264400,"paymentType":"Зарплата","sum":70000},"_id":"1YshRjfjuAtzYsuN"}
+{"type":"balance","data":{"name":"Наличные","value":{"102016":32540,"112016":11300,"122016":2300,"082016":42155,"092016":2155,"012017":32510,"022017":7510,"032017":30511,"042017":25850,"052017":55850,"062017":25851,"072017":5851,"082017":27851,"092017":53230}},"_id":"3GVxamX9JSsPjwSW"}
+{"type":"income","data":{"contact":"Газпром","date":1489179600,"description":"Остаток за февраль","id":null,"month":1485896400,"paymentType":"Зарплата","sum":60000},"_id":"3J9kwGbyVDYyM6E4"}
+{"type":"income","data":{"contact":"Газпром","date":1494450000,"description":"Остаток за апрель","id":"5BMoG0AvyMLHIsIc","month":1490994000,"paymentType":"Зарплата","sum":60000},"_id":"5BMoG0AvyMLHIsIc"}
+{"type":"balance","data":{"name":"Сбербанк","value":{"102016":85000,"112016":42000,"122016":18001,"082016":54000,"092016":112000,"012017":18001,"022017":63000,"032017":52000,"042017":84300,"052017":110430,"062017":110430,"072017":145430,"082017":205430,"092017":225000}},"_id":"7iw2wbB4lMfxuRHR"}
+{"type":"income","data":{"contact":"Алексей","date":1483477200,"description":"Проект","id":null,"month":1480539600,"paymentType":"Заказ","sum":12000},"_id":"9QM7Rl8wUMDCS0ZN"}
+{"type":"income","data":{"contact":"Ростелеком","date":1478811600,"description":"Остаток","id":null,"month":1475269200,"paymentType":"Зарплата","sum":40000},"_id":"A7XJTJL9Lml4KXRA"}
+{"type":"income","data":{"contact":"Алексей","date":1481835600,"description":"Проект","id":null,"month":1480539600,"paymentType":"Заказ","sum":28000},"_id":"E27muO9s5Fa4xfjh"}
+{"type":"income","data":{"contact":"Газпром","date":1493154000,"description":"Аванс за апрель","id":"E3isLKloVbvufFfY","month":1490994000,"paymentType":"Зарплата","sum":50000},"_id":"E3isLKloVbvufFfY"}
+{"type":"income","data":{"contact":"Ростелеком","date":1480107600,"description":"Аванс","id":null,"month":1477947600,"paymentType":"Зарплата","sum":30000},"_id":"EwcmKST5qVupZzul"}
+{"type":"income","data":{"contact":"Газпром","date":1507669200,"description":"Остаток за сентябрь","id":null,"month":1504213200,"paymentType":"Зарплата","sum":75000},"_id":"FAw7dar63TFpHGme"}
+{"type":"income","data":{"contact":"Ростелеком","date":1473368400,"description":"Остаток","id":null,"month":1469998800,"paymentType":"Зарплата","sum":40000},"_id":"JpsrNVHS4mZaoKKW"}
+{"type":"income","data":{"contact":"Газпром","date":1498424400,"description":"Аванс за июнь","id":null,"month":1496264400,"paymentType":"Зарплата","sum":60000},"_id":"KR6RD7YZgB4wvyRi"}
+{"type":"income","data":{"contact":"Газпром","date":1504126800,"description":"Премия","id":null,"month":1501534800,"paymentType":"Зарплата","sum":15000},"_id":"KiGIwpmLJNL8AUF3"}
+{"type":"income","data":{"contact":"Газпром","date":1490475600,"description":"Аванс за март","id":null,"month":1488315600,"paymentType":"Зарплата","sum":50000},"_id":"PiEweTjC9KSNjLx1"}
+{"type":"income","data":{"contact":"Газпром","date":1487970000,"description":"Аванс","id":null,"month":1485896400,"paymentType":"Зарплата","sum":50000},"_id":"RJtbwxQAHhqRA1eQ"}
+{"type":"income","data":{"contact":"Газпром","date":1495659600,"description":"Аванс за май","id":"SWjlvoRLWeDAjykH","month":1493586000,"paymentType":"Зарплата","sum":60000},"_id":"SWjlvoRLWeDAjykH"}
+{"type":"income","data":{"contact":"Газпром","date":1502398800,"description":"Остаток за июль","id":null,"month":1498856400,"paymentType":"Зарплата","sum":60000},"_id":"VdLFfVbRjhk0yrMf"}
+{"type":"income","data":{"contact":"Газпром","date":1503694800,"description":"Аванс за август","id":null,"month":1501534800,"paymentType":"Зарплата","sum":65000},"_id":"WmVvcPpOhglVMhuv"}
+{"type":"income","data":{"contact":"Ростелеком","date":1481144400,"description":"Остаток","id":null,"month":1477947600,"paymentType":"Зарплата","sum":40000},"_id":"XtG1xJYl5xAr4mt0"}
+{"type":"income","data":{"contact":"Газпром","date":1506373200,"description":"Аванс за сентябрь","id":null,"month":1504213200,"paymentType":"Зарплата","sum":65000},"_id":"c3VkOJWINKeje7y9"}
+{"type":"balance","data":{"name":"Альфабанк","value":{"102016":23300,"112016":113300,"122016":125300,"082016":24500,"092016":19200,"012017":78300,"022017":78300,"032017":128300,"042017":160300,"052017":175000,"062017":265000,"072017":321000,"082017":275001,"092017":275000}},"_id":"jDASnGYBwrrojmXd"}
+{"type":"income","data":{"contact":"Алексей","date":1484859600,"description":"Проект","id":null,"month":1483218000,"paymentType":"Заказ","sum":22000},"_id":"laeTo2PiWCXYEbCx"}
+{"type":"income","data":{"contact":"Газпром","date":1501016400,"description":"Аванс за июль","id":null,"month":1498856400,"paymentType":"Зарплата","sum":60000},"_id":"lefDGbiArzcrS4t8"}
+{"type":"income","data":{"contact":"Газпром","date":1491598800,"description":"Остаток за март","id":"q8OGns23BdEMEQG0","month":1488315600,"paymentType":"Зарплата","sum":60000},"_id":"q8OGns23BdEMEQG0"}
+{"type":"income","data":{"contact":"Ростелеком","date":1477602000,"description":"Аванс","id":"qFLC3jHYaZxuWMxB","month":1475269200,"paymentType":"Зарплата","sum":30000},"_id":"qFLC3jHYaZxuWMxB"}
+{"type":"income","data":{"contact":"Ростелеком","date":1474923600,"description":"Аванс","id":"sSYpHBcpvtJxc0Fy","month":1472677200,"paymentType":"Зарплата","sum":30000},"_id":"sSYpHBcpvtJxc0Fy"}
+{"type":"income","data":{"contact":"Газпром","date":1497128400,"description":"Остаток за май","id":null,"month":1493586000,"paymentType":"Зарплата","sum":70000},"_id":"wOgYUSI8tJUUsNrJ"}
+{"type":"income","data":{"contact":"Газпром","date":1504904400,"description":"Остаток за август","id":null,"month":1501534800,"paymentType":"Зарплата","sum":75000},"_id":"zFKpkXXiZhNr6d6O"}

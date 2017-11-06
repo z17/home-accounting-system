@@ -2,7 +2,15 @@ const Datastore = require('nedb');
 
 function Database(path) {
     this.db = new Datastore({filename: path});
-    this.db.loadDatabase();
+    this.db.loadDatabase(
+        function (err) {
+            if (err) {
+                // todo: this. Can happens, when database in dropbox folder, for example.
+                console.log("DATABASE ERROR");
+                console.log(err);
+            }
+        }
+    );
     this.filename = this.db.filename;
 }
 

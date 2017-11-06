@@ -1,3 +1,5 @@
+"use strict";
+
 const functions = require('../scripts/functions');
 const Settings = require('../models/settings');
 
@@ -31,6 +33,10 @@ SettingsView.prototype.preparePage = function(sendSettingsFunction) {
         $('.js-settings-backup-text').val(path);
     });
 
+    $('.js-settings-database').change(function (e) {
+        let path = e.target.files[0].path;
+        $('.js-settings-database-text').val(path);
+    });
 
     $(".js-settings-form").on('submit', function (e) {
         e.preventDefault();
@@ -39,6 +45,7 @@ SettingsView.prototype.preparePage = function(sendSettingsFunction) {
 
         let remindFlag = $('.js-settings-remind').is(":checked");
         let remindEmail = $('.js-settings-email').val();
+        let databaseFolder = $('.js-settings-database-text').val();
         let backupFolder = $('.js-settings-backup-text').val();
         let language = $('.js-settings-language').val();
         if (remindFlag === true && remindEmail.length === 0) {
@@ -47,7 +54,7 @@ SettingsView.prototype.preparePage = function(sendSettingsFunction) {
             return;
         }
 
-        let settings = new Settings(remindFlag, remindEmail, backupFolder, language);
+        let settings = new Settings(remindFlag, remindEmail, databaseFolder, backupFolder, language);
 
         sendSettingsFunction(settings);
 
@@ -60,6 +67,7 @@ function updateData(data) {
     $('.js-settings-remind').prop("checked", data.remind);
     $('.js-settings-email').val(data.email);
     $('.js-settings-backup-text').val(data.backupFolder);
+    $('.js-settings-database-text').val(data.databaseFolder);
     $('.js-settings-language').val(data.language);
 }
 

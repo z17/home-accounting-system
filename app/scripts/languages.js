@@ -83,6 +83,10 @@ const legend = {
         ru: 'Папка для бекапов',
         en: 'Backup folder'
     },
+    'database-folder': {
+        ru: 'Папка для базы данных',
+        en: 'Database folder'
+    },
     'choose-folder': {
         ru: 'Выберите папку',
         en: 'Choose folder'

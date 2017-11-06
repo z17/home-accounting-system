@@ -83,4 +83,4 @@ function request(method, path, headers, requestData, callback) {
     req.end();
 }
 
-module.exports.ServerNotify = ServerRequester;
+module.exports = ServerRequester;

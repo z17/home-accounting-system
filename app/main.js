@@ -4,13 +4,18 @@ const Dao = require('./backend/Dao');
 const Backup = require('./backend/Backup');
 const functions = require('./scripts/functions');
 const argv = require('minimist')(process.argv);
-const ServerNotify = require('./backend/ServerRequester').ServerNotify;
+const ServerRequester = require('./backend/ServerRequester');
 const path = require('path');
+const Config = require('electron-config');
+const fs = require('fs');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-const serverNotify = new ServerNotify();
+const serverRequester = new ServerRequester();
+
+const DATABASE_FOLDER_KEY = 'database-folder';
+const DATABASE_NAME = 'database';
 
 // require('./tmp/converter').exportBalanceData();
 // require('./tmp/converter').exportIncomeData();
@@ -40,11 +45,17 @@ app.on('ready', function () {
         }
     );
 
-    let dbPath = app.getPath('userData') + '\\db\\database';
+    const config = new Config();
+    let dbPath = config.get(DATABASE_FOLDER_KEY);
+    if (dbPath === undefined) {
+        dbPath = app.getPath('userData') + '\\db\\';
+        config.set(DATABASE_FOLDER_KEY, dbPath);
+    }
+    dbPath = dbPath + DATABASE_NAME;
+
     if (argv.dev) {
         mainWindow.webContents.openDevTools();
         dbPath = "database-dev";
-
     } else {
         mainWindow.setMenu(null);
     }
@@ -54,7 +65,7 @@ app.on('ready', function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     mainWindow.webContents.on('dom-ready', function () {
-        serverNotify.getServerVersion((version) => {
+        serverRequester.getServerVersion((version) => {
             if (compareVersions(version, app.getVersion()) > 0) {
                 mainWindow.webContents.send('new-version', app.getVersion(), version);
             }
@@ -78,6 +89,7 @@ app.on('ready', function () {
         });
 
         dao.getSettings(function (settings) {
+            settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
             mainWindow.webContents.send('settings', settings);
 
             let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
@@ -85,11 +97,12 @@ app.on('ready', function () {
 
             if (backupTimestamp != undefined) {
                 settings.lastBackupDateTimestamp = backupTimestamp;
-                dao.updateSettings(settings, () => {});
+                dao.updateSettings(settings, () => {
+                });
             }
         });
 
-        dao.getBalances(function(types) {
+        dao.getBalances(function (types) {
             mainWindow.webContents.send('balance-types', types);
         });
 
@@ -112,7 +125,7 @@ app.on('ready', function () {
 
     ipcMain.on('income-delete', (event, incomeId) => {
         dao.deleteIncome(incomeId, () => {
-          mainWindow.webContents.send('income-data-deleted', incomeId);
+            mainWindow.webContents.send('income-data-deleted', incomeId);
         });
     });
 
@@ -127,29 +140,50 @@ app.on('ready', function () {
 
     ipcMain.on('balance-add', (event, source) => {
         dao.addBalanceSource(source, insertedSource => {
-          mainWindow.webContents.send('balance-inserted', insertedSource);
+            mainWindow.webContents.send('balance-inserted', insertedSource);
         });
     });
 
     ipcMain.on('balance-update', (event, id, month, sum) => {
         dao.addBalance(id, month, sum, () => {
-          mainWindow.webContents.send('balance-updated', id, month, sum);
+            mainWindow.webContents.send('balance-updated', id, month, sum);
         });
     });
     ipcMain.on('balance-month-remove', (event, id, month) => {
         dao.deleteBalance(id, month, () => {
-          mainWindow.webContents.send('balance-reupdated', id, month);
+            mainWindow.webContents.send('balance-reupdated', id, month);
         });
     });
 
-    ipcMain.on('update-settings', (event, settings) => {
+    ipcMain.on('update-settings', (event, newClientSettings) => {
+        let currentFolder = config.get(DATABASE_FOLDER_KEY);
+        let newFolder = newClientSettings.databaseFolder;
+
+        if (newFolder !== currentFolder) {
+            config.set(DATABASE_FOLDER_KEY, newFolder + '\\');
+
+            if (argv.dev) {
+                mainWindow.webContents.send('error', 'You cant move database file in dev mod');
+            } else {
+                let is = fs.createReadStream(currentFolder + DATABASE_NAME);
+                let os = fs.createWriteStream(newFolder + '\\' + DATABASE_NAME);
+
+                is.pipe(os);
+                is.on('end', function () {
+                    fs.unlinkSync(currentFolder + DATABASE_NAME);
+                    app.relaunch();
+                    app.exit(0);
+                });
+            }
+        }
+
+        let newSettings = Object.assign({}, newClientSettings);
+        delete newSettings.databaseFolder; // we wont to save this as a settings in database;
         dao.getSettings((oldSettings) => {
-            serverNotify.notify(oldSettings, settings);
-            dao.updateSettings(settings, () => {
-                mainWindow.webContents.send('settings-saved', settings);
+            serverRequester.notify(oldSettings, newSettings);
+            dao.updateSettings(newSettings, () => {
+                mainWindow.webContents.send('settings-saved', newClientSettings);
             });
         });
-
-        event.returnValue = true;
     });
 });

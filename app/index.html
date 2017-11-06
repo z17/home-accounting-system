@@ -29,9 +29,13 @@
                 <label>[[remind-email]]:
                     <input type="email" class="js-settings-email"/>
                 </label>
+                <label>[[database-folder]]:<br>
+                    <input type="file" class="js-settings-database settings-folder" value="folder" webkitdirectory directory multiple/>
+                    <input type="text" class="js-settings-database-text settings-folder-text" placeholder="[[choose-folder]]"/>
+                </label>
                 <label>[[backup-folder]]:<br>
-                    <input type="file" class="js-settings-backup settings-backup" value="folder" webkitdirectory directory multiple/>
-                    <input type="text" class="js-settings-backup-text settings-backup-text" placeholder="[[choose-folder]]"/>
+                    <input type="file" class="js-settings-backup settings-folder" value="folder" webkitdirectory directory multiple/>
+                    <input type="text" class="js-settings-backup-text settings-folder-text" placeholder="[[choose-folder]]"/>
                 </label>
                 <label>[[language]]:
                     <select class="js-settings-language">

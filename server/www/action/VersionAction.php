@@ -1,4 +1,5 @@
 <?php
+Namespace Action;
 
 class VersionAction extends Action
 {

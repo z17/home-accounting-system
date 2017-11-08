@@ -1,4 +1,8 @@
 <?php
+Namespace Action;
+
+Use TemplateHelper;
+Use Template;
 
 class UnsubscribeAction extends Action
 {

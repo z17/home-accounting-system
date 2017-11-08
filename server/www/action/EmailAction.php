@@ -1,4 +1,5 @@
 <?php
+Namespace Action;
 
 class EmailAction extends Action
 {
@@ -13,7 +14,7 @@ class EmailAction extends Action
     public function process()
     {
         if (!isset($this->data)) {
-            writeLog("invalid request with email");
+            \Functions::writeLog("invalid request with email");
             return;
         }
 
@@ -33,7 +34,7 @@ class EmailAction extends Action
                 $this->db->disableEmail($this->data->email);
                 break;
             default:
-                writeLog("invalid action with email");
+                \Functions::writeLog("invalid action with email");
         }
     }
 }

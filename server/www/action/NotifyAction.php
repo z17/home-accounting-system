@@ -1,4 +1,7 @@
 <?php
+Namespace Action;
+
+use Config;
 
 class NotifyAction extends Action
 {
@@ -7,12 +10,12 @@ class NotifyAction extends Action
     public function __construct($key)
     {
         parent::__construct();
-        $this -> key = $key;
+        $this->key = $key;
     }
 
     public function process()
     {
-        if ($this -> key !== Config::$notify_key) {
+        if ($this->key !== Config::$notify_key) {
             echo "invalid key";
             return;
         }

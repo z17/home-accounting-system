@@ -1,4 +1,9 @@
 <?php
+Namespace Action;
+
+Use Config;
+Use TemplateHelper;
+Use Template;
 
 class SendNotifyAction extends Action
 {

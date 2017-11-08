@@ -1,4 +1,7 @@
 <?php
+Namespace Action;
+
+Use Base;
 
 abstract class Action
 {

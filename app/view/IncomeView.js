@@ -306,8 +306,9 @@ function insertIncomeToPage(item) {
 function setupIncomeRow(item, row) {
     let id = item.id.toString();
     row.classList.remove('js-row');
+    row.classList.remove('edit');
     row.dataset.id = id;
-    row.querySelector('.js-delete').dataset.id = id;
+    row.querySelector('.js-balance-delete').dataset.id = id;
     row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
     row.querySelector('.js-date').dataset.time = item.date;
     row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");

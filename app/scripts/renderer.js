@@ -1,17 +1,16 @@
 const ipcRenderer = require('electron').ipcRenderer;
 const IncomeView = require('../view/IncomeView');
 const SettingsView = require('../view/SettingsView');
-const BalanceView = require('../view/BalanceView');
+const balanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
 const moment = require('moment');
 const Languages = require('../scripts/languages');
 
-const balanceView = new BalanceView();
 const incomeView = new IncomeView();
 const settingsView = new SettingsView();
 const languages = new Languages();
 
-let incomeEditingRow;
+let incomeEditingRow = undefined;
 let resizeTimeout;
 
 if (typeof google === 'undefined') {
@@ -107,6 +106,9 @@ function init() {
     },
     (id, month) => {
       ipcRenderer.send('balance-month-remove', id, month);
+    },
+      (id, newName) => {
+      ipcRenderer.send('rename-balance-source', id, newName);
     }
   );
 
@@ -116,13 +118,13 @@ function init() {
 }
 
 function clicksHandler(e) {
-  if (e.target.classList.contains('js-delete')) {
+  if (e.target.classList.contains('js-balance-delete')) {
     const id = e.target.dataset.id.toString();
     return ipcRenderer.send('income-delete', id);
   }
 
   const row = e.target.closest('.js-income-row');
-  if ((row === null) || (row === incomeEditingRow)) {
+  if (row === incomeEditingRow && !e.target.classList.contains('js-balance-save')) {
     return;
   }
 
@@ -130,6 +132,10 @@ function clicksHandler(e) {
     const incomeItem = incomeView.getItemFromForm(incomeEditingRow);
     ipcRenderer.send('income-edit', incomeItem);
     incomeEditingRow = undefined;
+  }
+
+  if (row === null || e.target.classList.contains('js-balance-save')) {
+    return;
   }
 
   const copyField = ({ elementClass, fieldClass, options = {} }) => {
@@ -165,6 +171,7 @@ function clicksHandler(e) {
     { elementClass: ".js-description", fieldClass: ".js-add-description" }];
 
   fields.forEach(copyField);
+  row.className += ' edit';
   incomeEditingRow = row;
 }
 

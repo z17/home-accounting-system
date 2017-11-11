@@ -155,6 +155,10 @@ app.on('ready', function () {
         });
     });
 
+    ipcMain.on('rename-balance-source', (event, id, newName) => {
+       dao.renameBalance(id, newName);
+    });
+
     ipcMain.on('update-settings', (event, newClientSettings) => {
         let currentFolder = config.get(DATABASE_FOLDER_KEY);
         let newFolder = newClientSettings.databaseFolder;
@@ -164,17 +168,18 @@ app.on('ready', function () {
 
             if (argv.dev) {
                 mainWindow.webContents.send('error', 'You cant move database file in dev mod');
-            } else {
-                let is = fs.createReadStream(currentFolder + DATABASE_NAME);
-                let os = fs.createWriteStream(newFolder + '\\' + DATABASE_NAME);
-
-                is.pipe(os);
-                is.on('end', function () {
-                    fs.unlinkSync(currentFolder + DATABASE_NAME);
-                    app.relaunch();
-                    app.exit(0);
-                });
+                return;
             }
+
+            let is = fs.createReadStream(currentFolder + DATABASE_NAME);
+            let os = fs.createWriteStream(newFolder + '\\' + DATABASE_NAME);
+
+            is.pipe(os);
+            is.on('end', function () {
+                fs.unlinkSync(currentFolder + DATABASE_NAME);
+                app.relaunch();
+                app.exit(0);
+            });
         }
 
         let newSettings = Object.assign({}, newClientSettings);

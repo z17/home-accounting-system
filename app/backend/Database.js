@@ -8,6 +8,8 @@ function Database(path) {
                 // todo: this. Can happens, when database in dropbox folder, for example.
                 console.log("DATABASE ERROR");
                 console.log(err);
+
+                throw new Error("Database load error: " + err);
             }
         }
     );
@@ -31,7 +33,7 @@ Database.prototype.insert = function (data, type, callback) {
     });
 };
 
-Database.prototype.update = function (id, type, data, callback) {
+Database.prototype.updateFullData = function (id, type, data, callback) {
     this.db.update({
             _id: id,
             type: type,
@@ -43,6 +45,10 @@ Database.prototype.update = function (id, type, data, callback) {
         {},
         callback
     );
+};
+
+Database.prototype.update = function (find, update, callback) {
+  this.db.update(find, update, {}, callback);
 };
 
 Database.prototype.addProperty = function (query, key, value, callback) {
@@ -61,7 +67,7 @@ Database.prototype.deleteProperty = function (query, key, callback) {
     });
 };
 
-Database.prototype.get = function (type, callback) {
+Database.prototype.getByType = function (type, callback) {
     this.db.find({type: type}, function (err, data) {
         let result = data.map(mapDataFromDB);
         callback(result);

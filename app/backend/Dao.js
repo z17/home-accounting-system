@@ -12,12 +12,12 @@ function Dao(path) {
 }
 
 Dao.prototype.getDatabasePath = function () {
-  return this.database.filename;
+    return this.database.filename;
 };
 
 // Incomes
 Dao.prototype.getIncomes = function (callback) {
-    this.database.get(Tables.INCOME, callback);
+    this.database.getByType(Tables.INCOME, callback);
 };
 
 Dao.prototype.insertIncome = function (income, callback) {
@@ -25,7 +25,7 @@ Dao.prototype.insertIncome = function (income, callback) {
 };
 
 Dao.prototype.updateIncome = function (income, callback) {
-    this.database.update(income.id, Tables.INCOME, income, callback);
+    this.database.updateFullData(income.id, Tables.INCOME, income, callback);
 };
 
 Dao.prototype.deleteIncome = function (incomeId, callback) {
@@ -34,7 +34,7 @@ Dao.prototype.deleteIncome = function (incomeId, callback) {
 
 //Balance
 Dao.prototype.getBalances = function (callback) {
-    this.database.get(Tables.BALANCE, callback);
+    this.database.getByType(Tables.BALANCE, callback);
 };
 
 Dao.prototype.addBalanceSource = function (source, callback) {
@@ -47,13 +47,20 @@ Dao.prototype.addBalance = function (id, month, sum, callback) {
 };
 
 Dao.prototype.deleteBalance = function (id, month, callback) {
-    let key = 'data.value.'+ month;
+    let key = 'data.value.' + month;
     this.database.deleteProperty({'_id': id, 'type': Tables.BALANCE}, key, callback);
+};
+
+Dao.prototype.renameBalance = function (id, newName) {
+    this.database.update(
+        {type: Tables.BALANCE, _id: id},
+        {$set: {"data.name": newName}}
+    );
 };
 
 // Settings
 Dao.prototype.getSettings = function (callback) {
-    this.database.get(Tables.SETTINGS, (data) => {
+    this.database.getByType(Tables.SETTINGS, (data) => {
         if (data.length > 1) {
             throw new Error("Settings error");
         }

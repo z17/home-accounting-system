@@ -19,13 +19,13 @@
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
     "minimist": "^1.2.0",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "nedb": "^1.8.0",
     "normalize.css": "^6.0.0"
   },
   "devDependencies": {
-    "electron-prebuilt": "^1.4.13",
-    "electron-builder": "^19.27.7"
+    "electron-builder": "^19.45.6",
+    "electron-prebuilt": "^1.4.13"
   },
   "scripts": {
     "start": "electron .",
@@ -41,8 +41,15 @@
       "icon": "build/icon.ico"
     },
     "mac": {
-      "category": "finance",
+      "category": "public.app-category.finance",
       "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Finance"
     }
   }
 }

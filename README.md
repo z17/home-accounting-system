@@ -1,30 +1,33 @@
-# Cromberg - Домашняя система учёта
+# Cromberg - personal finance accounting system
 
-## Функционал
+## Features
 
-### Учёт дохода
+### Accounting of income
 
-* Введение данных с полями: дата, месяц, сумма, тип, контакт, описание
-    * месяц от даты отличается тем, что дата - дата поступления средств, а месяц это месяц, за который пришли средства (например, зарплата за текущий месяц приходит в следующем)
-* График дохода по месяцам
-* Подсчёт суммарного и среднего дохода по годам, лучшего, худшего и среднего месяца
+* Inserting income data with next fields: date, month, sum, type, contact, description
+    * *Different between date and month: date - exact date of receive money; month - month, for which money you received*
+* Income chart by months
+* Calculating sum and average income by months, the best, worst and average month
 
-### Баланс
-* Ведение баланса по различным статьям (пример - наличные/счёт в банке А/электронные деньги)
-* График баланса по месяцам
-* График расходов по месяцам (на основании данных о балансе и доходах)
+### Balance
+* Inserting balance data with different sources (*example: cash, account in A bank, electronic money*)
+* Balance chart by months
+* Costs chart by months (based on balance and income data)
 
-### Остальное
+### Other
 
-* База данных приложения расположена в `%APPDATA%/Roaming/Cromberg/db/database` для Windows и аналогично для других OC.
-* При каждом запуске приложения (но не чаще раза в день) создаётся резервная копия базы данных. Она сохраняется в папку, указанную пользователем в настройках
-* В последний день каждого месяца происходит рассылка писем на электронные почты с напоминанием о заполнении баланса. Подписка и отписка от уведомлений возможна в разделе настроек.
+* App's database by default storing in `%APPDATA%/Roaming/Cromberg/db/database` for Windows and similarly for others OS. You can change it in settings.
+* Creating backup of database on every launch app, but not more ofter once a day. Backup folder you can set in settings.
+* Email reminder every last day of month to fill balance data. Subscription and unsubscribing of notification by setting in app.
+* Multi-language support: english and russian
 
-## Требования
+## Requirements
 
-Для корректной работы программы необходимо подключение к интернету.
+* Its need internet connection for correct work
+* Supports Windows, MacOS, Linux
 
-## Технологический стек
-* [Electron.js](https://github.com/electron/electron) - приложение
-* [NeDB](https://github.com/louischatriot/nedb) - база данных приложения
-* PHP - сервис уведомлений
+## Technology stack
+* [Electron.js](https://github.com/electron/electron) - app
+* [NeDB](https://github.com/louischatriot/nedb) - database
+* PHP, MySQL - notification service
+

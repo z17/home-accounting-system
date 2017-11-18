@@ -10,8 +10,9 @@ const incomeView = new IncomeView();
 const settingsView = new SettingsView();
 const languages = new Languages();
 
-let incomeEditingRow = undefined;
 let resizeTimeout;
+window.onclick = clicksHandler;
+window.onresize = resizeThrottler;
 
 if (typeof google === 'undefined') {
     alert(languages.getText('no-internet'));
@@ -79,13 +80,6 @@ ipcRenderer.on('settings', function (event, data) {
   init();
 });
 
-window.onclick = clicksHandler;
-
-window.onresize = resizeThrottler;
-
-$('a').click(onLinkClick);
-
-
 function init() {
   document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
   $('.js-tab').click(function () {
@@ -118,68 +112,32 @@ function init() {
 }
 
 function clicksHandler(e) {
-  if (e.target.classList.contains('js-balance-delete')) {
-    const id = e.target.dataset.id.toString();
-    return ipcRenderer.send('income-delete', id);
-  }
-
-  const row = e.target.closest('.js-income-row');
-  if (row === incomeEditingRow && !e.target.classList.contains('js-balance-save')) {
-    return;
-  }
-
-  if (incomeEditingRow !== undefined) {
-    const incomeItem = incomeView.getItemFromForm(incomeEditingRow);
-    ipcRenderer.send('income-edit', incomeItem);
-    incomeEditingRow = undefined;
-  }
-
-  if (row === null || e.target.classList.contains('js-balance-save')) {
-    return;
-  }
-
-  const copyField = ({ elementClass, fieldClass, options = {} }) => {
-    const { format } = options;
-    const element = row.querySelector(elementClass);
-    const field = document.querySelector(fieldClass).cloneNode(true);
-    let val  = element.innerHTML;
-    if (field.type == 'number') {
-      val = parseFloat(val.replace(' ', ''));
+    if (e.target.classList.contains('js-income-edit')) {
+        incomeView.editClickHandler(e);
+        return;
     }
-    field.value = val;
-    if (format !== undefined) {
-      const time = element.dataset.time;
-      field.value = moment.unix(time).format(format);
+
+    if (e.target.classList.contains('js-income-save')) {
+        ipcRenderer.send('income-edit', incomeView.saveClickHandler(e));
+        return;
     }
-    element.innerHTML = '';
-    element.appendChild(field);
-  };
 
-  const fields = [{
-      elementClass: ".js-date",
-      fieldClass: ".js-add-date",
-      options: { format: "YYYY-MM-DD" }
-    },
-    {
-      elementClass: ".js-month",
-      fieldClass: ".js-add-month",
-      options: { format: "YYYY-MM" }
-    },
-    { elementClass: ".js-sum", fieldClass: ".js-add-sum" },
-    { elementClass: ".js-payment-type", fieldClass: ".js-add-payment-type" },
-    { elementClass: ".js-contact", fieldClass: ".js-add-contact" },
-    { elementClass: ".js-description", fieldClass: ".js-add-description" }];
+    if (e.target.classList.contains('js-income-delete')) {
+        const row = event.target.closest('.js-income-row');
+        const id = row.dataset.id.toString();
+        ipcRenderer.send('income-delete', id);
+    }
 
-  fields.forEach(copyField);
-  row.className += ' edit';
-  incomeEditingRow = row;
+    if (e.target.tagName == 'A') {
+        onLinkClick(e);
+    }
 }
 
 function onLinkClick(e) {
-  if ($(this).attr('href') !== undefined) {
-    e.preventDefault();
-    shell.openExternal($(this).attr('href'));
-  }
+    if (e.target.getAttribute('href') !== null) {
+        e.preventDefault();
+        shell.openExternal(e.target.getAttribute('href'));
+    }
 }
 
 function makeActive(tabName) {

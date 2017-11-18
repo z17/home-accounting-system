@@ -27,7 +27,7 @@ table.data-table {
     margin-bottom: 35px;
 }
 
-table.data-table tr:hover td, table.data-table tr.row.edit {
+table.data-table tr:hover td, table.data-table tr.row.update {
     background: #f1f1f1;
 }
 
@@ -82,34 +82,46 @@ table.data-table tr.row {
     position: relative;
 }
 
-table.data-table tr.row .save {
+table.data-table tr.row .income-button {
     position: absolute;
-    right: 35px;
-    top:5px;
-    display: none;
     cursor: pointer;
+    display: none;
     width: 25px;
     height: 25px;
+}
+
+table.data-table tr.row .save {
+    right: 35px;
+    top:4px;
     background: url('../img/ok.svg') no-repeat;
 }
 
-table.data-table tr.row.edit .save {
+table.data-table tr.row.update .save {
     display: block;
 }
 
 table.data-table tr.row .delete {
-    position: absolute;
     right: 10px;
     top:3px;
-    display: none;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
     background: url('../img/delete.svg') no-repeat;
 }
 
 table.data-table tr.row:hover .delete {
     display: block;
+}
+
+table.data-table tr.row .edit {
+    right: 35px;
+    top:3px;
+    background: url('../img/edit.svg') no-repeat;
+}
+
+table.data-table tr.row:hover .edit {
+    display: block;
+}
+
+table.data-table tr.row.update .edit {
+    display: none;
 }
 
 .page {

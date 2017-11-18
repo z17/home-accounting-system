@@ -76,17 +76,17 @@ IncomeView.prototype.insertIncome = function (item) {
 IncomeView.prototype.deleteIncome = function (id) {
     let index = getIndexById(id, this.data);
     this.data.splice(index, 1);
-    document.querySelector('tr[data-id="'+id+'"]').remove();
+    document.querySelector('tr[data-id="' + id + '"]').remove();
 
     updateGraphData(this);
     this.reloadGraph();
 };
 
-IncomeView.prototype.updateIncome = function(income) {
+IncomeView.prototype.updateIncome = function (income) {
     let index = getIndexById(income.id, this.data);
     this.data[index] = income;
 
-    let row = document.querySelector('.js-income-row[data-id="'+income.id+'"]');
+    let row = document.querySelector('.js-income-row[data-id="' + income.id + '"]');
     this.setRowFromItem(income, row);
 
     updateGraphData(this);
@@ -109,9 +109,39 @@ IncomeView.prototype.preparePage = function (addIncomeFunction) {
 
     $(".js-income-page .js-income-add").on('submit', (e) => {
         e.preventDefault();
-        const incomeItem = this.getItemFromForm(document.querySelector('.js-income-page .form'));
+        const incomeItem = getItemFromForm(document.querySelector('.js-income-page .form'));
         addIncomeFunction(incomeItem);
     });
+};
+
+IncomeView.prototype.editClickHandler = function (event) {
+    const row = event.target.closest('.js-income-row');
+
+    const fields = [
+        [row,
+            ".js-date",
+            ".js-add-date",
+            {format: "YYYY-MM-DD"}
+        ],
+        [
+            row,
+            ".js-month",
+            ".js-add-month",
+            {format: "YYYY-MM"}
+        ],
+        [row, ".js-sum", ".js-add-sum"],
+        [row, ".js-payment-type", ".js-add-payment-type"],
+        [row, ".js-contact", ".js-add-contact"],
+        [row, ".js-description", ".js-add-description"]
+    ];
+
+    fields.forEach(copyField);
+    row.className += ' update';
+};
+
+IncomeView.prototype.saveClickHandler = function (event) {
+    const row = event.target.closest('.js-income-row');
+    return getItemFromForm(row);
 };
 
 function drawByMonth(incomeItem) {
@@ -306,9 +336,8 @@ function insertIncomeToPage(item) {
 function setupIncomeRow(item, row) {
     let id = item.id.toString();
     row.classList.remove('js-row');
-    row.classList.remove('edit');
+    row.classList.remove('update');
     row.dataset.id = id;
-    row.querySelector('.js-balance-delete').dataset.id = id;
     row.querySelector('.js-date').textContent = moment.unix(item.date).format("DD.MM.YYYY");
     row.querySelector('.js-date').dataset.time = item.date;
     row.querySelector('.js-month').textContent = moment.unix(item.month).format("MMM YYYY");
@@ -328,7 +357,24 @@ function getIndexById(id, data) {
     return null;
 }
 
-IncomeView.prototype.getItemFromForm = function(row) {
+function copyField([row, elementClass, fieldClass, options = {}]) {
+    const {format} = options;
+    const element = row.querySelector(elementClass);
+    const field = document.querySelector(fieldClass).cloneNode(true);
+    let val = element.innerHTML;
+    if (field.type == 'number') {
+        val = parseFloat(val.replace(' ', ''));
+    }
+    field.value = val;
+    if (format !== undefined) {
+        const time = element.dataset.time;
+        field.value = moment.unix(time).format(format);
+    }
+    element.innerHTML = '';
+    element.appendChild(field);
+}
+
+function getItemFromForm(row) {
     let date = row.querySelector('input.js-add-date').value;
     let month = row.querySelector('input.js-add-month').value;
     let sum = row.querySelector('input.js-add-sum').value;
@@ -345,6 +391,6 @@ IncomeView.prototype.getItemFromForm = function(row) {
         income.id = id;
     }
     return income;
-};
+}
 
 module.exports = IncomeView;

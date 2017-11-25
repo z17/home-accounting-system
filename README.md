@@ -31,3 +31,6 @@
 * [NeDB](https://github.com/louischatriot/nedb) - database
 * PHP, MySQL - notification service
 
+## Screenshots
+![Income chart](server/www/screenshots/income.png)
+![Balance chart](server/www/screenshots/balance.png)

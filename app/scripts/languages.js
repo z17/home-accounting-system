@@ -1,126 +1,157 @@
 const legend = {
     title: {
         ru: 'Cromberg - система личного учёта',
-        en: 'Cromberg - personal finance accounting system'
+        en: 'Cromberg - personal finance accounting system',
+        fr: 'Cromberg - système de comptabilité financière personnelle'
     },
     income: {
         ru: 'Доход',
-        en: 'Income'
+        en: 'Income',
+        fr: 'Revenu'
     },
     balance: {
         ru: 'Баланс',
         en: 'Balance',
+        fr: 'Equilibre'
     },
     settings: {
         ru: 'Настройки',
         en: 'Settings',
+        fr: 'Paramètres'
     },
     remind: {
         ru: 'Присылать мне уведомления каждый месяц',
-        en: 'Remind me every month about balance'
+        en: 'Remind me every month about balance',
+        fr: 'Rappelez-moi chaque mois l\'équilibre'
     },
     'remind-email': {
         ru: 'E-mail для уведомлений',
         en: 'E-mail for reminds',
+        fr: 'E-mail de rappel'
     },
     sum: {
         ru: 'Сумма',
-        en: 'Sum'
+        en: 'Sum',
+        fr: 'Somme'
     },
     average: {
         ru: 'Средний',
         en: 'Average',
+        fr: 'Moyenne'
     },
     'top-month': {
         ru: 'Лучший месяц',
         en: 'Best month',
+        fr: 'Meilleur mois'
     },
     'worst-month': {
         ru: 'Худший месяц',
-        en: 'Worst month'
+        en: 'Worst month',
+        fr: 'Pire mois'
     },
     date: {
         ru: 'Дата поступления средств',
-        en: 'Date of receive money'
+        en: 'Date of receive money',
+        fr: 'Date de réception de l\'argent'
     },
     month: {
         ru: 'Месяц',
-        en: 'Month'
+        en: 'Month',
+        fr: 'Mois'
     },
     type: {
         ru: 'Тип',
-        en: 'Type'
+        en: 'Type',
+        fr: 'Type'
     },
     contact: {
         ru: 'Контакт',
-        en: 'Contact'
+        en: 'Contact',
+        fr: 'Contrat'
     },
     description: {
         ru: 'Описание',
-        en: 'Description'
+        en: 'Description',
+        fr: 'Description'
     },
     'balance-source-input': {
         ru: 'Введите место для хранения средств',
-        en: 'Enter a place to storage money'
+        en: 'Enter a place to storage money',
+        fr: 'Entrer un endroit pour ranger de l\'argent'
     },
     save: {
         ru: 'Сохранить',
-        en: 'Save'
+        en: 'Save',
+        fr: 'Enregister'
     },
     'income-month': {
         ru: 'Доход по месяцам',
-        en: 'Income by month'
+        en: 'Income by month',
+        fr: 'Revenu mensuel'
     },
     'income-year': {
         ru: 'Доход по годам',
-        en: 'Income by year'
+        en: 'Income by year',
+        fr: 'Revenu annuel'
     },
     'income-average': {
         ru: 'Средний доход по годам',
-        en: 'Average income by year'
+        en: 'Average income by year',
+        fr: 'Revenu moyen annuel'
     },
     'backup-folder': {
         ru: 'Папка для бекапов',
-        en: 'Backup folder'
+        en: 'Backup folder',
+        fr: 'Dossier de sauvegarde'
     },
     'database-folder': {
         ru: 'Папка для базы данных',
-        en: 'Database folder'
+        en: 'Database folder',
+        fr: 'Dossier de la base de données '
     },
     'choose-folder': {
         ru: 'Выберите папку',
-        en: 'Choose folder'
+        en: 'Choose folder',
+        fr: 'Choisissez dossier'
     },
     'balance-chart-title': {
         ru: 'Баланс по месяцам',
-        en: 'Balance by months'
+        en: 'Balance by months',
+        fr: 'Équilibre par mois'
     },
     'costs-chart-title': {
         ru: 'Расход по месяцам',
-        en: 'Costs by months'
+        en: 'Costs by months',
+        fr: 'Coûts par mois'
     },
     'no-internet': {
         ru: 'Без подключения к интернету работа программы невозможна',
-        en: 'Its need internet connection for correct work'
+        en: 'Its need internet connection for correct work',
+        fr: 'Connexion internet nécessaire pour fonctionné correctement'
     },
     'language': {
         ru: 'Язык',
-        en: 'Language'
+        en: 'Language',
+        fr: 'Langue'
     },
     'statistic': {
         ru: 'Статистика',
         en: 'Statistic',
+        fr: 'Statistique'
     },
     'new-version': {
         ru: 'Вышла новая версия приложения. Текущая версия: ?, новая версия: ?.',
-        en: 'A new version of the application has been released. Current: ?, new: ?.'
+        en: 'A new version of the application has been released. Current: ?, new: ?.',
+        fr: 'Une nouvelle version de l\'application a été publiée. Actuel:?, nouveau:?.'
     },
 };
 
 function Languages() {
     if (navigator.language == 'ru') {
         this.lang =  'ru';
-    } else {
+    } else if (navigator.language == 'fr') {
+        this.lang = 'fr';
+    } else if (navigator.language == 'en') {
         this.lang = 'en';
     }
 }
@@ -138,6 +169,10 @@ Languages.prototype.getText = function (word) {
 
     if (legend[word].hasOwnProperty('en')) {
         return legend[word].en;
+    }
+
+    if (legend[word].hasOwnProperty('fr')) {
+        return legend[word].fr;
     }
 
     return word;

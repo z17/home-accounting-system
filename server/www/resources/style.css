@@ -12,27 +12,50 @@ body {
 
 .wrapper {
     background-color: #ffffff;
-    padding: 10px 20px;
-    width:1000px;
-    margin:0 auto;
+    padding: 20px 20px;
+    width: 1000px;
+    margin: 0 auto;
 }
 
 .wrapper:after {
     content: '';
     display: block;
-    clear:both;
+    clear: both;
 }
 
 h1 {
-    margin:20px 0;
-    font-size:150%;
+    margin: 20px 0;
+    font-size: 150%;
+}
+
+h2 {
+    margin: 15px 0;
+    font-size: 120%;
 }
 
 p {
-    margin:10px 0;
+    margin: 10px 0;
 }
 
 .logo {
-    float:left;
-    margin:0 20px 0 0;
+    float: left;
+    margin: 0 20px 0 0;
+}
+
+.screenshots {
+    text-align: center;
+}
+
+.screenshots a {
+    display: inline-block;
+    margin: 0 20px;
+    vertical-align: middle;
+}
+
+.screenshots img {
+    width: 450px;
+}
+
+.clear {
+    clear: both;
 }

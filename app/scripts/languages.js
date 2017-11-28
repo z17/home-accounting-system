@@ -170,10 +170,6 @@ Languages.prototype.getText = function (word) {
         return legend[word][lang];
     }
 
-    if (legend[word].hasOwnProperty('en')) {
-        return legend[word].en;
-    }
-
     return word;
 };
 

@@ -12,7 +12,7 @@ const legend = {
     balance: {
         ru: 'Баланс',
         en: 'Balance',
-        fr: 'Equilibre'
+        fr: 'Balance'
     },
     settings: {
         ru: 'Настройки',
@@ -22,7 +22,7 @@ const legend = {
     remind: {
         ru: 'Присылать мне уведомления каждый месяц',
         en: 'Remind me every month about balance',
-        fr: 'Rappelez-moi chaque mois l\'équilibre'
+        fr: 'Rappelez-moi chaque mois la balance'
     },
     'remind-email': {
         ru: 'E-mail для уведомлений',
@@ -117,7 +117,7 @@ const legend = {
     'balance-chart-title': {
         ru: 'Баланс по месяцам',
         en: 'Balance by months',
-        fr: 'Équilibre par mois'
+        fr: 'Balance par mois'
     },
     'costs-chart-title': {
         ru: 'Расход по месяцам',
@@ -147,13 +147,16 @@ const legend = {
 };
 
 function Languages() {
-    if (navigator.language == 'ru') {
-        this.lang =  'ru';
-    } else if (navigator.language == 'fr') {
-        this.lang = 'fr';
-    } else if (navigator.language == 'en') {
-        this.lang = 'en';
-    }
+  switch (navigator.language) {
+    case 'ru':
+      this.lang = 'ru';
+      break;
+    case 'fr':
+      this.lang = 'fr';
+      break;
+    default:
+      this.lang = 'en';
+  }
 }
 
 Languages.prototype.getText = function (word) {
@@ -169,10 +172,6 @@ Languages.prototype.getText = function (word) {
 
     if (legend[word].hasOwnProperty('en')) {
         return legend[word].en;
-    }
-
-    if (legend[word].hasOwnProperty('fr')) {
-        return legend[word].fr;
     }
 
     return word;

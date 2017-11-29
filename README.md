@@ -51,6 +51,10 @@ There are two commands to run app from sources:
 ### How to build app
 
 `npm run dist`
+
+### Hot to make pull request
+
+Create pull request only to `dev` branch. Your commits will merge in `master` with next release.
     
 ## License
 

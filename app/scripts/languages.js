@@ -147,16 +147,7 @@ const legend = {
 };
 
 function Languages() {
-  switch (navigator.language) {
-    case 'ru':
-      this.lang = 'ru';
-      break;
-    case 'fr':
-      this.lang = 'fr';
-      break;
-    default:
-      this.lang = 'en';
-  }
+    this.setLanguage(navigator.language);
 }
 
 Languages.prototype.getText = function (word) {
@@ -182,7 +173,20 @@ Languages.prototype.getTextWithPlaceholders = function (word, array) {
 };
 
 Languages.prototype.setLanguage = function (lang) {
-    this.lang = lang;
+    if (!lang) {
+        lang = navigator.language;
+    }
+
+    switch (lang) {
+        case 'ru':
+            this.lang = 'ru';
+            break;
+        case 'fr':
+            this.lang = 'fr';
+            break;
+        default:
+            this.lang = 'en';
+    }
 };
 
 Languages.prototype.replacePlaceholders = function (pageText) {
@@ -196,4 +200,4 @@ Languages.prototype.replacePlaceholders = function (pageText) {
     return pageText;
 };
 
-module.exports = Languages;
+module.exports = new Languages();

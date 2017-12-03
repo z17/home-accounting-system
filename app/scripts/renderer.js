@@ -4,11 +4,10 @@ const SettingsView = require('../view/SettingsView');
 const balanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
 const moment = require('moment');
-const Languages = require('../scripts/languages');
+const languages = require('../scripts/languages');
 
 const incomeView = new IncomeView();
 const settingsView = new SettingsView();
-const languages = new Languages();
 
 let resizeTimeout;
 window.onclick = clicksHandler;

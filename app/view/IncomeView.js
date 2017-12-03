@@ -1,9 +1,7 @@
 const functions = require('../scripts/functions');
 const Income = require('../models/income');
 const moment = require('moment');
-const Languages = require('../scripts/languages');
-
-const languages = new Languages();
+const languages = require('../scripts/languages');
 
 function IncomeView() {
     this.data = {};

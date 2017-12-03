@@ -7,7 +7,7 @@ function Backup(databasePath, folder) {
 }
 
 Backup.prototype.makeBackup = function (lastBackupTimestamp) {
-    if (this.folder === undefined) {
+    if (!this.folder) {
         console.log('cant find a folder for backup');
         return undefined;
     }

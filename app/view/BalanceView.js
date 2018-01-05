@@ -3,6 +3,7 @@
 const functions = require('../scripts/functions');
 const moment = require('moment');
 let balanceView = null;
+const languages = require('../scripts/languages');
 
 function BalanceView() {
     this.data = {};
@@ -164,6 +165,9 @@ BalanceView.prototype.reloadGraph = function () {
 
     let costsChartData = prepareDataForCostsChart(this.dataByMonth, this.incomeByMonth);
     drawChart(costsChartData, 'js-costs-chart');
+
+    let [pieData, lastMonth] = prepareDataForPieChart(this.data, this.dataByMonth);
+    drawPieChart(pieData, lastMonth, 'js-balance-pie-chart');
 };
 
 BalanceView.prototype.preparePage = function (addBalanceSourceFunction, addBalanceFunction, removeBalanceFunction, renameBalanceSourceFunction) {
@@ -221,9 +225,9 @@ function onDeleteClick(e, removeBalanceFunction) {
 }
 
 function drawChart(chartData, chartId) {
-    google.charts.setOnLoadCallback(drawBalanceChart);
+    google.charts.setOnLoadCallback(chart);
 
-    function drawBalanceChart() {
+    function chart() {
         let data = google.visualization.arrayToDataTable(chartData);
 
         let options = {
@@ -241,6 +245,25 @@ function drawChart(chartData, chartId) {
 
         let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
         chart.draw(view, options);
+    }
+}
+
+function drawPieChart(pieData, lastMonth, chartId) {
+    google.charts.setOnLoadCallback(chart);
+
+    function chart() {
+        let data = google.visualization.arrayToDataTable(pieData);
+
+        let options = {
+            width: '100%',
+            height: 350,
+            title: languages.getTextWithPlaceholders('balance-pie-chart-title', [lastMonth.format('MMM YYYY')]),
+            pieSliceText: 'label',
+        };
+
+        let chart = new google.visualization.PieChart(document.getElementById(chartId));
+
+        chart.draw(data, options);
     }
 }
 
@@ -273,7 +296,6 @@ function prepareDataForCostsChart(balanceByMonth, incomeByMonth) {
 }
 
 function prepareDataForBalanceChart(balanceData, dataByMonth) {
-
     let chartPartNames = ['month'];
     for (let source in balanceData) {
         if (!balanceData.hasOwnProperty(source)) {
@@ -294,6 +316,35 @@ function prepareDataForBalanceChart(balanceData, dataByMonth) {
     });
 
     return [chartPartNames].concat(dataChart);
+}
+
+function prepareDataForPieChart(balanceData, dataByMonth) {
+    let lastAddedMonth = null;
+    for (let i = dataByMonth.length - 1; i >= 0; i--) {
+        let monthData = dataByMonth[i];
+        let isNotEmpty = true;
+        isNotEmpty = monthData['value'].some(function (balance) {
+            return balance != 0;
+        });
+        if (isNotEmpty) {
+            lastAddedMonth = monthData;
+            break;
+        }
+    }
+
+    let data = [
+        ['', ''],
+    ];
+
+    let index = 0;
+    for (let source in balanceData) {
+        if (!balanceData.hasOwnProperty(source)) {
+            continue;
+        }
+        data.push([balanceData[source].name, lastAddedMonth['value'][index]]);
+        index++;
+    }
+    return [data, lastAddedMonth.month];
 }
 
 function convertData(balanceSources) {

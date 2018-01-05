@@ -34,3 +34,28 @@
 ## Screenshots
 ![Income chart](server/www/screenshots/income.png)
 ![Balance chart](server/www/screenshots/balance.png)
+
+## Contributing
+
+You are welcome for contributing.
+
+### How to run app from sources
+First of all, do `npm install` from app folder.
+
+In folder `app/db` there is `database-dev-example` file with some prepared data for application. Copy it and rename to `app/database-dev`.
+
+There are two commands to run app from sources:
+* `npm run dev` - to launch app with using database in `app/database-dev` file
+* `npm start` - standard way to launch app
+    
+### How to build app
+
+`npm run dist`
+
+### Hot to make pull request
+
+Create pull request only to `dev` branch. Your commits will merge in `master` with next release.
+    
+## License
+
+MIT

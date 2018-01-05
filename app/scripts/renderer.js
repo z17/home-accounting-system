@@ -1,13 +1,11 @@
 const ipcRenderer = require('electron').ipcRenderer;
-const IncomeView = require('../view/IncomeView');
-const SettingsView = require('../view/SettingsView');
-const balanceView = require('../view/BalanceView');
 const shell = require('electron').shell;
 const moment = require('moment');
+const settingsView = require('../view/SettingsView');
+const balanceView = require('../view/BalanceView');
+const incomeView = require('../view/IncomeView');
 const languages = require('../scripts/languages');
-
-const incomeView = new IncomeView();
-const settingsView = new SettingsView();
+const renderFunctions = require('../scripts/renderFunctions');
 
 let resizeTimeout;
 window.onclick = clicksHandler;
@@ -82,9 +80,10 @@ ipcRenderer.on('settings', function (event, data) {
 function init() {
   document.documentElement.innerHTML = languages.replacePlaceholders(document.documentElement.innerHTML);
   $('.js-tab').click(function () {
-    makeActive($(this).data('name'));
+    renderFunctions.makeActive($(this).data('name'), incomeView, balanceView);
   });
-  makeActive('income');
+
+  renderFunctions.makeActive('income', incomeView, balanceView);
 
   incomeView.preparePage((incomeItem) => {
     ipcRenderer.send('income-add', incomeItem);
@@ -128,48 +127,15 @@ function clicksHandler(e) {
     }
 
     if (e.target.tagName == 'A') {
-        onLinkClick(e);
+        renderFunctions.onLinkClick(e, shell);
     }
-}
-
-function onLinkClick(e) {
-    if (e.target.getAttribute('href') !== null) {
-        e.preventDefault();
-        shell.openExternal(e.target.getAttribute('href'));
-    }
-}
-
-function makeActive(tabName) {
-  $('.js-page').removeClass('active');
-  $('.js-tab').removeClass('active');
-  $('.js-tab[data-name=' + tabName + ']').addClass('active');
-  $('.js-page[data-name="' + tabName + '"]').addClass('active');
-  reloadGraph(tabName);
-}
-
-function reloadGraph(tabName) {
-  switch (tabName) {
-    case 'income':
-      incomeView.reloadGraph();
-      break;
-    case 'balance':
-      balanceView.reloadGraph();
-      break;
-    default:
-      alert('Unknown tab name: ' + name);
-  }
 }
 
 function resizeThrottler() {
   if (!resizeTimeout) {
     resizeTimeout = setTimeout(function () {
       resizeTimeout = null;
-      actualResizeHandler();
+      renderFunctions.actualResizeHandler(incomeView, balanceView);
     }, 250);
   }
-}
-
-function actualResizeHandler() {
-  let name = $('.js-tab.active').data('name');
-  reloadGraph(name);
 }

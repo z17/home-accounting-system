@@ -77,4 +77,4 @@ function toggleSettingsWindow() {
 }
 
 
-module.exports = SettingsView;
+module.exports = new SettingsView();

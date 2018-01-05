@@ -391,4 +391,4 @@ function getItemFromForm(row) {
     return income;
 }
 
-module.exports = IncomeView;
+module.exports = new IncomeView();

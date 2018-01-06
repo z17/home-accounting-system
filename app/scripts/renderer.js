@@ -16,7 +16,7 @@ if (typeof google === 'undefined') {
     throw new Error('no internet');
 }
 
-google.charts.load("current", {packages: ['corechart']});
+google.charts.load('45', {packages: ['corechart']});
 
 ipcRenderer.on('error', function (event, data) {
   alert(data);

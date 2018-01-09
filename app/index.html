@@ -65,14 +65,14 @@
                     </div>
                     <div class="income-data">
                         <h2>[[statistic]]</h2>
-                        <p class="income-data-line"><span class="income-data-name">[[sum]]:</span> <span
-                                class="js-income-sum income-data-value"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">[[average]]:</span> <span
-                                class="js-income-average income-data-value"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">[[top-month]]:</span> <span
-                                class="js-income-top income-data-value"></span></p>
-                        <p class="income-data-line"><span class="income-data-name">[[worst-month]]:</span> <span
-                                class="js-income-worst income-data-value"></span></p>
+                        <p class="data-line"><span class="income-data-name">[[sum]]:</span> <span
+                                class="js-income-sum data-value"></span></p>
+                        <p class="data-line"><span class="income-data-name">[[average]]:</span> <span
+                                class="js-income-average data-value"></span></p>
+                        <p class="data-line"><span class="income-data-name">[[top-month]]:</span> <span
+                                class="js-income-top data-value"></span></p>
+                        <p class="data-line"><span class="income-data-name">[[worst-month]]:</span> <span
+                                class="js-income-worst data-value"></span></p>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,15 @@
             <div class="balance-statistic">
                 <h2>[[balance-chart-title]]</h2>
                 <div class="balance-chart" id="js-balance-chart"></div>
-                <div class="balance-chart" id="js-balance-pie-chart"></div>
+
+                <div class="inline-blocks">
+                    <div class="balance-chart balance-pie-chart" id="js-balance-pie-chart"></div>
+                    <div class="balance-data">
+                        <h2>[[statistic]]</h2>
+                        <p class="data-line"><span class="income-data-name">[[sum]]:</span> <span
+                                class="js-balance-sum data-value"></span></p>
+                    </div>
+                </div>
                 <h2>[[costs-chart-title]]</h2>
                 <div class="costs-chart" id="js-costs-chart"></div>
             </div>

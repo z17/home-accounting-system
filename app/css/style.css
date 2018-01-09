@@ -185,13 +185,13 @@ table.data-table tr.row.update .edit {
     text-align: left;
 }
 
-.income-data-line {
+.data-line {
     margin: 0;
     padding: 10px;
     border-bottom: 1px dashed #e1e1e1;
 }
 
-.income-data-line:hover {
+.data-line:hover {
     background: #f1f1f1;
 }
 
@@ -199,7 +199,7 @@ table.data-table tr.row.update .edit {
     font-weight: bold;
 }
 
-.income-data-value {
+.data-value {
     float: right;
 }
 
@@ -360,4 +360,13 @@ form.addBalance button.submit {
 .balance-statistic {
     text-align: center;
     margin-bottom: 40px;
+}
+
+.inline-blocks .balance-chart, .inline-blocks .balance-data {
+    display: inline-block;
+    padding: 0 20px;
+    vertical-align: top;
+    min-width: 300px;
+    width: 32%;
+    text-align: left;
 }

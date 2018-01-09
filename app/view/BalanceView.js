@@ -74,7 +74,7 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     monthInput.type = 'month';
     monthInput.name = 'month';
     monthInput.required = 'required';
-    monthInput.className = 'js-balance-month month';
+    monthInput.className = 'js-balance-form-month month';
     monthInput.min = '1900-01';
     monthInput.max = '2100-01';
     monthInput.value = moment().format('YYYY-MM');
@@ -84,11 +84,10 @@ BalanceView.prototype.addBalanceSourceToDOM = function (sourceId, sourceName, da
     sumInput.name = 'balanceValue';
     sumInput.placeholder = 'Enter balance';
     sumInput.required = 'required';
-    sumInput.className = 'js-balance-sum sum';
+    sumInput.className = 'js-balance-form-sum sum';
     form.appendChild(sumInput);
 
     submit.type = 'submit';
-    submit.className = 'js-balance-submit submit';
     submit.textContent = '+';
     form.appendChild(submit);
 
@@ -168,6 +167,11 @@ BalanceView.prototype.reloadGraph = function () {
 
     let [pieData, lastMonth] = prepareDataForPieChart(this.data, this.dataByMonth);
     drawPieChart(pieData, lastMonth, 'js-balance-pie-chart');
+
+    let lastMonthSum = pieData.reduce(function f(a, b) {
+        return a + b[1];
+    }, 0);
+    document.getElementsByClassName('js-balance-sum')[0].innerHTML = functions.numberWithSpaces(lastMonthSum);
 };
 
 BalanceView.prototype.preparePage = function (addBalanceSourceFunction, addBalanceFunction, removeBalanceFunction, renameBalanceSourceFunction) {
@@ -203,8 +207,8 @@ function onBalanceSubmit(e, addBalanceFunction) {
     e.preventDefault();
 
     let id = e.target.dataset.id;
-    let month = moment(e.target.querySelector('.js-balance-month').value).format("MMYYYY");
-    let value = parseFloat(e.target.querySelector('.js-balance-sum').value);
+    let month = moment(e.target.querySelector('.js-balance-form-month').value).format("MMYYYY");
+    let value = parseFloat(e.target.querySelector('.js-balance-form-sum').value);
     if (addBalanceFunction === undefined) {
         alert("error");
         return;
@@ -252,7 +256,7 @@ function drawPieChart(pieData, lastMonth, chartId) {
     google.charts.setOnLoadCallback(chart);
 
     function chart() {
-        let data = google.visualization.arrayToDataTable(pieData);
+        let data = google.visualization.arrayToDataTable([['','']].concat(pieData));
 
         let options = {
             width: '100%',
@@ -332,9 +336,7 @@ function prepareDataForPieChart(balanceData, dataByMonth) {
         }
     }
 
-    let data = [
-        ['', ''],
-    ];
+    let data = [];
 
     let index = 0;
     for (let source in balanceData) {

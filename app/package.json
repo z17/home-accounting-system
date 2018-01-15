@@ -2,7 +2,7 @@
   "name": "Cromberg",
   "description": "Personal accounting system",
   "homepage": "http://cromberg.blweb.ru",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "main.js",
   "author": {
     "name": "z-17",
@@ -35,7 +35,7 @@
   },
   "build": {
     "appId": "ru.blweb.cromberg",
-    "buildVersion": "1.2",
+    "buildVersion": "1.2.1",
     "win": {
       "target": "portable",
       "icon": "build/icon.ico"

@@ -48,7 +48,7 @@ app.on('ready', function () {
     const config = new Config();
     let dbPath = config.get(DATABASE_FOLDER_KEY);
     if (dbPath === undefined) {
-        dbPath = app.getPath('userData') + '\\db\\';
+        dbPath = app.getPath('userData') + path.sep + 'db' + path.sep;
         config.set(DATABASE_FOLDER_KEY, dbPath);
     }
     dbPath = dbPath + DATABASE_NAME;
@@ -95,7 +95,7 @@ app.on('ready', function () {
             let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
             let backupTimestamp = backup.makeBackup(settings.lastBackupDateTimestamp);
 
-            if (backupTimestamp != undefined) {
+            if (backupTimestamp !== undefined) {
                 settings.lastBackupDateTimestamp = backupTimestamp;
                 dao.updateSettings(settings, () => {
                 });
@@ -164,7 +164,7 @@ app.on('ready', function () {
         let newFolder = newClientSettings.databaseFolder;
 
         if (newFolder !== currentFolder) {
-            config.set(DATABASE_FOLDER_KEY, newFolder + '\\');
+            config.set(DATABASE_FOLDER_KEY, newFolder + path.sep);
 
             if (argv.dev) {
                 mainWindow.webContents.send('error', 'You cant move database file in dev mod');
@@ -172,7 +172,7 @@ app.on('ready', function () {
             }
 
             let is = fs.createReadStream(currentFolder + DATABASE_NAME);
-            let os = fs.createWriteStream(newFolder + '\\' + DATABASE_NAME);
+            let os = fs.createWriteStream(newFolder + path.sep + DATABASE_NAME);
 
             is.pipe(os);
             is.on('end', function () {

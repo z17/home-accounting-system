@@ -11,12 +11,10 @@ install:
 
 os:
  - linux
+ - osx
+
 env:
  - TARGET_ARCH=x64
-
-matrix:
- include:
-  - os: linux
 
 script:
  - npm run dist

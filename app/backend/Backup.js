@@ -1,5 +1,6 @@
 const fs = require('fs');
 const moment = require('moment');
+const path = require('path');
 
 function Backup(databasePath, folder) {
     this.folder = folder;
@@ -24,7 +25,7 @@ Backup.prototype.makeBackup = function (lastBackupTimestamp) {
 };
 
 function generateBackupName() {
-    return '\\database_' + moment().format('YYYY-MM-DD hh-mm') + '.db';
+    return path.sep + 'database_' + moment().format('YYYY-MM-DD hh-mm') + '.db';
 }
 
 module.exports = Backup;

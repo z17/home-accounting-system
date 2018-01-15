@@ -1,27 +1,26 @@
 language: node_js
 
 node_js:
-  - "8"
+ - "8"
 
 before_install:
-  -cd app
+ - cd app
 
 install:
-  - npm install
+ - npm install
 
 os:
-  - linux
+ - linux
 env:
-  - TARGET_ARCH=x64
+ - TARGET_ARCH=x64
 
 matrix:
-  include:
-    - os: linux
-      env: TARGET_ARCH=arm
+ include:
+  - os: linux
 
 script:
-  - npm run dist
+ - npm run dist
 
 branches:
-  only:
-- master
+ only:
+  - master

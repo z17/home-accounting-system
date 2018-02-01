@@ -1,7 +1,7 @@
 <?php
-Namespace Action;
+Namespace Cromberg\Action;
 
-Use Base;
+Use Cromberg\Base;
 
 abstract class Action
 {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Cromberg;
+
 class Lang
 {
     const DEFAULT_LANG = 'en';
@@ -32,21 +34,21 @@ class Lang
         return [
             'subject' => [
                 'en' => 'Notification from Cromberg',
-                'ru' => 'Напоминание от Cromberg'
+                'ru' => 'РќР°РїРѕРјРёРЅР°РЅРёРµ РѕС‚ Cromberg'
             ],
             'main-caption' => [
                 'en' => 'Notification',
-                'ru' => 'Заголовок',
+                'ru' => 'Р—Р°РіРѕР»РѕРІРѕРє',
             ],
             'text' => [
                 'en' => 'It\'s already last day of the month, it\'s time to fill the current balance data in the Cromberg',
-                'ru' => ' Уже конец месяца, пришло время заполнить текущий баланс в системе Cromberg.',
+                'ru' => ' РЈР¶Рµ РєРѕРЅРµС† РјРµСЃСЏС†Р°, РїСЂРёС€Р»Рѕ РІСЂРµРјСЏ Р·Р°РїРѕР»РЅРёС‚СЊ С‚РµРєСѓС‰РёР№ Р±Р°Р»Р°РЅСЃ РІ СЃРёСЃС‚РµРјРµ Cromberg.',
             ],
             'cause' => [
                 'en' => 'You have received this email because you use <a href="[[?]]" title="Cromberg - home accounting system">Cromberg</a> app and subscribed for monthly notifications. To unsubscribe, just change settings in the app.
             If you don\'t understand what is it, you can unsubscribe from letters by clicking on <a href="[[?]]">this</a> link.',
-                'ru' => 'Вы получили это письмо так как пользуетесь <a href="[[?]]" title="Cromberg - домашняя система учёта финансов">Cromberg</a> и подписались на ежемесячные уведомления. Чтобы отписаться, измените соответствующие настройки в приложении.
-            Если вы не понимаете о чём речь, отпишитесь от сообщений нажав на эту <a href="[[?]]">ссылку</a>.',
+                'ru' => 'Р’С‹ РїРѕР»СѓС‡РёР»Рё СЌС‚Рѕ РїРёСЃСЊРјРѕ С‚Р°Рє РєР°Рє РїРѕР»СЊР·СѓРµС‚РµСЃСЊ <a href="[[?]]" title="Cromberg - РґРѕРјР°С€РЅСЏСЏ СЃРёСЃС‚РµРјР° СѓС‡С‘С‚Р° С„РёРЅР°РЅСЃРѕРІ">Cromberg</a> Рё РїРѕРґРїРёСЃР°Р»РёСЃСЊ РЅР° РµР¶РµРјРµСЃСЏС‡РЅС‹Рµ СѓРІРµРґРѕРјР»РµРЅРёСЏ. Р§С‚РѕР±С‹ РѕС‚РїРёСЃР°С‚СЊСЃСЏ, РёР·РјРµРЅРёС‚Рµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РЅР°СЃС‚СЂРѕР№РєРё РІ РїСЂРёР»РѕР¶РµРЅРёРё.
+            Р•СЃР»Рё РІС‹ РЅРµ РїРѕРЅРёРјР°РµС‚Рµ Рѕ С‡С‘Рј СЂРµС‡СЊ, РѕС‚РїРёС€РёС‚РµСЃСЊ РѕС‚ СЃРѕРѕР±С‰РµРЅРёР№ РЅР°Р¶Р°РІ РЅР° СЌС‚Сѓ <a href="[[?]]">СЃСЃС‹Р»РєСѓ</a>.',
             ],
         ];
     }

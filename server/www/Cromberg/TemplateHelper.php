@@ -1,5 +1,7 @@
 <?php
 
+namespace Cromberg;
+
 class TemplateHelper
 {
 
@@ -8,7 +10,8 @@ class TemplateHelper
         return file_get_contents(self::getPathToTemplate($name));
     }
 
-    public static function getPageTemplate($name, $title) {
+    public static function getPageTemplate($name, $title)
+    {
         $template = file_get_contents(self::getPathToTemplate(Template::MAIN));
         $content = self::getTemplate($name);
         $content = self::replaceKey('body', $content, $template);
@@ -22,7 +25,8 @@ class TemplateHelper
         return str_replace('[[' . $key . ']]', $value, $data);
     }
 
-    private static function getPathToTemplate($name) {
+    private static function getPathToTemplate($name)
+    {
         return Template::TEMPLATE_ROOT . $name . '.html';
     }
 }

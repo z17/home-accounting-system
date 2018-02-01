@@ -1,5 +1,7 @@
 <?php
 
+namespace Cromberg;
+
 class Functions
 {
     public static function writeLog($string)

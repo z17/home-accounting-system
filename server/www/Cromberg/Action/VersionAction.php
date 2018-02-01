@@ -1,5 +1,5 @@
 <?php
-Namespace Action;
+Namespace Cromberg\Action;
 
 class VersionAction extends Action
 {

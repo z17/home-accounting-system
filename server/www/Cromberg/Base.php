@@ -1,5 +1,8 @@
 <?php
 
+namespace Cromberg;
+use PDO;
+
 class Base
 {
     private $base;
@@ -133,7 +136,8 @@ class Base
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function logVersionRequest($ip) {
+    public function logVersionRequest($ip)
+    {
         $query = "INSERT INTO log (ip, type) VALUES (INET_ATON(:ip), 'version')";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':ip', $ip);

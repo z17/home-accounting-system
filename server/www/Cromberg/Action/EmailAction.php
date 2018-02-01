@@ -1,5 +1,5 @@
 <?php
-Namespace Action;
+Namespace Cromberg\Action;
 
 class EmailAction extends Action
 {
@@ -14,7 +14,7 @@ class EmailAction extends Action
     public function process()
     {
         if (!isset($this->data)) {
-            \Functions::writeLog("invalid request with email");
+            \Cromberg\Functions::writeLog("invalid request with email");
             return;
         }
 
@@ -34,7 +34,7 @@ class EmailAction extends Action
                 $this->db->disableEmail($this->data->email);
                 break;
             default:
-                \Functions::writeLog("invalid action with email");
+                \Cromberg\Functions::writeLog("invalid action with email");
         }
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
-class Template {
-    const TEMPLATE_ROOT = __DIR__ . '/resources/template/';
+namespace Cromberg;
+
+class Template
+{
+    const TEMPLATE_ROOT = __DIR__ . '/../resources/template/';
 
     const MAIN = 'page-template';
 

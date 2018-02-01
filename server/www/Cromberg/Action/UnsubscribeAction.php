@@ -1,8 +1,8 @@
 <?php
-Namespace Action;
+Namespace Cromberg\Action;
 
-Use TemplateHelper;
-Use Template;
+Use Cromberg\TemplateHelper;
+Use Cromberg\Template;
 
 class UnsubscribeAction extends Action
 {

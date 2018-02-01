@@ -1,11 +1,11 @@
 <?php
 
-namespace Action;
+Namespace Cromberg\Action;
 
-Use Config;
-use Lang;
-Use TemplateHelper;
-Use Template;
+Use Cromberg\Config;
+use Cromberg\Lang;
+Use Cromberg\TemplateHelper;
+Use Cromberg\Template;
 
 class SendNotifyAction extends Action
 {

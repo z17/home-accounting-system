@@ -4,6 +4,6 @@
 /app/dist/
 /app/node_modules/
 /app/database-dev
-/server/www/Config.php
+/server/www/Cromberg/Config.php
 /*.log
 /*.db

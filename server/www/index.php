@@ -1,5 +1,10 @@
 <?php
 
+use Cromberg\Functions;
+use Cromberg\Template;
+use Cromberg\TemplateHelper;
+use Cromberg\Action;
+
 spl_autoload_register(function ($name) {
     $fileParts = explode('\\', $name);
     array_walk($fileParts, function (&$str, $i, $size) {

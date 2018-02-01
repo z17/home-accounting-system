@@ -5,8 +5,7 @@ class TemplateHelper
 
     public static function getTemplate($name)
     {
-        $html = file_get_contents(self::getPathToTemplate($name));
-        return self::replaceKey('domain_url', Config::$domain_link, $html);
+        return file_get_contents(self::getPathToTemplate($name));
     }
 
     public static function getPageTemplate($name, $title) {
@@ -14,6 +13,7 @@ class TemplateHelper
         $content = self::getTemplate($name);
         $content = self::replaceKey('body', $content, $template);
         $content = self::replaceKey('title', $title, $content);
+        $content = self::replaceKey('domain_url', Config::$domain_link, $content);
         return $content;
     }
 

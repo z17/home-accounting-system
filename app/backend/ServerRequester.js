@@ -13,24 +13,24 @@ ServerRequester.prototype.notify = function (oldSettings, newSettings) {
     if (newSettings.remind === true && oldSettings.remind === false) {
         requestData = {
             action: 'add',
-            email: newSettings.email
+            email: newSettings.email,
+            language: newSettings.language,
         };
         doRequest = true;
-    }
-
-    if (newSettings.remind === false && oldSettings.remind === true) {
+    } else if (newSettings.remind === false && oldSettings.remind === true) {
+        // todo: if we disable notifications and change email, we send only delete request
         requestData = {
             action: 'delete',
-            email: oldSettings.email
+            email: oldSettings.email,
+            language: newSettings.language,
         };
         doRequest = true;
-    }
-
-    if (oldSettings.remind === true && newSettings.remind === true && oldSettings.email !== newSettings.email) {
+    } else if (oldSettings.email && (oldSettings.email !== newSettings.email || oldSettings.language !== newSettings.language)) {
         requestData = {
             action: 'update',
             email: newSettings.email,
-            oldEmail: oldSettings.email
+            oldEmail: oldSettings.email,
+            language: newSettings.language,
         };
         doRequest = true;
     }

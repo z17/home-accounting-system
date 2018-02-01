@@ -22,7 +22,7 @@ $path = isset($_SERVER["REDIRECT_URL"]) ? $_SERVER["REDIRECT_URL"] : '';
 switch ($path) {
     case '/email':
         $data = isset($_POST['data']) ? json_decode($_POST['data']) : null;
-        $action = new Action\EmailAction($data);
+        $action = new Action\SettingsAction($data);
         $action->process();
         break;
     case '/notify':

@@ -13,52 +13,59 @@ class Base
         $this->base->query("set names utf8");
     }
 
-    public function addEmail($email)
+    public function addEmail($email, $lang)
     {
-        $query = "INSERT INTO emails (uuid, email, deleted) VALUES (:uuid, :email, FALSE)";
+        $query = "INSERT INTO emails (uuid, email, deleted, lang) VALUES (:uuid, :email, FALSE, :lang)";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':uuid', uniqid());
         $sql->bindParam(':email', $email);
+        $sql->bindParam(':lang', $lang);
         $sql->execute();
     }
 
-    public function updateEmail($newEmail, $oldEmail)
+    public function updateEmail($newEmail, $oldEmail, $lang)
     {
         $query = "
 		UPDATE emails
 		SET
-			email = :new_email
+			email = :new_email,
+			lang = :lang
 		WHERE 
 			email = :old_email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':new_email', $newEmail);
         $sql->bindParam(':old_email', $oldEmail);
+        $sql->bindParam(':lang', $lang);
         $sql->execute();
     }
 
-    public function enableEmail($email)
+    public function enableEmail($email, $lang)
     {
         $query = "
 		UPDATE emails
 		SET
-			deleted = FALSE
+			deleted = FALSE,
+			lang = :lang
 		WHERE 
 			email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
+        $sql->bindParam(':lang', $lang);
         $sql->execute();
     }
 
-    public function disableEmail($email)
+    public function disableEmail($email, $lang)
     {
         $query = "
 		UPDATE emails
 		SET
-			deleted = TRUE
+			deleted = TRUE,
+			lang = :lang
 		WHERE 
 			email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
+        $sql->bindParam(':lang', $lang);
         $sql->execute();
     }
 
@@ -77,7 +84,7 @@ class Base
 
     public function emailExists($email)
     {
-        $query = "SELECT COUNT(email) AS count FROM  emails WHERE email = :email";
+        $query = "SELECT COUNT(email) AS count FROM emails WHERE email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
         $sql->execute();
@@ -106,7 +113,7 @@ class Base
     public function getNotifyEmailsList($limit)
     {
         $query = "
-        SELECT e.email, r.id, e.uuid FROM reminders r
+        SELECT e.email, e.lang, r.id, e.uuid FROM reminders r
           INNER JOIN  emails e ON e.uuid = r.email_uuid
         WHERE r.done = 0
         ORDER BY r.id

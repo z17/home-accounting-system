@@ -39,6 +39,9 @@ function IncomeView() {
         name: '',
         value: 0
     };
+    this.paymentTypes = [];
+    this.contacts = [];
+    this.ready = false;
 }
 
 IncomeView.prototype.setData = function (data) {
@@ -48,20 +51,20 @@ IncomeView.prototype.setData = function (data) {
     this.data = data;
     insertIncomeData(data);
     updateGraphData(this);
-};
 
-IncomeView.prototype.setPaymentTypes = function (types) {
-    $(".js-income-page .js-add-payment-type").autocomplete({
-        source: types,
-        minLength: 0,
+    let paymentTypes = data.map(function (e) {
+        return e.paymentType;
     });
-};
+    this.paymentTypes = paymentTypes.filter(functions.uniqueArrayFilter);
 
-IncomeView.prototype.setContacts = function (contacts) {
-    $(".js-income-page .js-add-contact").autocomplete({
-        source: contacts,
-        minLength: 0,
+    let contacts = data.map(function (e) {
+        return e.contact;
     });
+    this.contacts = contacts.filter(functions.uniqueArrayFilter);
+
+    if (this.ready) {
+        setFieldsAutocomplete(this.paymentTypes, this.contacts);
+    }
 };
 
 IncomeView.prototype.insertIncome = function (item) {
@@ -110,6 +113,9 @@ IncomeView.prototype.preparePage = function (addIncomeFunction) {
         const incomeItem = getItemFromForm(document.querySelector('.js-income-page .form'));
         addIncomeFunction(incomeItem);
     });
+    this.ready = true;
+
+    setFieldsAutocomplete(this.paymentTypes, this.contacts);
 };
 
 IncomeView.prototype.editClickHandler = function (event) {
@@ -135,6 +141,7 @@ IncomeView.prototype.editClickHandler = function (event) {
 
     fields.forEach(copyField);
     row.className += ' update';
+    setFieldsAutocomplete(this.paymentTypes, this.contacts);
 };
 
 IncomeView.prototype.saveClickHandler = function (event) {
@@ -389,6 +396,22 @@ function getItemFromForm(row) {
         income.id = id;
     }
     return income;
+}
+
+function setFieldsAutocomplete(types, contacts) {
+    if (contacts.length > 0) {
+        setAutocomplete('.js-add-contact', contacts);
+    }
+    if (types.length > 0) {
+        setAutocomplete('.js-add-payment-type', types);
+    }
+}
+
+function setAutocomplete(jsClass, data) {
+    $(".js-income-page " + jsClass).autocomplete({
+        source: data,
+        minLength: 0,
+    });
 }
 
 module.exports = new IncomeView();

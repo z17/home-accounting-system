@@ -71,23 +71,6 @@ app.on('ready', function () {
             }
         });
 
-        dao.getIncomes(function (data) {
-            mainWindow.webContents.send('income-data', data);
-
-            let paymentTypes = data.map(function (e) {
-                return e.paymentType;
-            });
-            paymentTypes = paymentTypes.filter(functions.uniqueArrayFilter);
-            mainWindow.webContents.send('income-payment-types', paymentTypes);
-
-            let contacts = data.map(function (e) {
-                return e.contact;
-            });
-            contacts = contacts.filter(functions.uniqueArrayFilter);
-            mainWindow.webContents.send('income-contacts', contacts);
-
-        });
-
         dao.getSettings(function (settings) {
             settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
             mainWindow.webContents.send('settings', settings);
@@ -102,10 +85,13 @@ app.on('ready', function () {
             }
         });
 
+        dao.getIncomes(function (data) {
+            mainWindow.webContents.send('income-data', data);
+        });
+
         dao.getBalances(function (types) {
             mainWindow.webContents.send('balance-types', types);
         });
-
     });
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.

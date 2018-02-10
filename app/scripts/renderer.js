@@ -31,14 +31,6 @@ ipcRenderer.on('income-data', function (event, data) {
   balanceView.setIncomeData(data);
 });
 
-ipcRenderer.on('income-payment-types', function (event, data) {
-  incomeView.setPaymentTypes(data);
-});
-
-ipcRenderer.on('income-contacts', function (event, data) {
-  incomeView.setContacts(data);
-});
-
 ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
   incomeView.insertIncome(incomeItem);
 });

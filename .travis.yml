@@ -19,11 +19,14 @@ env:
 script:
   - npm run dist
 
-branches:
-  only:
-    - master
-
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GH_TOKEN
+  file_glob: true
+  file:
+    - "dist/Cromberg-*-x86_64.AppImage"
+    - "dist/Cromberg_*_amd64.deb"
+    - "dist/Cromberg-*.dmg"
+  on:
+    tags: true

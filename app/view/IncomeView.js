@@ -168,12 +168,12 @@ function drawAverage(dataAverage) {
 
 function drawByType(data){
     let chartData = preparePieChartDataByField(data, 'paymentType');
-    drawPie(chartData, 'js-income-by-type-chart')
+    drawPie(chartData, 'js-income-by-types-chart')
 }
 
 function drawByContact(data) {
     let chartData = preparePieChartDataByField(data, 'contact');
-    drawPie(chartData, 'js-income-by-contact-chart')
+    drawPie(chartData, 'js-income-by-contacts-chart')
 }
 
 function preparePieChartDataByField(data, field) {

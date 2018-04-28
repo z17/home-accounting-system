@@ -129,6 +129,11 @@ const legend = {
         en: 'Balance by months',
         fr: 'Balance par mois'
     },
+    'balance-chart-diff-title': {
+        ru: 'Разница с предыдущим месяцем',
+        en: 'Diff with previous month',
+        fr: 'Balance par mois'
+    },
     'balance-pie-chart-title': {
         ru: 'За последний месяц: ?',
         en: 'Last month: ?',

@@ -160,7 +160,10 @@ BalanceView.prototype.setBalance = function (balanceSources) {
 
 BalanceView.prototype.reloadGraph = function () {
     let chartData = prepareDataForBalanceChart(this.data, this.dataByMonth);
-    drawChart(chartData, 'js-balance-chart');
+    drawChart(chartData, 'js-balance-chart', {legend: {position: 'top'}});
+
+    let chartDiffData = prepareDataForBalanceDiffChart(this.dataByMonth);
+    drawChart(chartDiffData, 'js-balance-diff-chart');
 
     let costsChartData = prepareDataForCostsChart(this.dataByMonth, this.incomeByMonth);
     drawChart(costsChartData, 'js-costs-chart');
@@ -228,27 +231,25 @@ function onDeleteClick(e, removeBalanceFunction) {
     removeBalanceFunction(id, month);
 }
 
-function drawChart(chartData, chartId) {
+function drawChart(chartData, chartId, options = {}) {
     google.charts.setOnLoadCallback(chart);
+
+    let chart_options = {
+        width: '100%',
+        height: 400,
+        legend: options.legend ? options.legend : 'none',
+        bar: {groupWidth: '75%'},
+        isStacked: true,
+        vAxis: {
+            minValue: 0
+        }
+    };
 
     function chart() {
         let data = google.visualization.arrayToDataTable(chartData);
-
-        let options = {
-            width: '100%',
-            height: 400,
-            legend: {position: 'top', maxLines: 3},
-            bar: {groupWidth: '75%'},
-            isStacked: true,
-            vAxis: {
-                minValue: 0
-            }
-        };
-
         let view = new google.visualization.DataView(data);
-
         let chart = new google.visualization.ColumnChart(document.getElementById(chartId));
-        chart.draw(view, options);
+        chart.draw(view, chart_options);
     }
 }
 
@@ -322,6 +323,25 @@ function prepareDataForBalanceChart(balanceData, dataByMonth) {
     return [chartPartNames].concat(dataChart);
 }
 
+function prepareDataForBalanceDiffChart(dataByMonth) {
+    let chartPartNames = ['month', 'diff'];
+
+    let chartData = [];
+    let prevMonthSum = undefined;
+    for (let i = 0; i < dataByMonth.length; i++) {
+        let currentMonthSum = dataByMonth[i].value.reduce((x, y) => x + y);
+        let diff = 0;
+        if (prevMonthSum !== undefined) {
+            diff = currentMonthSum - prevMonthSum;
+        }
+        let monthName = dataByMonth[i].month.format('MMM YYYY');
+        chartData.push([monthName, diff]);
+
+        prevMonthSum = currentMonthSum;
+    }
+    return [chartPartNames].concat(chartData);
+}
+
 function prepareDataForPieChart(balanceData, dataByMonth) {
     let lastAddedMonth = null;
     for (let i = dataByMonth.length - 1; i >= 0; i--) {
@@ -350,8 +370,10 @@ function prepareDataForPieChart(balanceData, dataByMonth) {
 }
 
 function convertData(balanceSources) {
+    // todo: refactor this, to another return format: array of (month(string), values) instead of array(month(object), values)
     let firstMonth = moment().startOf('month');
     let lastMonth = moment().startOf('month');
+    let currentMonth = moment().startOf('month');
 
     for (let balanceId in balanceSources) {
         if (!balanceSources.hasOwnProperty(balanceId)) {
@@ -371,29 +393,34 @@ function convertData(balanceSources) {
     let data = [];
 
     let countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
-    let currentMonth = firstMonth;
+    let month = firstMonth;
     for (let i = 0; i < countMonths; i++) {
-
         let monthData = {
-            month: currentMonth.clone(),
+            month: month.clone(),
             value: []
         };
 
+        let addedAnuValue = false;
         for (let balanceId in balanceSources) {
             if (!balanceSources.hasOwnProperty(balanceId)) {
                 continue;
             }
 
             let currentSource = balanceSources[balanceId];
-            if (currentSource.value[currentMonth.format("MMYYYY")] !== undefined) {
-                monthData.value.push(currentSource.value[currentMonth.format("MMYYYY")]);
+            if (currentSource.value[month.format("MMYYYY")] !== undefined) {
+                monthData.value.push(currentSource.value[month.format("MMYYYY")]);
+                addedAnuValue = true;
             } else {
                 monthData.value.push(0);
             }
         }
 
-        currentMonth.add(1, 'M');
+        if (addedAnuValue === false && currentMonth.format("MMYYYY") === month.format("MMYYYY")) {
+            continue;
+        }
         data.push(monthData);
+
+        month.add(1, 'M');
     }
     return data;
 }

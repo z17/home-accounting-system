@@ -67,7 +67,7 @@ const legend = {
     contact: {
         ru: 'Контакт',
         en: 'Contact',
-        fr: 'Contrat'
+        fr: 'Contact'
     },
     description: {
         ru: 'Описание',
@@ -99,6 +99,16 @@ const legend = {
         en: 'Average income by year',
         fr: 'Revenu moyen annuel'
     },
+    'income-by-type': {
+        ru: 'По типам',
+        en: 'By types',
+        fr: 'Par types'
+    },
+    'income-by-contact': {
+        ru: 'По контактам',
+        en: 'By contacts',
+        fr: 'Par des contacts'
+    },
     'backup-folder': {
         ru: 'Папка для бекапов',
         en: 'Backup folder',
@@ -119,6 +129,11 @@ const legend = {
         en: 'Balance by months',
         fr: 'Balance par mois'
     },
+    'balance-chart-diff-title': {
+        ru: 'Разница с предыдущим месяцем',
+        en: 'Diff with previous month',
+        fr: 'Balance par mois'
+    },
     'balance-pie-chart-title': {
         ru: 'За последний месяц: ?',
         en: 'Last month: ?',
@@ -128,6 +143,11 @@ const legend = {
         ru: 'Расход по месяцам',
         en: 'Costs by months',
         fr: 'Coûts par mois'
+    },
+    'cost': {
+        ru: 'Расход',
+        en: 'Spending',
+        fr: 'Déchets'
     },
     'no-internet': {
         ru: 'Без подключения к интернету работа программы невозможна',

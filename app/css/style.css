@@ -176,6 +176,18 @@ table.data-table tr.row.update .edit {
     text-align: center;
 }
 
+.income-month-chart {
+    height: 400px;
+}
+
+.income-year-chart, .income-average-chart {
+    height: 300px;
+}
+
+.income-by-types-chart, .income-by-contacts-chart {
+    height: 350px;
+}
+
 .inline-blocks .income-chart, .inline-blocks .income-data {
     display: inline-block;
     padding: 0 20px;

@@ -6,25 +6,22 @@ const languages = require('../scripts/languages');
 function IncomeView() {
     this.data = {};
     this.dataByMonth = {
-        title: languages.getText('income-month'),
         cols: ["Month", "Sum"],
-        data: [],
+        data: null,
         chart: null,
         chartData: null,
         chartOptions: null,
     };
     this.dataByYear = {
-        title: languages.getText('income-year'),
         cols: ["Year", "Sum"],
-        data: [],
+        data: null,
         chart: null,
         chartData: null,
         chartOptions: null,
     };
     this.dataAverage = {
-        title: languages.getText('income-average'),
         cols: ["Year", "Middle sum"],
-        data: [],
+        data: null,
         chart: null,
         chartData: null,
         chartOptions: null,
@@ -65,6 +62,8 @@ IncomeView.prototype.setData = function (data) {
     if (this.ready) {
         setFieldsAutocomplete(this.paymentTypes, this.contacts);
     }
+
+    this.reloadGraph();
 };
 
 IncomeView.prototype.insertIncome = function (item) {
@@ -95,9 +94,15 @@ IncomeView.prototype.updateIncome = function (income) {
 };
 
 IncomeView.prototype.reloadGraph = function () {
-    drawByMonth(this);
-    drawByYear(this);
-    drawAverage(this);
+    if (this.dataByMonth.data === null || this.dataByYear === null || this.dataAverage === null || this.data === null) {
+        return;
+    }
+
+    drawByMonth(this.dataByMonth);
+    drawByYear(this.dataByYear);
+    drawAverage(this.dataAverage);
+    drawByType(this.data);
+    drawByContact(this.data);
 };
 
 IncomeView.prototype.setRowFromItem = function (item, row) {
@@ -149,20 +154,47 @@ IncomeView.prototype.saveClickHandler = function (event) {
     return getItemFromForm(row);
 };
 
-function drawByMonth(incomeItem) {
-    if (!incomeItem.dataByMonth) {
-        throw new Error('There is no month data in this item');
-    } else {
-        draw(incomeItem.dataByMonth, '100%', 400, "js-income-month-chart");
+function drawByMonth(dataByMonth) {
+    draw(dataByMonth, '100%', 400, "js-income-month-chart");
+}
+
+function drawByYear(dataByYear) {
+    draw(dataByYear, '100%', 300, "js-income-year-chart");
+}
+
+function drawAverage(dataAverage) {
+    draw(dataAverage, '100%', 300, "js-income-average-chart");
+}
+
+function drawByType(data){
+    let chartData = preparePieChartDataByField(data, 'paymentType');
+    drawPie(chartData, 'js-income-by-types-chart')
+}
+
+function drawByContact(data) {
+    let chartData = preparePieChartDataByField(data, 'contact');
+    drawPie(chartData, 'js-income-by-contacts-chart')
+}
+
+function preparePieChartDataByField(data, field) {
+    let map = data.reduce(
+        (accumulator, item) => {
+            if (accumulator.hasOwnProperty(item[field])) {
+                accumulator[item[field]] += item.sum;
+            } else {
+                accumulator[item[field]] = item.sum;
+            }
+            return accumulator;
+        }, {}
+    );
+
+    let result = [];
+    for (let type in map) {
+        if (map.hasOwnProperty(type)) {
+            result.push([type, map[type]]);
+        }
     }
-}
-
-function drawByYear(incomeItem) {
-    draw(incomeItem.dataByYear, '100%', 300, "js-income-year-chart");
-}
-
-function drawAverage(incomeItem) {
-    draw(incomeItem.dataAverage, '100%', 300, "js-income-average-chart");
+    return result;
 }
 
 function draw(chartData, width, height, chartId) {
@@ -201,6 +233,29 @@ function draw(chartData, width, height, chartId) {
         chartData.chart = chart;
         chartData.chartData = dataTable;
         chartData.chartOptions = options;
+    }
+}
+
+function drawPie(pieData, chartId) {
+    google.charts.setOnLoadCallback(chart);
+
+    function chart() {
+        let data = google.visualization.arrayToDataTable([['','']].concat(pieData));
+
+        let sliceVisibilityThreshold = 0;
+        if (pieData.length > 8) {
+            sliceVisibilityThreshold = 0.05
+        }
+        let options = {
+            width: '100%',
+            height: 350,
+            pieSliceText: 'label',
+            sliceVisibilityThreshold: sliceVisibilityThreshold,
+        };
+
+        let chart = new google.visualization.PieChart(document.getElementById(chartId));
+
+        chart.draw(data, options);
     }
 }
 

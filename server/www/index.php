@@ -1,9 +1,7 @@
 <?php
 
-use Cromberg\Functions;
-use Cromberg\Template;
-use Cromberg\TemplateHelper;
 use Cromberg\Action;
+use Cromberg\Urls;
 
 spl_autoload_register(function ($name) {
     $fileParts = explode('\\', $name);
@@ -20,37 +18,41 @@ spl_autoload_register(function ($name) {
 
 $path = isset($_SERVER["REDIRECT_URL"]) ? $_SERVER["REDIRECT_URL"] : '';
 switch ($path) {
-    case '/email':
+    case Urls::EMAIL:
         $data = isset($_POST['data']) ? json_decode($_POST['data']) : null;
         $action = new Action\SettingsAction($data);
         $action->process();
         break;
-    case '/notify':
+    case Urls::NOTIFY:
         $key = isset($_GET['key']) ? $_GET['key'] : null;
         $action = new Action\NotifyAction($key);
         $action->process();
         break;
-    case '/send-notify':
+    case Urls::SEND_NOTIFY:
         $action = new Action\SendNotifyAction();
         $action->process();
         break;
-    case '/unsubscribe':
+    case Urls::UNSUBSCRIBE:
         $uuid = isset($_GET['uuid']) ? $_GET['uuid'] : null;
         $action = new Action\UnsubscribeAction($uuid);
         $action->process();
         break;
-    case '/version':
+    case Urls::VERSION:
         $action = new Action\VersionAction();
         $action->process();
         break;
-    case '';
-        // todo: transfer this from index.php
-        echo TemplateHelper::getPageTemplate(Template::PAGE_INDEX, 'Cromberg');
+    case Urls::STATS;
+        $code = isset($_GET['code']) ? $_GET['code'] : null;
+        $action = new Action\StatsAction($code);
+        $action->process();
+        break;
+    case Urls::MAIN;
+        $action = new Action\MainAction();
+        $action->process();
         break;
     default:
-        // todo: transfer this from index.php
-        header("HTTP/1.0 404 Not Found");
-        echo TemplateHelper::getPageTemplate(Template::PAGE_404, '404 error');
-        Functions::writeLog("404 error: " . $path);
+        $action = new Action\Page404($path);
+        $action->process();
         break;
 }
+

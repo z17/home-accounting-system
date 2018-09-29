@@ -59,3 +59,12 @@ p {
 .clear {
     clear: both;
 }
+
+.hidden {
+    display: none;
+}
+
+.stats-launch {
+    width:100%;
+    height: 500px;
+}

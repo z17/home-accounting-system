@@ -150,4 +150,32 @@ class Base
         $sql->bindParam(':ip', $ip);
         $sql->execute();
     }
+
+    public function getUniqueLaunchStatsByDay() {
+        $sql = 'SELECT COUNT(DISTINCT ip) AS number, DATE_FORMAT(date, \'%d.%m.%Y\') AS date_str FROM log WHERE type = \'version\' GROUP BY date_str';
+        $sql = $this -> base -> prepare($sql);
+        $sql -> execute();
+        return $sql -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getLaunchStatsByDay() {
+        $sql = 'SELECT COUNT(*) as number, DATE_FORMAT(date, \'%d.%m.%Y\') AS date_str FROM log WHERE type = \'version\' GROUP BY date_str';
+        $sql = $this -> base-> prepare($sql);
+        $sql -> execute();
+        return $sql -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUniqueLaunchStatsByMonth() {
+        $sql = 'SELECT COUNT(DISTINCT ip) AS number, DATE_FORMAT(date, \'%m.%Y\') AS date_str FROM log WHERE type = \'version\' GROUP BY date_str';
+        $sql = $this -> base -> prepare($sql);
+        $sql -> execute();
+        return $sql -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getLaunchStatsByMonth() {
+        $sql = 'SELECT COUNT(*) as number, DATE_FORMAT(date, \'%m.%Y\') AS date_str FROM log WHERE type = \'version\' GROUP BY date_str';
+        $sql = $this -> base-> prepare($sql);
+        $sql -> execute();
+        return $sql -> fetchAll(PDO::FETCH_ASSOC);
+    }
 }

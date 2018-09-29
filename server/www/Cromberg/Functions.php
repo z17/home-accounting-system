@@ -17,4 +17,10 @@ class Functions
         $string = ob_get_clean();
         self::writeLog($string);
     }
+
+    public static function redirect($page)
+    {
+        header('Location: ' . $page);
+        die();
+    }
 }

@@ -275,11 +275,10 @@ function drawPieChart(pieData, lastMonth, chartId) {
 function prepareDataForCostsChart(balanceByMonth, incomeByMonth) {
     let prevBalance = undefined;
     let costsData = [
-        ['month', 'Расходы']
+        [languages.getText('month'), languages.getText('cost')]
     ];
 
-    // balanceByMonth.length - 1 : skip last month
-    for (let i = 0; i < balanceByMonth.length - 1; i++) {
+    for (let i = 0; i < balanceByMonth.length; i++) {
         let currentMonth = balanceByMonth[i];
         let currentBalance = currentMonth.value.reduce(function (total, val) {
             return total + val;

@@ -144,6 +144,11 @@ const legend = {
         en: 'Costs by months',
         fr: 'Coûts par mois'
     },
+    'cost': {
+        ru: 'Расход',
+        en: 'Spending',
+        fr: 'Déchets'
+    },
     'no-internet': {
         ru: 'Без подключения к интернету работа программы невозможна',
         en: 'Its need internet connection for correct work',

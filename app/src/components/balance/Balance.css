@@ -1,0 +1,119 @@
+
+.balance-source {
+    margin: 15px 30px 15px 0;
+    float: left;
+    width: 320px;
+}
+
+.balance-source-name {
+    padding: 10px 5px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.balance-source-name:hover {
+    background: #f1f1f1;
+}
+
+.balance-source-name .balance-edit {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    display: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: url('../../img/edit.svg') no-repeat;
+}
+
+.balance-source-name .balance-edit-save {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: url('../../img/ok.svg') no-repeat;
+}
+
+.balance-source-name .balance-edit-input {
+    width: 240px;
+}
+
+.balance-source-name:hover .balance-edit {
+    display: block;
+}
+
+.balance-items .balance-item {
+    padding: 7px 10px 7px 10px;
+    margin: 0;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.balance-items .balance-item:hover {
+    background: #f1f1f1;
+}
+
+.balance-items .balance-item:hover .delete-month-balance {
+    display: inline-block;
+}
+
+.balance-items .balance-item:hover .sum {
+    margin-right: 20px;
+}
+
+.delete-month-balance {
+    float: right;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: none;
+    vertical-align: middle;
+    background: url('../../img/delete.svg') no-repeat;
+}
+
+.balance-items .balance-item .month {
+    display: inline-block;
+    width: 120px;
+}
+
+.balance-items .balance-item .sum {
+    display: inline-block;
+    width: 70px;
+    float: right;
+    text-align: right;
+    margin-right: 40px;
+}
+
+form.addBalance {
+    margin-top: 15px;
+}
+
+form.addBalance input.month {
+    width: 160px;
+}
+
+form.addBalance input.sum {
+    padding: 2px;
+    width: 110px;
+    margin-left: 5px;
+}
+
+form.addBalance button.submit {
+    padding: 2px 6px;
+    margin-left: 5px;
+}
+
+.balance-statistic {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.inline-blocks .balance-chart, .inline-blocks .balance-data {
+    display: inline-block;
+    padding: 0 10px;
+    vertical-align: top;
+    min-width: 300px;
+    width: 49%;
+    text-align: left;
+}

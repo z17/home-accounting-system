@@ -57,12 +57,22 @@ app.on('ready', function () {
         mainWindow.webContents.openDevTools();
         dbPath = "database-dev";
     } else {
-        mainWindow.setMenu(null);
+        mainWindow.webContents.openDevTools();
+        // mainWindow.setMenu(null);
     }
     const dao = new Dao(dbPath);
 
     // mainWindow.maximize();
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+    // mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+    let loadUrl = argv.dev
+        ? 'http://localhost:3000'
+        : `file://${__dirname}/index.html`;
+
+    loadUrl = 'http://localhost:3000';
+
+    mainWindow.loadURL(loadUrl);
 
     mainWindow.webContents.on('dom-ready', function () {
         serverRequester.getServerVersion((version) => {

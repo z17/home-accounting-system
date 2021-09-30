@@ -1,0 +1,55 @@
+.settings-window {
+    display: none;
+    position: fixed;
+    width: 500px;
+    border: 5px solid #e1e1e1;
+    background: #fff;
+    z-index: 50;
+    padding: 20px 40px;
+    margin-left: -250px;
+    margin-top: -100px;
+    top: 30%;
+    left: 50%;
+}
+
+.settings-window.active {
+    display: block;
+}
+
+.settings-window .settings-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.settings-form label {
+    display: block;
+    margin: 15px 0;
+}
+
+.settings-form .settings-folder {
+    position: absolute;
+    z-index: 100;
+    opacity: 0;
+    width: 410px;
+    margin: 10px 0;
+}
+
+.settings-form .settings-folder-text {
+    position: relative;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.settings-response.error {
+    color: #ff0000;
+}
+
+.settings-button {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 100;
+}

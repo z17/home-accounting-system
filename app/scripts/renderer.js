@@ -59,10 +59,6 @@ ipcRenderer.on('balance-types', function (event, types) {
   balanceView.setBalance(types);
 });
 
-ipcRenderer.on('settings-saved', function (event, data) {
-  settingsView.updateData(data);
-});
-
 ipcRenderer.on('settings', function (event, data) {
   languages.setLanguage(data.language);
   settingsView.setData(data);

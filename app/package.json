@@ -36,6 +36,7 @@
   },
   "scripts": {
     "electron": "electron .",
+    "electron-dev": "electron . --dev",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

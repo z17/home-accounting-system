@@ -1,6 +1,5 @@
 import React, {useState}  from 'react';
 import './Settings.css'
-import '../../models/Settings'
 
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;

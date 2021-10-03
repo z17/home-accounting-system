@@ -1,6 +1,6 @@
 'use strict';
 
-const functions = require('../scripts/functions');
+const functions = require('../src/functions');
 const moment = require('moment');
 let balanceView = null;
 const languages = require('../scripts/languages');

@@ -1,4 +1,4 @@
-const functions = require('../scripts/functions');
+const functions = require('../src/functions');
 const Income = require('../models/income');
 const moment = require('moment');
 const languages = require('../scripts/languages');

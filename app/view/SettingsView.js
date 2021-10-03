@@ -1,6 +1,6 @@
 "use strict";
 
-const functions = require('../scripts/functions');
+const functions = require('../src/functions');
 const Settings = require('../models/settings');
 
 function SettingsView() {

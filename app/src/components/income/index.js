@@ -1,7 +1,26 @@
-import React  from 'react';
+import React, {useState} from 'react';
 import './Income.css'
+import IncomeLine from "../IncomeLine";
 
-const Index = ({active}) => {
+const electron = window.require('electron');
+const ipcRenderer  = electron.ipcRenderer;
+
+const Income = ({active}) => {
+
+    const [incomeArray, setIncomeArray] = useState([])
+
+    ipcRenderer.on('income-data', function (event, data) {
+        data.sort((a, b) => {
+            return a.date - b.date;
+        });
+
+        setIncomeArray(data);
+    });
+
+    const incomeList = incomeArray.map((income) =>
+      <IncomeLine item={income} />
+    );
+
     return  <div className={`js-income-page js-page page ${active ? 'active' : ''}`} data-name="income">
         <h1>[[income]]</h1>
 
@@ -48,19 +67,7 @@ const Index = ({active}) => {
                     <th>[[contact]]</th>
                     <th>[[description]]</th>
                 </tr>
-                <tr className="js-row row js-income-row">
-                    <td className="js-date"></td>
-                    <td className="js-month"></td>
-                    <td className="js-sum"></td>
-                    <td className="js-payment-type"></td>
-                    <td className="js-contact"></td>
-                    <td>
-                        <span className="js-description"></span>
-                        <span data-id="" className="save income-button js-income-save"></span>
-                        <span data-id="" className="edit income-button js-income-edit"></span>
-                        <span data-id="" className="delete income-button js-income-delete"></span>
-                    </td>
-                </tr>
+                {incomeList}
                 <tr className="form">
                     <td><input className="js-add-date" form="income-form" type="date" placeholder="Date"
                                min="1900-01-01" max="2100-01-01" required/></td>
@@ -91,4 +98,4 @@ const Index = ({active}) => {
 };
 
 
-export default Index;
+export default Income;

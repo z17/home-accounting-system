@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './Income.css'
 import IncomeLine from "../IncomeLine";
+import IncomeAddForm from "../IncomeAddForm";
 
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
@@ -68,32 +69,9 @@ const Income = ({active}) => {
                     <th>[[description]]</th>
                 </tr>
                 {incomeList}
-                <tr className="form">
-                    <td><input className="js-add-date" form="income-form" type="date" placeholder="Date"
-                               min="1900-01-01" max="2100-01-01" required/></td>
-                    <td><input className="js-add-month" form="income-form" type="month" placeholder="Month"
-                               min="1900-01" max="2100-01" required/></td>
-                    <td><input className="js-add-sum" form="income-form" type="number" placeholder="[[sum]]"
-                               required/></td>
-                    <td>
-                        <input className="js-add-payment-type" form="income-form" placeholder="[[type]]"
-                               required/>
-                    </td>
-                    <td><input className="js-add-contact" form="income-form" type="text"
-                               placeholder="[[contact]]"
-                               required/>
-                    </td>
-                    <td>
-                        <input className="js-add-description" form="income-form" type="text"
-                               placeholder="[[description]]"/>
-                        <input className="submit js-submit" form="income-form" type="submit"/>
-                    </td>
-                </tr>
+                <IncomeAddForm />
             </table>
         </div>
-
-        <form action="#" id="income-form" className="js-income-add">
-        </form>
     </div>
 };
 

@@ -2,7 +2,6 @@ const electron = require('electron');
 const compareVersions = require('compare-versions');
 const Dao = require('./backend/Dao');
 const Backup = require('./backend/Backup');
-const functions = require('./src/functions');
 const argv = require('minimist')(process.argv);
 const ServerRequester = require('./backend/ServerRequester');
 const path = require('path');

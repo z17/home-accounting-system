@@ -18,9 +18,17 @@ const Income = ({active}) => {
         setIncomeArray(data);
     });
 
-    const incomeList = incomeArray.map((income) =>
-      <IncomeLine item={income} />
-    );
+    ipcRenderer.on('income-data-deleted', function (event, incomeId) {
+        setIncomeArray(incomeArray.filter(function(income) {
+            return income.id !== incomeId
+        }));
+    })
+
+    ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
+        const newArray = incomeArray.slice();
+        newArray.push(incomeItem);
+        setIncomeArray(newArray);
+    });
 
     return  <div className={`js-income-page js-page page ${active ? 'active' : ''}`} data-name="income">
         <h1>[[income]]</h1>
@@ -68,7 +76,9 @@ const Income = ({active}) => {
                     <th>[[contact]]</th>
                     <th>[[description]]</th>
                 </tr>
-                {incomeList}
+                {incomeArray.map((income) =>
+                  <IncomeLine key={income.id} item={income}/>
+                )}
                 <IncomeAddForm />
             </table>
         </div>

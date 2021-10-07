@@ -3,12 +3,20 @@ import moment from "moment";
 import Utils from "../../Utils";
 import IncomeAddForm from "../IncomeAddForm";
 
+const electron = window.require('electron');
+const ipcRenderer  = electron.ipcRenderer;
+
 const IncomeLine = ({item}) => {
   const [isEditMode, setEditMode] = useState(false)
 
   const toggleEditMod = () => {
     setEditMode(!isEditMode);
   }
+
+  const onDelete = () => {
+    ipcRenderer.send('income-delete', item.id);
+  }
+
   if (isEditMode) {
     return <IncomeAddForm item={item} onSubmit={toggleEditMod} />
   }
@@ -21,8 +29,8 @@ const IncomeLine = ({item}) => {
     <td>{item.contact}</td>
     <td>
       <span className="js-description">{item.description}</span>
-      <span className="edit income-button js-income-edit" onClick={toggleEditMod}/>
-      <span className="delete income-button js-income-delete"/>
+      <span className="edit income-button" onClick={toggleEditMod}/>
+      <span className="delete income-button" onClick={onDelete}/>
     </td>
   </tr>
 };

@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import moment from "moment";
+import Income from "../../models/income";
 
-const IncomeAddForm = ({item, onSubmit}) => {
-  const updateMode = item !== undefined && onSubmit !== undefined;
+const electron = window.require('electron');
+const ipcRenderer  = electron.ipcRenderer;
+
+const IncomeAddForm = ({item, toggleEditMode}) => {
+  const updateMode = item !== undefined && toggleEditMode !== undefined;
 
   const [date, setDate] = useState(item ? item.date: moment().unix());
   const [month, setMonth] = useState(item ? item.month: moment().unix());
@@ -30,11 +34,19 @@ const IncomeAddForm = ({item, onSubmit}) => {
     setDescription(event.target.value);
   };
 
-  let controlButtons = <input className="submit js-submit" type="submit"/>
+  const onCreate = () => {
+    const incomeItem = new Income(date,  month, sum, paymentType, contact, description);
+    ipcRenderer.send('income-add', incomeItem);
+  }
+
+  const onUpdate = () => {
+    // todo: hello
+  }
+
+  let controlButtons = <input className="submit js-submit" type="submit" onClick={onCreate}/>
+
   if (updateMode) {
-    controlButtons = <div><span className="save income-button js-income-save" onClick={onSubmit}/>
-      <span className="delete income-button js-income-delete"/>
-    </div>
+    controlButtons = <span className="save income-button js-income-save" onClick={onUpdate}/>
   }
 
   //todo: autocomplete, see setFieldsAutocomplete

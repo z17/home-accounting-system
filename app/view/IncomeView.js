@@ -1,5 +1,5 @@
 const functions = require('../src/functions');
-const Income = require('../models/income');
+const Income = require('../src/models/income');
 const moment = require('moment');
 const languages = require('../scripts/languages');
 

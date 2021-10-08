@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import moment from "moment";
+import './IncomeAddForm.css'
 import Income from "../../models/income";
 
 const electron = window.require('electron');

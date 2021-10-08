@@ -10,6 +10,7 @@ const Income = ({active}) => {
 
     const [incomeArray, setIncomeArray] = useState([])
 
+    // todo: google for multiple catch ispRender events
     ipcRenderer.on('income-data', function (event, data) {
         data.sort((a, b) => {
             return a.date - b.date;
@@ -28,6 +29,17 @@ const Income = ({active}) => {
         const newArray = incomeArray.slice();
         newArray.push(incomeItem);
         setIncomeArray(newArray);
+    });
+
+    ipcRenderer.on('income-edited', function (event, income) {
+        setIncomeArray(incomeArray.map(function(item) {
+            if (income.id !== item.id) {
+                return item;
+            }
+
+            item = income;
+            return item
+        }));
     });
 
     return  <div className={`js-income-page js-page page ${active ? 'active' : ''}`} data-name="income">

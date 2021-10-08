@@ -18,7 +18,7 @@ const IncomeLine = ({item}) => {
   }
 
   if (isEditMode) {
-    return <IncomeAddForm item={item} onSubmit={toggleEditMod} />
+    return <IncomeAddForm item={item} toggleEditMode={toggleEditMod} />
   }
 
   return <tr className="row">

@@ -40,13 +40,15 @@ const IncomeAddForm = ({item, toggleEditMode}) => {
   }
 
   const onUpdate = () => {
-    // todo: hello
+    const updatedItem = new Income(date,  month, sum, paymentType, contact, description);
+    updatedItem.id = item.id
+    ipcRenderer.send('income-edit', updatedItem);
   }
 
-  let controlButtons = <input className="submit js-submit" type="submit" onClick={onCreate}/>
+  let controlButtons = <input className="submit" type="submit" onClick={onCreate}/>
 
   if (updateMode) {
-    controlButtons = <span className="save income-button js-income-save" onClick={onUpdate}/>
+    controlButtons = <span className="save income-button" onClick={onUpdate}/>
   }
 
   //todo: autocomplete, see setFieldsAutocomplete

@@ -10,6 +10,12 @@ const Income = ({active}) => {
 
     const [incomeArray, setIncomeArray] = useState([])
 
+    // todo: google for calculation over state
+    const incomeSum = 0
+    const incomeAverage = 0
+    const incomeTopMonth = 0
+    const incomeWorstMonth = 0
+
     // todo: google for multiple catch ispRender events
     ipcRenderer.on('income-data', function (event, data) {
         data.sort((a, b) => {
@@ -59,14 +65,10 @@ const Income = ({active}) => {
                 </div>
                 <div className="income-data">
                     <h2>[[statistic]]</h2>
-                    <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span
-                        className="js-income-sum data-value"></span></p>
-                    <p className="data-line"><span className="income-data-name">[[average]]:</span> <span
-                        className="js-income-average data-value"></span></p>
-                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span
-                        className="js-income-top data-value"></span></p>
-                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span
-                        className="js-income-worst data-value"></span></p>
+                    <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span className="data-value">{incomeSum}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[average]]:</span> <span className="data-value">{incomeAverage}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span className="data-value">{incomeTopMonth}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span className="data-value">{incomeWorstMonth}</span></p>
                 </div>
                 <div className="income-chart">
                     <h2>[[income-by-type]]</h2>

@@ -13,37 +13,27 @@ const Balance = ({active}) => {
     const [sources, setSources] = useState([]);
 
     ipcRenderer.on('balance-types', function (event, sourceData) {
-        const sources = [];
 
         let firstMonth = moment().startOf('month');
         let lastMonth = moment().startOf('month');
 
-        const sourcesMapIndexToId = []
-        let index = 0
+        // search first and last months
         for (let i in sourceData) {
-            const source = sourceData[i]
-            sources[source.id] = {
-                id : source.id,
-                name: source.name,
-                months: source.value,
-                index: index
-            };
-            sourcesMapIndexToId[index] = source.id
-
-            let months = Object.keys(source.value);
-            let monthData = [];
-            for (let i = 0; i < months.length; i++) {
-                monthData.push(moment(months[i], "MMYYYY"));
+            if (!sourceData.hasOwnProperty(i)) {
+                continue;
             }
 
+            let months = Object.keys(sourceData[i].value);
+            let monthData = months.map((month) => moment(month, "MMYYYY"));
+
             [firstMonth, lastMonth] = Utils.calcStartEndDates(firstMonth, lastMonth, monthData);
-            index++;
         }
         const countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
 
+        // prepare array of all months
         let month = firstMonth.clone();
-        const monthsMapValueToIndex = []
-        const monthsMapIndexToValue = []
+        const monthsMapValueToIndex = [];
+        const monthsMapIndexToValue = [];
         for (let i = 0; i < countMonths; i++) {
             const monthValue = month.format("MMYYYY");
             monthsMapValueToIndex[monthValue] = i;
@@ -51,10 +41,31 @@ const Balance = ({active}) => {
             month.add(1, 'M');
         }
 
-        const balanceTable = [];
+        // prepare sources object
+        const sourcesMapIndexToId = [];
+        const sources = [];
+        let index = 0;
+        for (let i in sourceData) {
+            if (!sourceData.hasOwnProperty(i)) {
+                continue;
+            }
+            const source = sourceData[i];
+            sources[source.id] = {
+                id: source.id,
+                name: source.name,
+                months: source.value,
+                index: index
+            };
+            sourcesMapIndexToId[index] = source.id;
 
+            index++;
+        }
+
+
+        // fill balance table
+        const balanceTable = [];
         for (let j = 0; j < sourcesMapIndexToId.length; j++) {
-            balanceTable[j] = []
+            balanceTable[j] = [];
             const sourceValues = sources[sourcesMapIndexToId[j]].months;
             let month = firstMonth.clone();
             for (let i = 0; i < countMonths; i++) {
@@ -70,12 +81,9 @@ const Balance = ({active}) => {
             }
         }
 
-        console.log(balanceTable);
 
+        console.log('----------');
         console.log(sources);
-        console.log(sourcesMapIndexToId);
-
-        console.log(monthsMapValueToIndex);
         console.log(monthsMapIndexToValue);
 
         setMonths(monthsMapIndexToValue);
@@ -111,52 +119,7 @@ const Balance = ({active}) => {
         <article className="balance-items">
             <table className="balance-items-table">
                 <BalanceMonthsLine months={months} />
-                <BalanceSourceLines sources={sources}/>
-                <tr>
-                    <th>Открытие брокер</th>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                    <td>14 000</td>
-                    <td>12 000</td>
-                    <td>150 000</td>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                    <td>14 000</td>
-                    <td>12 000</td>
-                    <td>150 000</td>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                </tr>
-                <tr>
-                    <th>Райфайзен</th>
-                    <td>1 000</td>
-                    <td>570 000</td>
-                    <td>12 000</td>
-                    <td>14 000</td>
-                    <td>12 000</td>
-                    <td>10 000</td>
-                    <td>1 000</td>
-                    <td>14 000</td>
-                    <td>90 000</td>
-                    <td>150 000</td>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                </tr>
-                <tr>
-                    <th>Наличка</th>
-                    <td>1 000</td>
-                    <td>50 00</td>
-                    <td>12 000</td>
-                    <td>14 000</td>
-                    <td>10 000</td>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                    <td>12 000</td>
-                    <td>150 000</td>
-                    <td>14 000</td>
-                    <td>1 000</td>
-                    <td>50 000</td>
-                </tr>
+                <BalanceSourceLines sources={sources} months={months}/>
             </table>
         </article>
     </div>

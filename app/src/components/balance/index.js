@@ -1,11 +1,16 @@
-import React  from 'react';
+import React, {useState} from 'react';
 import './Balance.css'
 import moment from "moment";
 import Utils from "../../Utils";
+import BalanceMonthsLine from "../BalanceMonthsLine";
+import BalanceSourceLines from "../BalanceSourceLines";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
 const Balance = ({active}) => {
+
+    const [months, setMonths] = useState([]);
+    const [sources, setSources] = useState([]);
 
     ipcRenderer.on('balance-types', function (event, sourceData) {
         const sources = [];
@@ -72,8 +77,10 @@ const Balance = ({active}) => {
 
         console.log(monthsMapValueToIndex);
         console.log(monthsMapIndexToValue);
-    });
 
+        setMonths(monthsMapIndexToValue);
+        setSources(sources);
+    });
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>[[balance]]</h1>
         <div className="balance-statistic">
@@ -103,21 +110,8 @@ const Balance = ({active}) => {
         </form>
         <article className="balance-items">
             <table className="balance-items-table">
-                <tr>
-                    <th></th>
-                    <th>Январь 2015</th>
-                    <th>Февраль 2015</th>
-                    <th>Март 2015</th>
-                    <th>Апрель 2015</th>
-                    <th>Март 2015</th>
-                    <th>Июнь 2015</th>
-                    <th>Июль 2015</th>
-                    <th>Август 2015</th>
-                    <th>Сентябрь 2015</th>
-                    <th>Октябрь 2015</th>
-                    <th>Ноябрь 2015</th>
-                    <th>Декабрь 2015</th>
-                </tr>
+                <BalanceMonthsLine months={months} />
+                <BalanceSourceLines sources={sources}/>
                 <tr>
                     <th>Открытие брокер</th>
                     <td>1 000</td>

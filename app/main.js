@@ -74,11 +74,13 @@ app.on('ready', function () {
     mainWindow.loadURL(loadUrl);
 
     mainWindow.webContents.on('dom-ready', function () {
-        serverRequester.getServerVersion((version) => {
-            if (compareVersions(version, app.getVersion()) > 0) {
-                mainWindow.webContents.send('new-version', app.getVersion(), version);
-            }
-        });
+        if (!argv.dev) {
+            serverRequester.getServerVersion((version) => {
+                if (compareVersions(version, app.getVersion()) > 0) {
+                    mainWindow.webContents.send('new-version', app.getVersion(), version);
+                }
+            });
+        }
 
         dao.getSettings(function (settings) {
             settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);

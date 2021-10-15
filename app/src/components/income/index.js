@@ -12,7 +12,6 @@ const Income = ({active}) => {
 
     const [incomeArray, setIncomeArray] = useState([]);
 
-    // todo: google for calculation over state
     let incomeSum = 0;
     let incomeAverage = 0;
     let incomeTopMonthValue = 0;

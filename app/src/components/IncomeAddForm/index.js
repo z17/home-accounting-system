@@ -23,7 +23,7 @@ const IncomeAddForm = ({item, toggleEditMode}) => {
     setMonth(moment(event.target.value).unix());
   };
   const onChangeSum = (event) => {
-    setSum(event.target.value);
+    setSum(parseInt(event.target.value));
   };
   const onChangePaymentType = (event) => {
     setPaymentType(event.target.value);

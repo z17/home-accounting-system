@@ -7,7 +7,7 @@ const BalanceSourceLines = ({sources, months}) => {
 
             const values = months.map((month) => {
                 let value = source.months.hasOwnProperty(month) ? source.months[month] : 0;
-                return <td>{Utils.numberWithSpaces(value)}</td>
+                return <td key={month}>{Utils.numberWithSpaces(value)}</td>
             });
 
             return <tr key={source.id}>

@@ -11,6 +11,7 @@ const Balance = ({active}) => {
 
     const [months, setMonths] = useState([]);
     const [sources, setSources] = useState([]);
+    let balanceSum = 0;
 
     ipcRenderer.on('balance-types', function (event, sourceData) {
 
@@ -82,13 +83,29 @@ const Balance = ({active}) => {
         }
 
 
-        console.log('----------');
-        console.log(sources);
-        console.log(monthsMapIndexToValue);
-
         setMonths(monthsMapIndexToValue);
         setSources(sources);
     });
+
+    // search last unempty months
+    let lastUnemptyMonth = null
+    for (let monthIndex in months.reverse()) {
+        let month = months[monthIndex];
+        for (let source in sources) {
+            if (sources[source].months.hasOwnProperty(month)) {
+                lastUnemptyMonth = month;
+                break;
+            }
+        }
+        if (lastUnemptyMonth !== null) {
+            break
+        }
+    }
+
+    for (let source in sources) {
+        balanceSum += sources[source].months[lastUnemptyMonth];
+    }
+
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>[[balance]]</h1>
         <div className="balance-statistic">
@@ -107,7 +124,7 @@ const Balance = ({active}) => {
                 <div className="balance-data">
                     <h2>[[statistic]]</h2>
                     <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span
-                        className="js-balance-sum data-value"></span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
                 </div>
             </div>
         </div>

@@ -4,22 +4,23 @@ import IncomeLine from "../IncomeLine";
 import IncomeAddForm from "../IncomeAddForm";
 import moment from "moment";
 import * as Utils from "../../Utils";
+import Chart from "react-google-charts";
 
 const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
+const ipcRenderer = electron.ipcRenderer;
 
 const Income = ({active}) => {
 
     const [incomeArray, setIncomeArray] = useState([]);
 
     let incomeSum = 0;
-    let incomeAverage = 0;
+    let incomeAverage;
     let incomeTopMonthValue = 0;
     let incomeTopMonthName = null;
     let incomeWorstMonthValue = 0;
     let incomeWorstMonthName = null;
 
-    // todo: google for multiple catch ispRender events
+    // todo: google for multiple catch ipcRender events
     ipcRenderer.on('income-data', function (event, data) {
         data.sort((a, b) => {
             return a.date - b.date;
@@ -29,7 +30,7 @@ const Income = ({active}) => {
     });
 
     ipcRenderer.on('income-data-deleted', function (event, incomeId) {
-        setIncomeArray(incomeArray.filter(function(income) {
+        setIncomeArray(incomeArray.filter(function (income) {
             return income.id !== incomeId
         }));
     });
@@ -41,7 +42,7 @@ const Income = ({active}) => {
     });
 
     ipcRenderer.on('income-edited', function (event, income) {
-        setIncomeArray(incomeArray.map(function(item) {
+        setIncomeArray(incomeArray.map(function (item) {
             if (income.id !== item.id) {
                 return item;
             }
@@ -104,7 +105,7 @@ const Income = ({active}) => {
         dataAverage[year] += element.sum / monthDiff;
     });
 
-    // incomeItem.dataByMonth.data = [];
+    let incomeByMonthsChartArray = [["Month", "Sum"]];
     for (let property in dataByMonth) {
         if (dataByMonth.hasOwnProperty(property)) {
             if (incomeTopMonthValue < dataByMonth[property] || incomeTopMonthName === null) {
@@ -115,104 +116,185 @@ const Income = ({active}) => {
                 incomeWorstMonthValue = dataByMonth[property];
                 incomeWorstMonthName = property;
             }
-            // incomeItem.dataByMonth.data.push({
-            //     name: property,
-            //     value: dataByMonth[property],
-            //     time: moment(property, "MMM YYYY").unix()
-            // });
+            incomeByMonthsChartArray.push([property, dataByMonth[property]]);
         }
     }
 
-    // incomeItem.dataByYear.data = [];
+    let incomeByYearChartArray = [["Year", "Sum"]];
     for (let property in dataByYear) {
         if (dataByYear.hasOwnProperty(property)) {
-            // incomeItem.dataByYear.data.push({
-            //     name: property,
-            //     value: dataByYear[property],
-            //     time: moment(property, "YYYY").unix()
-            // });
+            incomeByYearChartArray.push([property, dataByYear[property]])
         }
     }
 
-    // incomeItem.dataAverage.data = [];
+    let averageChartArray = [["Year", "Middle sum"]];
     for (let property in dataAverage) {
         if (dataAverage.hasOwnProperty(property)) {
-            // incomeItem.dataAverage.data.push({
-            //     name: property,
-            //     value: dataAverage[property],
-            //     time: moment(property, "YYYY").unix()
-            // });
+            averageChartArray.push( [property, dataAverage[property]]);
         }
     }
-    //
-    // incomeItem.dataByMonth.data.sort(function (a, b) {
-    //     return a.time - b.time;
-    // });
-    // incomeItem.dataByYear.data.sort(function (a, b) {
-    //     return a.time - b.time;
-    // });
-    // incomeItem.dataAverage.data.sort(function (a, b) {
-    //     return a.time - b.time;
-    // });
+
+    let byContactsChartArray = preparePieChartDataByField(incomeArray, 'contact', ['Contact', 'Sum']);
+    let byTypeChartArray = preparePieChartDataByField(incomeArray, 'paymentType', ['Payment Type', 'Sum']);
+    console.log("byTypeChartArray", byTypeChartArray);
+    console.log(incomeArray);
 
     incomeAverage = Math.round(incomeSum / Object.keys(dataByMonth).length);
-
-
-    // document.getElementsByClassName('js-income-sum')[0].innerHTML = functions.numberWithSpaces(incomeItem.sum);
-    // document.getElementsByClassName('js-income-average')[0].innerHTML = functions.numberWithSpaces(incomeItem.average);
-    // document.getElementsByClassName('js-income-top')[0].innerHTML = functions.numberWithSpaces(incomeItem.topMonth.value);
-    // document.getElementsByClassName('js-income-worst')[0].innerHTML = functions.numberWithSpaces(incomeItem.worstMonth.value);
 
     return  <div className={`js-income-page js-page page ${active ? 'active' : ''}`} data-name="income">
         <h1>[[income]]</h1>
 
         <div className="income-statistic">
             <h2>[[income-month]]</h2>
-            <div className="income-chart income-month-chart" id="js-income-month-chart"></div>
+            <div className="income-chart income-month-chart" id="js-income-month-chart">
+                <Chart
+                    chartType="ColumnChart"
+                    loader={<div>Loading Chart</div>}
+                    options={{
+                        width: "100%",
+                        height: 400,
+                        bar: {groupWidth: "95%"},
+                        legend: {position: "none"},
+                        animation: {
+                            duration: 500,
+                            easing: 'out',
+                        },
+                        vAxis: {
+                            minValue: 0
+                        }
+                    }}
+                    data={incomeByMonthsChartArray}
+                />
+            </div>
             <div className="inline-blocks">
                 <div className="income-chart">
                     <h2>[[income-year]]</h2>
-                    <div id="js-income-year-chart" className="income-year-chart"></div>
+                    <div id="js-income-year-chart" className="income-year-chart">
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 300,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "none"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                vAxis: {
+                                    minValue: 0
+                                }
+                            }}
+                            data={incomeByYearChartArray}
+                        />
+                    </div>
                 </div>
                 <div className="income-chart">
                     <h2>[[income-average]]</h2>
-                    <div id="js-income-average-chart" className="income-average-chart"></div>
+                    <div id="js-income-average-chart" className="income-average-chart">
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 300,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "none"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                vAxis: {
+                                    minValue: 0
+                                }
+                            }}
+                            data={averageChartArray }
+                        />
+                    </div>
                 </div>
                 <div className="income-data">
                     <h2>[[statistic]]</h2>
                     <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeSum)}</span></p>
                     <p className="data-line"><span className="income-data-name">[[average]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeAverage)}</span></p>
-                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)}</span></p>
-                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)} {incomeTopMonthName}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)} {incomeWorstMonthName}</span></p>
                 </div>
                 <div className="income-chart">
                     <h2>[[income-by-type]]</h2>
-                    <div id="js-income-by-types-chart" className="income-by-types-chart"></div>
+                    <div id="js-income-by-types-chart" className="income-by-types-chart">
+                        <Chart
+                            chartType="PieChart"
+                            loader={<div>Loading Chart</div>}
+                            data={byTypeChartArray}
+                            options={{
+                                width: '100%',
+                                height: 350,
+                                pieSliceText: 'label',
+                                // sliceVisibilityThreshold: 0.05,
+                            }}
+                        />
+                    </div>
                 </div>
                 <div className="income-chart">
                     <h2>[[income-by-contact]]</h2>
-                    <div id="js-income-by-contacts-chart" className="income-by-contacts-chart"></div>
+                    <div id="js-income-by-contacts-chart" className="income-by-contacts-chart">
+                        <Chart
+                            chartType="PieChart"
+                            loader={<div>Loading Chart</div>}
+                            data={byContactsChartArray}
+                            options={{
+                                width: '100%',
+                                height: 350,
+                                pieSliceText: 'label',
+                                // sliceVisibilityThreshold: 0.05,
+                            }}
+                        />
+
+                    </div>
                 </div>
             </div>
         </div>
         <div className="income-table">
             <table className="data-table">
-                <tr>
-                    <th>[[date]]</th>
-                    <th>[[month]]</th>
-                    <th>[[sum]]</th>
-                    <th>[[type]]</th>
-                    <th>[[contact]]</th>
-                    <th>[[description]]</th>
-                </tr>
-                {incomeArray.map((income) =>
-                  <IncomeLine key={income.id} item={income}/>
-                )}
-                <IncomeAddForm />
+                <tbody>
+                    <tr>
+                        <th>[[date]]</th>
+                        <th>[[month]]</th>
+                        <th>[[sum]]</th>
+                        <th>[[type]]</th>
+                        <th>[[contact]]</th>
+                        <th>[[description]]</th>
+                    </tr>
+                    {incomeArray.map((income) =>
+                      <IncomeLine key={income.id} item={income}/>
+                    )}
+                    <IncomeAddForm />
+                </tbody>
             </table>
         </div>
     </div>
 };
 
+function preparePieChartDataByField(data, field, titleFields) {
+    let map = data.reduce(
+        (accumulator, item) => {
+            if (accumulator.hasOwnProperty(item[field])) {
+                accumulator[item[field]] += item.sum;
+            } else {
+                accumulator[item[field]] = item.sum;
+            }
+            return accumulator;
+        }, {}
+    );
+
+    let result = [titleFields];
+    for (let type in map) {
+        if (map.hasOwnProperty(type)) {
+            result.push([type, map[type]]);
+        }
+    }
+    return result;
+}
 
 export default Income;

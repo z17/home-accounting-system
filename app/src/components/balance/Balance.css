@@ -128,13 +128,16 @@ form.addBalance button.submit {
   width: 100%;
 }
 
-.balance-items-table th, .balance-items-table td {
+.balance-items-table .source-name, .balance-items-table .source-month-value {
   padding: 7px 10px 7px 10px;
   border: 1px dashed #e1e1e1;
   min-width: 200px;
   border-left: 0;
+  position: relative;
 }
 
-.balance-items-table td:hover {
+.balance-items-table .source-line:hover .source-month-value,
+.balance-items-table .source-line:hover .source-name,
+.balance-items-table .source-month-value.edit-mode {
   background: #f1f1f1;
 }

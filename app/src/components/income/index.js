@@ -20,7 +20,7 @@ const Income = ({active}) => {
     let incomeWorstMonthValue = 0;
     let incomeWorstMonthName = null;
 
-    // todo: google for multiple catch ipcRender events
+    // todo: move .on() to useEffect
     ipcRenderer.on('income-data', function (event, data) {
         data.sort((a, b) => {
             return a.date - b.date;

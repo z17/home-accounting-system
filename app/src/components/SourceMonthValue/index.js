@@ -5,9 +5,9 @@ import './SourceMonthValue.css'
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
-const SourceMonthValue = ({month, sourceValue}) => {
+const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
 
-    const [updateMode, setUpdateMode] = useState(false);
+    const [editMode, setEditMode] = useState(isEditMode);
     const [value, setValue] = useState(sourceValue);
 
     const onChangeValue = (event) => {
@@ -15,18 +15,18 @@ const SourceMonthValue = ({month, sourceValue}) => {
     };
 
     const onChangeUpdateMode = () => {
-        if (updateMode) {
-            // todo: send updates
+        if (editMode) {
+            ipcRenderer.send('balance-update', sourceId, month, value);
         } else {
-            setUpdateMode(true);
+            setEditMode(true);
         }
     };
 
     const onDelete = () => {
-
+        ipcRenderer.send('balance-month-remove', sourceId, month);
     }
 
-    if (updateMode) {
+    if (editMode) {
         return <td className="source-month-value edit-mode" key={month}>
             <input type="number" placeholder="[[sum]]" className="source-month-value-input" value={value} onChange={onChangeValue}/>
             <span className="save control-button" onClick={onChangeUpdateMode}/>

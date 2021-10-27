@@ -1,90 +1,122 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Balance.css'
 import moment from "moment";
 import Utils from "../../Utils";
 import BalanceMonthsLine from "../BalanceMonthsLine";
 import BalanceSourceLines from "../BalanceSourceLines";
+import AddBalanceSource from "../AddBalanceSource";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
 const Balance = ({active}) => {
 
     const [months, setMonths] = useState([]);
-    const [sources, setSources] = useState([]);
+    const [sources, setSources] = useState({});
     let balanceSum = 0;
 
-    ipcRenderer.on('balance-types', function (event, sourceData) {
+    useEffect(() => {
+        ipcRenderer.on('balance-types', function (event, sourceData) {
 
-        let firstMonth = moment().startOf('month');
-        let lastMonth = moment().startOf('month');
+            let firstMonth = moment().startOf('month');
+            let lastMonth = moment().startOf('month');
 
-        // search first and last months
-        for (let i in sourceData) {
-            if (!sourceData.hasOwnProperty(i)) {
-                continue;
+            // search first and last months
+            for (let i in sourceData) {
+                if (!sourceData.hasOwnProperty(i)) {
+                    continue;
+                }
+
+                let months = Object.keys(sourceData[i].value);
+                let monthData = months.map((month) => moment(month, "MMYYYY"));
+
+                [firstMonth, lastMonth] = Utils.calcStartEndDates(firstMonth, lastMonth, monthData);
+            }
+            const countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
+
+            // prepare array of all months
+            let month = firstMonth.clone();
+            const monthsMapValueToIndex = [];
+            const monthsMapIndexToValue = [];
+            for (let i = 0; i < countMonths; i++) {
+                const monthValue = month.format("MMYYYY");
+                monthsMapValueToIndex[monthValue] = i;
+                monthsMapIndexToValue[i] = monthValue;
+                month.add(1, 'M');
             }
 
-            let months = Object.keys(sourceData[i].value);
-            let monthData = months.map((month) => moment(month, "MMYYYY"));
+            // prepare sources object
+            const sourcesMapIndexToId = [];
+            const sources = {};
+            let index = 0;
+            for (let i in sourceData) {
+                if (!sourceData.hasOwnProperty(i)) {
+                    continue;
+                }
+                const source = sourceData[i];
+                sources[source.id] = {
+                    id: source.id,
+                    name: source.name,
+                    months: source.value,
+                    index: index
+                };
+                sourcesMapIndexToId[index] = source.id;
 
-            [firstMonth, lastMonth] = Utils.calcStartEndDates(firstMonth, lastMonth, monthData);
-        }
-        const countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
-
-        // prepare array of all months
-        let month = firstMonth.clone();
-        const monthsMapValueToIndex = [];
-        const monthsMapIndexToValue = [];
-        for (let i = 0; i < countMonths; i++) {
-            const monthValue = month.format("MMYYYY");
-            monthsMapValueToIndex[monthValue] = i;
-            monthsMapIndexToValue[i] = monthValue;
-            month.add(1, 'M');
-        }
-
-        // prepare sources object
-        const sourcesMapIndexToId = [];
-        const sources = [];
-        let index = 0;
-        for (let i in sourceData) {
-            if (!sourceData.hasOwnProperty(i)) {
-                continue;
+                index++;
             }
-            const source = sourceData[i];
+
+
+            // fill balance table
+            const balanceTable = [];
+            for (let j = 0; j < sourcesMapIndexToId.length; j++) {
+                balanceTable[j] = [];
+                const sourceValues = sources[sourcesMapIndexToId[j]].months;
+                let month = firstMonth.clone();
+                for (let i = 0; i < countMonths; i++) {
+                    let monthValue = 0;
+
+                    if (sourceValues[month.format("MMYYYY")] !== undefined) {
+                        monthValue = sourceValues[month.format("MMYYYY")];
+                    }
+
+                    balanceTable[j][i] = monthValue;
+
+                    month.add(1, 'M');
+                }
+            }
+
+
+            setMonths(monthsMapIndexToValue);
+            setSources(sources);
+            console.log('----------');
+            console.log(sources);
+        });
+
+        ipcRenderer.on('balance-updated', function (event, sourceId, month, sum) {
+            console.log('balance-updated')
+            console.log(sources)
+            console.log(sourceId)
+            console.log(month)
+            console.log(sources[sourceId])
+            console.log(sources[sourceId].months)
+            console.log(sources[sourceId].months[month]);
+            // sources[sourceId].months[month] = sum;
+            // setSources(sources); // todo: change object?
+        });
+
+
+        ipcRenderer.on('balance-reupdated', function (event, sourceId, month) {
+            // sources[sourceId].months[month] = 0;
+            // setSources(sources); // todo: change object?
+        });
+
+        ipcRenderer.on('balance-inserted', function (event, source) {
             sources[source.id] = {
                 id: source.id,
                 name: source.name,
                 months: source.value,
-                index: index
             };
-            sourcesMapIndexToId[index] = source.id;
-
-            index++;
-        }
-
-
-        // fill balance table
-        const balanceTable = [];
-        for (let j = 0; j < sourcesMapIndexToId.length; j++) {
-            balanceTable[j] = [];
-            const sourceValues = sources[sourcesMapIndexToId[j]].months;
-            let month = firstMonth.clone();
-            for (let i = 0; i < countMonths; i++) {
-                let monthValue = 0;
-
-                if (sourceValues[month.format("MMYYYY")] !== undefined) {
-                    monthValue = sourceValues[month.format("MMYYYY")];
-                }
-
-                balanceTable[j][i] = monthValue;
-
-                month.add(1, 'M');
-            }
-        }
-
-
-        setMonths(monthsMapIndexToValue);
-        setSources(sources);
+            setSources(sources); // todo: new object
+        });
     });
 
     // search last unempty months
@@ -128,11 +160,7 @@ const Balance = ({active}) => {
                 </div>
             </div>
         </div>
-        <form className="js-balance-source-form" action="" method="post">
-            <label htmlFor="balancesource">[[balance-source-input]]:</label>
-            <input type="text" id="balancesource" name="balancesource" value="" />
-            <button type="submit" name="incrementsources">+</button>
-        </form>
+        <AddBalanceSource />
         <article className="balance-items">
             <table className="balance-items-table">
                 <BalanceMonthsLine months={months} />

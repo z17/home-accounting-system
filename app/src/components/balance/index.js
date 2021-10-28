@@ -46,14 +46,14 @@ const Balance = ({active}) => {
 
             // prepare sources object
             const sourcesMapIndexToId = [];
-            const sources = {};
+            const sourcesInit = {};
             let index = 0;
             for (let i in sourceData) {
                 if (!sourceData.hasOwnProperty(i)) {
                     continue;
                 }
                 const source = sourceData[i];
-                sources[source.id] = {
+                sourcesInit[source.id] = {
                     id: source.id,
                     name: source.name,
                     months: source.value,
@@ -69,7 +69,7 @@ const Balance = ({active}) => {
             const balanceTable = [];
             for (let j = 0; j < sourcesMapIndexToId.length; j++) {
                 balanceTable[j] = [];
-                const sourceValues = sources[sourcesMapIndexToId[j]].months;
+                const sourceValues = sourcesInit[sourcesMapIndexToId[j]].months;
                 let month = firstMonth.clone();
                 for (let i = 0; i < countMonths; i++) {
                     let monthValue = 0;
@@ -84,40 +84,34 @@ const Balance = ({active}) => {
                 }
             }
 
-
             setMonths(monthsMapIndexToValue);
-            setSources(sources);
-            console.log('----------');
-            console.log(sources);
+            console.log('setSources');
+            console.log(sourcesInit);
+            setSources(sourcesInit);
+        });
+
+        ipcRenderer.on('balance-reupdated', function (event, sourceId, month) {
+            const s = Object.assign({}, sources);
+            s[sourceId].months[month] = 0;
+            setSources(s);
         });
 
         ipcRenderer.on('balance-updated', function (event, sourceId, month, sum) {
-            console.log('balance-updated')
-            console.log(sources)
-            console.log(sourceId)
-            console.log(month)
-            console.log(sources[sourceId])
-            console.log(sources[sourceId].months)
-            console.log(sources[sourceId].months[month]);
-            // sources[sourceId].months[month] = sum;
-            // setSources(sources); // todo: change object?
-        });
-
-
-        ipcRenderer.on('balance-reupdated', function (event, sourceId, month) {
-            // sources[sourceId].months[month] = 0;
-            // setSources(sources); // todo: change object?
+            let s = Object.assign({}, sources);
+            s[sourceId].months[month] = sum;
+            setSources(s);
         });
 
         ipcRenderer.on('balance-inserted', function (event, source) {
-            sources[source.id] = {
+            let s = Object.assign({}, sources);
+            s[source.id] = {
                 id: source.id,
                 name: source.name,
                 months: source.value,
             };
-            setSources(sources); // todo: new object
+            setSources(s);
         });
-    });
+    }, []);
 
     // search last unempty months
     let lastUnemptyMonth = null
@@ -160,11 +154,13 @@ const Balance = ({active}) => {
                 </div>
             </div>
         </div>
-        <AddBalanceSource />
+        <AddBalanceSource/>
         <article className="balance-items">
             <table className="balance-items-table">
-                <BalanceMonthsLine months={months} />
-                <BalanceSourceLines sources={sources} months={months}/>
+                <tbody>
+                   <BalanceMonthsLine months={months}/>
+                   <BalanceSourceLines sources={sources} months={months}/>
+                </tbody>
             </table>
         </article>
     </div>

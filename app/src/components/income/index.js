@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Income.css'
 import IncomeLine from "../IncomeLine";
 import IncomeAddForm from "../IncomeAddForm";
@@ -20,37 +20,41 @@ const Income = ({active}) => {
     let incomeWorstMonthValue = 0;
     let incomeWorstMonthName = null;
 
-    // todo: move .on() to useEffect
-    ipcRenderer.on('income-data', function (event, data) {
-        data.sort((a, b) => {
-            return a.date - b.date;
+    useEffect(() => {
+        ipcRenderer.on('income-data', function (event, data) {
+            data.sort((a, b) => {
+                return a.date - b.date;
+            });
+
+            setIncomeArray(data);
         });
 
-        setIncomeArray(data);
-    });
+        ipcRenderer.on('income-data-deleted', function (event, incomeId) {
+            console.log('income-data-deleted');
+            console.log(incomeArray);
+            console.log(incomeId);
+            setIncomeArray(incomeArray.filter(function (income) {
+                return income.id !== incomeId
+            }));
+        });
 
-    ipcRenderer.on('income-data-deleted', function (event, incomeId) {
-        setIncomeArray(incomeArray.filter(function (income) {
-            return income.id !== incomeId
-        }));
-    });
+        ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
+            const newArray = incomeArray.slice();
+            newArray.push(incomeItem);
+            setIncomeArray(newArray);
+        });
 
-    ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
-        const newArray = incomeArray.slice();
-        newArray.push(incomeItem);
-        setIncomeArray(newArray);
-    });
+        ipcRenderer.on('income-edited', function (event, income) {
+            setIncomeArray(incomeArray.map(function (item) {
+                if (income.id !== item.id) {
+                    return item;
+                }
 
-    ipcRenderer.on('income-edited', function (event, income) {
-        setIncomeArray(incomeArray.map(function (item) {
-            if (income.id !== item.id) {
-                return item;
-            }
-
-            item = income;
-            return item
-        }));
-    });
+                item = income;
+                return item
+            }));
+        });
+    }, []);
 
 
     let firstMonth = moment().startOf('month');
@@ -136,8 +140,6 @@ const Income = ({active}) => {
 
     let byContactsChartArray = preparePieChartDataByField(incomeArray, 'contact', ['Contact', 'Sum']);
     let byTypeChartArray = preparePieChartDataByField(incomeArray, 'paymentType', ['Payment Type', 'Sum']);
-    console.log("byTypeChartArray", byTypeChartArray);
-    console.log(incomeArray);
 
     incomeAverage = Math.round(incomeSum / Object.keys(dataByMonth).length);
 

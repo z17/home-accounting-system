@@ -24,7 +24,7 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
 
     const onDelete = () => {
         ipcRenderer.send('balance-month-remove', sourceId, month);
-    }
+    };
 
     if (editMode) {
         return <td className="source-month-value edit-mode" key={month}>

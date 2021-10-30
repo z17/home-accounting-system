@@ -5,6 +5,7 @@ import Utils from "../../Utils";
 import BalanceMonthsLine from "../BalanceMonthsLine";
 import BalanceSourceLines from "../BalanceSourceLines";
 import AddBalanceSource from "../AddBalanceSource";
+import Chart from "react-google-charts";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
@@ -114,9 +115,8 @@ const Balance = ({active}) => {
     }, []);
 
     // search last unempty months
-    let lastUnemptyMonth = null
-    for (let monthIndex in months.reverse()) {
-        let month = months[monthIndex];
+    let lastUnemptyMonth = null;
+    for (let month of months.slice().reverse()) {
         for (let source in sources) {
             if (sources[source].months.hasOwnProperty(month)) {
                 lastUnemptyMonth = month;
@@ -129,15 +129,63 @@ const Balance = ({active}) => {
     }
 
     for (let source in sources) {
-        balanceSum += sources[source].months[lastUnemptyMonth];
+        let value = sources[source].months[lastUnemptyMonth];
+        if (value) {
+            balanceSum += value;
+        }
     }
+
+    let balanceChartArray = [["month"]];
+    for (let source in sources) {
+        balanceChartArray[0].push(sources[source].name);
+    }
+
+    balanceChartArray.push(...months.map((month) => {
+        let chartMonthData = [moment(month, "MMYYYY").format("MMM YYYY")];
+
+        for (let source in sources) {
+            let val = sources[source].months.hasOwnProperty(month) ? sources[source].months[month] : 0;
+            chartMonthData.push(val);
+        }
+        return chartMonthData;
+    }));
+
+    let balancePieChartArray = [["Source", "Sum"]];
+    for (let source in sources) {
+        let value = sources[source].months[lastUnemptyMonth];
+        if (value) {
+            balancePieChartArray.push([sources[source].name, value])
+        }
+    }
+
+
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>[[balance]]</h1>
         <div className="balance-statistic">
 
             <h2>[[balance-chart-title]]</h2>
-            <div className="balance-chart" id="js-balance-chart"/>
+            <div className="balance-chart" id="js-balance-chart">
+                <Chart
+                    chartType="ColumnChart"
+                    loader={<div>Loading Chart</div>}
+                    options={{
+                        width: "100%",
+                        height: 400,
+                        bar: {groupWidth: "95%"},
+                        legend: {position: "top"},
+                        animation: {
+                            duration: 500,
+                            easing: 'out',
+                        },
+                        isStacked: true,
+                        vAxis: {
+                            minValue: 0
+                        }
+                    }}
+                    data={balanceChartArray}
+                />
+            </div>
 
             <h2>[[balance-chart-diff-title]]</h2>
             <div className="balance-chart" id="js-balance-diff-chart"/>
@@ -146,10 +194,21 @@ const Balance = ({active}) => {
             <div className="costs-chart" id="js-costs-chart"/>
 
             <div className="inline-blocks">
-                <div className="balance-chart balance-pie-chart" id="js-balance-pie-chart"/>
+                <div className="balance-chart balance-pie-chart">
+                    <Chart
+                        chartType="PieChart"
+                        loader={<div>Loading Chart</div>}
+                        data={balancePieChartArray}
+                        options={{
+                            width: '100%',
+                            height: 350,
+                            pieSliceText: 'label',
+                        }}
+                    />
+                </div>
                 <div className="balance-data">
                     <h2>[[statistic]]</h2>
-                    <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span
+                    <p className="data-line"><span className="income-data-name">[[sum]] :</span> <span
                         className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
                 </div>
             </div>

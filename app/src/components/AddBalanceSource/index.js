@@ -13,8 +13,12 @@ const AddBalanceSource = ({}) => {
 
     const addBalanceSource = (e) => {
         e.preventDefault();
-        ipcRenderer.send('balance-add', name);
-    }
+        const source = {
+            name: name,
+            value: {},
+        };
+        ipcRenderer.send('balance-add', source);
+    };
 
     return <form className="js-balance-source-form" onSubmit={addBalanceSource}>
         <label htmlFor="balancesource">[[balance-source-input]]:</label>

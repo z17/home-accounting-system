@@ -148,7 +148,7 @@ const Income = ({active}) => {
 
         <div className="income-statistic">
             <h2>[[income-month]]</h2>
-            <div className="income-chart income-month-chart" id="js-income-month-chart">
+            <div className="income-chart income-month-chart">
                 <Chart
                     chartType="ColumnChart"
                     loader={<div>Loading Chart</div>}
@@ -171,7 +171,7 @@ const Income = ({active}) => {
             <div className="inline-blocks">
                 <div className="income-chart">
                     <h2>[[income-year]]</h2>
-                    <div id="js-income-year-chart" className="income-year-chart">
+                    <div className="income-year-chart">
                         <Chart
                             chartType="ColumnChart"
                             loader={<div>Loading Chart</div>}
@@ -219,8 +219,8 @@ const Income = ({active}) => {
                     <h2>[[statistic]]</h2>
                     <p className="data-line"><span className="income-data-name">[[sum]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeSum)}</span></p>
                     <p className="data-line"><span className="income-data-name">[[average]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeAverage)}</span></p>
-                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)} {incomeTopMonthName}</span></p>
-                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)} {incomeWorstMonthName}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[top-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)}, {incomeTopMonthName}</span></p>
+                    <p className="data-line"><span className="income-data-name">[[worst-month]]:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)}, {incomeWorstMonthName}</span></p>
                 </div>
                 <div className="income-chart">
                     <h2>[[income-by-type]]</h2>

@@ -5,45 +5,6 @@
   width: 320px;
 }
 
-.balance-source-name {
-  padding: 10px 5px;
-  margin: 10px 0;
-  position: relative;
-}
-
-.balance-source-name:hover {
-  background: #f1f1f1;
-}
-
-.balance-source-name .balance-edit {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  display: none;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  background: url('../../img/edit.svg') no-repeat;
-}
-
-.balance-source-name .balance-edit-save {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  background: url('../../img/ok.svg') no-repeat;
-}
-
-.balance-source-name .balance-edit-input {
-  width: 240px;
-}
-
-.balance-source-name:hover .balance-edit {
-  display: block;
-}
-
 .balance-items .balance-item {
   padding: 7px 10px 7px 10px;
   margin: 0;
@@ -126,6 +87,7 @@ form.addBalance button.submit {
   margin-top: 35px;
   text-align: left;
   width: 100%;
+  padding-left: 220px;
 }
 
 .balance-items-table .source-name, .balance-items-table .source-month-value {
@@ -137,7 +99,35 @@ form.addBalance button.submit {
 }
 
 .balance-items-table .source-line:hover .source-month-value,
-.balance-items-table .source-line:hover .source-name,
-.balance-items-table .source-month-value.edit-mode {
+.balance-items-table .source-line:hover .source-name {
   background: #f1f1f1;
+}
+
+.balance-items-table .control-button {
+  position: absolute;
+  cursor: pointer;
+  display: none;
+  width: 25px;
+  height: 25px;
+}
+
+.balance-items-table .edit {
+  top: 3px;
+  background: url('../../img/edit.svg') no-repeat;
+}
+
+.balance-items-table .save {
+  top: 3px;
+  background: url('../../img/ok.svg') no-repeat;
+  display: block;
+}
+
+.balance-items-table .delete {
+  top: 3px;
+  background: url('../../img/delete.svg') no-repeat;
+}
+
+.balance-items-table .control-with-buttons:hover .edit,
+.balance-items-table .control-with-buttons:hover .delete {
+  display: block;
 }

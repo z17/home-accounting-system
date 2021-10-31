@@ -3,9 +3,9 @@ import './Balance.css'
 import moment from "moment";
 import Utils from "../../Utils";
 import BalanceMonthsLine from "../BalanceMonthsLine";
-import BalanceSourceLines from "../BalanceSourceLines";
 import AddBalanceSource from "../AddBalanceSource";
 import Chart from "react-google-charts";
+import SourceLine from "../SourceLine";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
@@ -218,7 +218,10 @@ const Balance = ({active}) => {
             <table className="balance-items-table">
                 <tbody>
                    <BalanceMonthsLine months={months}/>
-                   <BalanceSourceLines sources={sources} months={months}/>
+                   {Object.keys(sources).map((sourceKey) => {
+                       const source = sources[sourceKey];
+                       return <SourceLine source={source} months={months}/>
+                   })}
                 </tbody>
             </table>
         </article>

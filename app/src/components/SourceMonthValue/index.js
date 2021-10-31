@@ -27,13 +27,13 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
     };
 
     if (editMode) {
-        return <td className="source-month-value edit-mode" key={month}>
+        return <td className="source-month-value control-with-buttons edit-mode" key={month}>
             <input type="number" placeholder="[[sum]]" className="source-month-value-input" value={value} onChange={onChangeValue}/>
             <span className="save control-button" onClick={onChangeUpdateMode}/>
         </td>
     }
 
-    return <td className="source-month-value" key={month}>
+    return <td className="source-month-value control-with-buttons" key={month}>
         {Utils.numberWithSpaces(value)}
         <span className="edit control-button" onClick={onChangeUpdateMode}/>
         <span className="delete control-button" onClick={onDelete}/>

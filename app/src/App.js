@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import './App.css';
-import Navigation from './components/navigation'
-import Income from './components/income'
-import Balance from './components/balance'
-import Settings from './components/settings'
+import Navigation from './components/Navigation'
+import Income from './components/Income'
+import Balance from './components/Balance'
+import Settings from './components/Settings'
 
 
 function App() {

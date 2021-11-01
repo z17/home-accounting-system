@@ -82,6 +82,8 @@ app.on('ready', function () {
             });
         }
 
+        // todo: #critical понять как отправлять данные в веб когда там реакт уже проинициализировал слушателей
+
         dao.getSettings(function (settings) {
             settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
             mainWindow.webContents.send('settings', settings);

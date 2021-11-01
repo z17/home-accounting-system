@@ -38,13 +38,13 @@ const IncomeAddForm = ({item, toggleEditMode}) => {
   const onCreate = () => {
     const incomeItem = new Income(date,  month, sum, paymentType, contact, description);
     ipcRenderer.send('income-add', incomeItem);
-  }
+  };
 
   const onUpdate = () => {
-    const updatedItem = new Income(date,  month, sum, paymentType, contact, description);
-    updatedItem.id = item.id
+    const updatedItem = new Income(date, month, sum, paymentType, contact, description);
+    updatedItem.id = item.id;
     ipcRenderer.send('income-edit', updatedItem);
-  }
+  };
 
   let controlButtons = <input className="submit" type="submit" onClick={onCreate}/>
 

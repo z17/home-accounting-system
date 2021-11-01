@@ -17,6 +17,7 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
     const onChangeUpdateMode = () => {
         if (editMode) {
             ipcRenderer.send('balance-update', sourceId, month, value);
+            setEditMode(false);
         } else {
             setEditMode(true);
         }

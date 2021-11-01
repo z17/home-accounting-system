@@ -30,9 +30,6 @@ const Income = ({active}) => {
         });
 
         ipcRenderer.on('income-data-deleted', function (event, incomeId) {
-            console.log('income-data-deleted');
-            console.log(incomeArray);
-            console.log(incomeId);
             setIncomeArray(incomeArray.filter(function (income) {
                 return income.id !== incomeId
             }));
@@ -54,7 +51,14 @@ const Income = ({active}) => {
                 return item
             }));
         });
-    }, []);
+
+        return () => {
+            ipcRenderer.removeAllListeners('income-data');
+            ipcRenderer.removeAllListeners('income-data-deleted');
+            ipcRenderer.removeAllListeners('income-data-inserted');
+            ipcRenderer.removeAllListeners('income-edited');
+        };
+    }, [incomeArray]);
 
 
     let firstMonth = moment().startOf('month');

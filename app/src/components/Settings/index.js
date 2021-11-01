@@ -1,4 +1,4 @@
-import React, {useState}  from 'react';
+import React, {useEffect, useState}  from 'react';
 import './Settings.css'
 
 const electron = window.require('electron');
@@ -20,6 +20,7 @@ const Settings = ({active, settingsToggle}) => {
     let [responseCode, setResponseCode] = useState();
     let [response, setResponse] = useState();
 
+    // todo: move to useEffect
     ipcRenderer.on('settings', function (event, data) {
         setId(data.id);
         setEmail(data.email);

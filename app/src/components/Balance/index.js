@@ -86,8 +86,6 @@ const Balance = ({active}) => {
             }
 
             setMonths(monthsMapIndexToValue);
-            console.log('setSources');
-            console.log(sourcesInit);
             setSources(sourcesInit);
         });
 
@@ -112,7 +110,13 @@ const Balance = ({active}) => {
             };
             setSources(s);
         });
-    }, []);
+        return () => {
+          ipcRenderer.removeAllListeners('balance-types');
+          ipcRenderer.removeAllListeners('balance-reupdated');
+          ipcRenderer.removeAllListeners('balance-updated');
+          ipcRenderer.removeAllListeners('balance-inserted');
+        };
+    }, [sources, months]);
 
     // search last unempty months
     let lastUnemptyMonth = null;
@@ -220,7 +224,7 @@ const Balance = ({active}) => {
                    <BalanceMonthsLine months={months}/>
                    {Object.keys(sources).map((sourceKey) => {
                        const source = sources[sourceKey];
-                       return <SourceLine source={source} months={months}/>
+                       return <SourceLine key={sourceKey} source={source} months={months}/>
                    })}
                 </tbody>
             </table>

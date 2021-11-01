@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
-const AddBalanceSource = ({}) => {
+const AddBalanceSource = () => {
 
     const [name, setName] = useState();
 

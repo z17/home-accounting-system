@@ -7,15 +7,15 @@ const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
 const IncomeLine = ({item}) => {
-  const [isEditMode, setEditMode] = useState(false)
+  const [isEditMode, setEditMode] = useState(false);
 
   const toggleEditMod = () => {
     setEditMode(!isEditMode);
-  }
+  };
 
   const onDelete = () => {
     ipcRenderer.send('income-delete', item.id);
-  }
+  };
 
   if (isEditMode) {
     return <IncomeAddForm item={item} toggleEditMode={toggleEditMod} />

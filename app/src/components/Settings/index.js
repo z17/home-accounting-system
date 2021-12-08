@@ -1,8 +1,8 @@
-import React, {useEffect, useState}  from 'react';
+import React, {useEffect, useState} from 'react';
 import './Settings.css'
 
 const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
+const ipcRenderer = electron.ipcRenderer;
 
 const RESPONSE_OK = 'ok';
 const RESPONSE_ERROR = 'error';
@@ -20,21 +20,25 @@ const Settings = ({active, settingsToggle}) => {
     let [responseCode, setResponseCode] = useState();
     let [response, setResponse] = useState();
 
-    // todo: move to useEffect
-    ipcRenderer.on('settings', function (event, data) {
-        setId(data.id);
-        setEmail(data.email);
-        setRemind(data.remind);
-        setBackupFolder(data.backupFolder);
-        setDatabaseFolder(data.databaseFolder);
-        setLanguage(data.language);
-        setLastBackupDateTimestamp(data.lastBackupDateTimestamp);
-    });
+    useEffect(() => {
+        ipcRenderer.send('component-settings-ready');
 
-    ipcRenderer.on('settings-saved', function () {
-        setResponse('ok');
-        setResponseCode(RESPONSE_OK);
-    });
+        ipcRenderer.on('settings', function (event, data) {
+            setId(data.id);
+            setEmail(data.email);
+            setRemind(data.remind);
+            setBackupFolder(data.backupFolder);
+            setDatabaseFolder(data.databaseFolder);
+            setLanguage(data.language);
+            setLastBackupDateTimestamp(data.lastBackupDateTimestamp);
+
+        });
+
+        ipcRenderer.on('settings-saved', function () {
+            setResponse('ok');
+            setResponseCode(RESPONSE_OK);
+        });
+    }, [id]);
 
 
     const onChangeEmail = (event) => {
@@ -91,15 +95,19 @@ const Settings = ({active, settingsToggle}) => {
                 <input type="checkbox" checked={remind} onChange={onChangeRemind}/>
             </label>
             <label>[[remind-email]]:
-                <input type="email" value={email}  onChange={onChangeEmail} />
+                <input type="email" value={email} onChange={onChangeEmail}/>
             </label>
             <label>[[database-folder]]:<br/>
-                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple onChange={onChangeDatabaseFolder}/>
-                <input type="text" className="settings-folder-text" value={databaseFolder} placeholder="[[choose-folder]]"/>
+                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
+                       onChange={onChangeDatabaseFolder}/>
+                <input type="text" className="settings-folder-text" value={databaseFolder}
+                       placeholder="[[choose-folder]]"/>
             </label>
             <label>[[backup-folder]]:<br/>
-                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple onChange={onChangeBackupFolder}/>
-                <input type="text" className="settings-folder-text" value={backupFolder} placeholder="[[choose-folder]]"/>
+                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
+                       onChange={onChangeBackupFolder}/>
+                <input type="text" className="settings-folder-text" value={backupFolder}
+                       placeholder="[[choose-folder]]"/>
             </label>
             <label>[[language]]:
                 <select value={language} onChange={onChangeLanguage}>

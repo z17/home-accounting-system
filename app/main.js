@@ -61,6 +61,13 @@ app.on('ready', function () {
     }
     const dao = new Dao(dbPath);
 
+    const rootComponentsReadyStatus = {
+        'balance': false,
+        'income': false,
+        'settings': false,
+        'data_sent': false
+    };
+
     // mainWindow.maximize();
 
     // mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -73,7 +80,15 @@ app.on('ready', function () {
 
     mainWindow.loadURL(loadUrl);
 
-    mainWindow.webContents.on('dom-ready', function () {
+    const loadData = function () {
+        if (rootComponentsReadyStatus['data_sent']
+            || !rootComponentsReadyStatus['balance']
+            || !rootComponentsReadyStatus['income']
+            || !rootComponentsReadyStatus['settings']) {
+            return
+        }
+        rootComponentsReadyStatus['data_sent'] = true;
+
         if (!argv.dev) {
             serverRequester.getServerVersion((version) => {
                 if (compareVersions(version, app.getVersion()) > 0) {
@@ -81,8 +96,6 @@ app.on('ready', function () {
                 }
             });
         }
-
-        // todo: #critical понять как отправлять данные в веб когда там реакт уже проинициализировал слушателей
 
         dao.getSettings(function (settings) {
             settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
@@ -105,7 +118,7 @@ app.on('ready', function () {
         dao.getBalances(function (types) {
             mainWindow.webContents.send('balance-types', types);
         });
-    });
+    };
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.
     mainWindow.on('closed', function () {
@@ -113,6 +126,21 @@ app.on('ready', function () {
         // окон вы будете хранить их в массиве, это время
         // когда нужно удалить соответствующий элемент.
         mainWindow = null;
+    });
+
+    ipcMain.on('component-balance-ready', () => {
+        rootComponentsReadyStatus['balance'] = true;
+        loadData();
+    });
+
+    ipcMain.on('component-income-ready', () => {
+        rootComponentsReadyStatus['income'] = true;
+        loadData();
+    });
+
+    ipcMain.on('component-settings-ready', () => {
+        rootComponentsReadyStatus['settings'] = true;
+        loadData();
     });
 
     ipcMain.on('income-add', (event, income) => {

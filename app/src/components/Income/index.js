@@ -21,6 +21,8 @@ const Income = ({active}) => {
     let incomeWorstMonthName = null;
 
     useEffect(() => {
+        ipcRenderer.send('component-income-ready');
+
         ipcRenderer.on('income-data', function (event, data) {
             data.sort((a, b) => {
                 return a.date - b.date;

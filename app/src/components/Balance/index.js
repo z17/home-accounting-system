@@ -16,6 +16,8 @@ const Balance = ({active}) => {
     let balanceSum = 0;
 
     useEffect(() => {
+        ipcRenderer.send('component-balance-ready');
+
         ipcRenderer.on('balance-types', function (event, sourceData) {
 
             let firstMonth = moment().startOf('month');

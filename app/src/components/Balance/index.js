@@ -157,6 +157,26 @@ const Balance = ({active}) => {
         return chartMonthData;
     }));
 
+    for (let month in months) {
+        console.log(month);
+    }
+    let bestMonth = months.map((month) => {
+        let sum = 0;
+        for (let source in sources) {
+            sum += sources[source].months.hasOwnProperty(month) ? sources[source].months[month] : 0;
+        }
+        return [month, sum];
+    }).reduce((month1, month2) => {
+        if (month1[1] < month2[1]) {
+            month1 = month2;
+        }
+        return month1;
+    }, ['', 0]);
+
+    let balanceMaxSum = bestMonth[1];
+    let balanceMaxMonth = moment(bestMonth[0], "MMYYYY").format("MMM YYYY");
+
+
     let balancePieChartArray = [["Source", "Sum"]];
     for (let source in sources) {
         let value = sources[source].months[lastUnemptyMonth];
@@ -218,7 +238,7 @@ const Balance = ({active}) => {
                     <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span
                         className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
                     <p className="data-line"><span className="income-data-name">{strings.max_sum}:</span> <span
-                        className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)}, {balanceMaxMonth}</span></p>
                 </div>
             </div>
         </div>

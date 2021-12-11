@@ -1,5 +1,8 @@
 import LocalizedStrings from 'react-localization';
 
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
+
 let strings = new LocalizedStrings({
         en: {
             "title": "Cromberg - personal finance accounting system",
@@ -114,5 +117,11 @@ let strings = new LocalizedStrings({
         }
     }
 );
+
+ipcRenderer.on('current_language', function (event, language) {
+    if (language) {
+        strings.setLanguage(language);
+    }
+});
 
 export default strings;

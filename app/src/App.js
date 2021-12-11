@@ -1,14 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import Navigation from './components/Navigation'
 import Income from './components/Income'
 import Balance from './components/Balance'
 import Settings from './components/Settings'
+import strings from "./models/lang";
 
 
 function App() {
     const [settings_active, setSettingsActive] = useState(false);
     const [active_tab, setActiveTab] = useState('income');
+
+    useEffect(() => {
+       document.title = strings.title;
+    });
 
     const settingsToggle = () => {
         setSettingsActive(!settings_active)

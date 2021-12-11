@@ -75,6 +75,12 @@ app.on('ready', function () {
 
     mainWindow.loadURL(loadUrl);
 
+    mainWindow.webContents.on('dom-ready', function () {
+        dao.getSettings(function (settings) {
+            mainWindow.webContents.send('current_language', settings.language);
+        });
+    });
+
     const loadData = function () {
         if (rootComponentsReadyStatus['data_sent']
             || !rootComponentsReadyStatus['balance']

@@ -157,9 +157,6 @@ const Balance = ({active}) => {
         return chartMonthData;
     }));
 
-    for (let month in months) {
-        console.log(month);
-    }
     let bestMonth = months.map((month) => {
         let sum = 0;
         for (let source in sources) {
@@ -184,8 +181,6 @@ const Balance = ({active}) => {
             balancePieChartArray.push([sources[source].name, value])
         }
     }
-
-
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>

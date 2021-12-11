@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import strings from "../../models/lang";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -21,7 +22,7 @@ const AddBalanceSource = () => {
     };
 
     return <form className="js-balance-source-form" onSubmit={addBalanceSource}>
-        <label htmlFor="balancesource">[[balance-source-input]]:</label>
+        <label htmlFor="balancesource">{strings.balance_source_input}:</label>
         <input type="text" id="balancesource" name="balancesource" value={name} onChange={onChangeName}/>
         <button type="submit" name="incrementsources">+</button>
     </form>

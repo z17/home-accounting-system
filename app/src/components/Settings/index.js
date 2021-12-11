@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './Settings.css'
+import strings from "../../models/lang";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -32,9 +33,17 @@ const Settings = ({active, settingsToggle}) => {
             setLanguage(data.language);
             setLastBackupDateTimestamp(data.lastBackupDateTimestamp);
 
+            if (data.language) {
+                strings.setLanguage(data.language);
+            }
         });
 
-        ipcRenderer.on('settings-saved', function () {
+        ipcRenderer.on('settings-saved', function (event, isLanguageUpdated) {
+            if (isLanguageUpdated) {
+                setTimeout(() => {
+                    ipcRenderer.send('reload');
+                }, 500);
+            }
             setResponse('ok');
             setResponseCode(RESPONSE_OK);
         });
@@ -88,35 +97,35 @@ const Settings = ({active, settingsToggle}) => {
     return <div className={`settings-window ${active ? "active" : ""}`}>
 
         <div className="settings-close-button" onClick={settingsToggle}>&#10006;</div>
-        <h1>[[settings]]</h1>
+        <h1>{strings.settings}</h1>
 
         <form className="settings-form" onSubmit={onSubmit}>
-            <label>[[remind]]:
+            <label>{strings.remind}:
                 <input type="checkbox" checked={remind} onChange={onChangeRemind}/>
             </label>
-            <label>[[remind-email]]:
+            <label>{strings.remind_email}:
                 <input type="email" value={email} onChange={onChangeEmail}/>
             </label>
-            <label>[[database-folder]]:<br/>
+            <label>{strings.database_folder}:<br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" value={databaseFolder}
-                       placeholder="[[choose-folder]]"/>
+                       placeholder={strings.choose_folder}/>
             </label>
-            <label>[[backup-folder]]:<br/>
+            <label>{strings.backup_folder}:<br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" value={backupFolder}
-                       placeholder="[[choose-folder]]"/>
+                       placeholder={strings.choose_folder}/>
             </label>
-            <label>[[language]]:
+            <label>{strings.language}:
                 <select value={language} onChange={onChangeLanguage}>
                     <option value="ru">Русский</option>
                     <option value="en">English</option>
                     <option value="fr">Français</option>
                 </select>
             </label>
-            <input type="submit" value="[[save]]"/> <span
+            <input type="submit" value={strings.save}/> <span
             className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
         </form>
     </div>

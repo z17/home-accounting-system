@@ -6,6 +6,7 @@ import BalanceMonthsLine from "../BalanceMonthsLine";
 import AddBalanceSource from "../AddBalanceSource";
 import Chart from "react-google-charts";
 import SourceLine from "../SourceLine";
+import strings from "../../models/lang";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
@@ -167,10 +168,10 @@ const Balance = ({active}) => {
 
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
-        <h1>[[balance]]</h1>
+        <h1>{strings.balance}</h1>
         <div className="balance-statistic">
 
-            <h2>[[balance-chart-title]]</h2>
+            <h2>{strings.balance_chart_title}</h2>
             <div className="balance-chart" id="js-balance-chart">
                 <Chart
                     chartType="ColumnChart"
@@ -193,10 +194,10 @@ const Balance = ({active}) => {
                 />
             </div>
 
-            <h2>[[balance-chart-diff-title]]</h2>
+            <h2>{strings.balance_chart_diff_title}</h2>
             <div className="balance-chart" id="js-balance-diff-chart"/>
 
-            <h2>[[costs-chart-title]]</h2>
+            <h2>{strings.costs_chart_title}</h2>
             <div className="costs-chart" id="js-costs-chart"/>
 
             <div className="inline-blocks">
@@ -213,8 +214,10 @@ const Balance = ({active}) => {
                     />
                 </div>
                 <div className="balance-data">
-                    <h2>[[statistic]]</h2>
-                    <p className="data-line"><span className="income-data-name">[[sum]] :</span> <span
+                    <h2>{strings.statistic}</h2>
+                    <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span
+                        className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
+                    <p className="data-line"><span className="income-data-name">{strings.max_sum}:</span> <span
                         className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
                 </div>
             </div>

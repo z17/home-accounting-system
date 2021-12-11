@@ -61,12 +61,7 @@ app.on('ready', function () {
     }
     const dao = new Dao(dbPath);
 
-    const rootComponentsReadyStatus = {
-        'balance': false,
-        'income': false,
-        'settings': false,
-        'data_sent': false
-    };
+    let rootComponentsReadyStatus = initComponentsStatus();
 
     // mainWindow.maximize();
 
@@ -126,6 +121,11 @@ app.on('ready', function () {
         // окон вы будете хранить их в массиве, это время
         // когда нужно удалить соответствующий элемент.
         mainWindow = null;
+    });
+
+    ipcMain.on('reload', () => {
+        rootComponentsReadyStatus = initComponentsStatus();
+        mainWindow.reload();
     });
 
     ipcMain.on('component-balance-ready', () => {
@@ -213,9 +213,20 @@ app.on('ready', function () {
         delete newSettings.databaseFolder; // we wont to save this as a settings in database;
         dao.getSettings((oldSettings) => {
             serverRequester.notify(oldSettings, newSettings);
+            let isLanguageUpdated = oldSettings.language !== newSettings.language;
             dao.updateSettings(newSettings, () => {
-                mainWindow.webContents.send('settings-saved', newClientSettings);
+                mainWindow.webContents.send('settings-saved', isLanguageUpdated);
             });
         });
     });
 });
+
+
+function initComponentsStatus() {
+    return {
+        'balance': false,
+        'income': false,
+        'settings': false,
+        'data_sent': false
+    };
+}

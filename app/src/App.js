@@ -5,15 +5,24 @@ import Income from './components/Income'
 import Balance from './components/Balance'
 import Settings from './components/Settings'
 import strings from "./models/lang";
-
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 function App() {
     const [settings_active, setSettingsActive] = useState(false);
     const [active_tab, setActiveTab] = useState('income');
+    const [isReady, setReady] = useState(false);
 
     useEffect(() => {
-       document.title = strings.title;
-    });
+        ipcRenderer.send('app-ready');
+        ipcRenderer.on('current_language', function (event, language) {
+            if (language) {
+                strings.setLanguage(language);
+            }
+            document.title = strings.title;
+            setReady(true);
+        });
+    }, []);
 
     const settingsToggle = () => {
         setSettingsActive(!settings_active)
@@ -22,6 +31,10 @@ function App() {
     const onTabSelect = (tab) => {
         setActiveTab(tab)
     };
+
+    if (!isReady) {
+        return  <div className="wrapper"><div>Loading..</div></div>
+    }
 
     return (
         <div className="wrapper">

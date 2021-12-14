@@ -16,9 +16,6 @@ const serverRequester = new ServerRequester();
 const DATABASE_FOLDER_KEY = 'database-folder';
 const DATABASE_NAME = 'database';
 
-// require('./tmp/converter').exportBalanceData();
-// require('./tmp/converter').exportIncomeData();
-
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
 let mainWindow = null;
@@ -56,8 +53,8 @@ app.on('ready', function () {
         mainWindow.webContents.openDevTools();
         dbPath = "database-dev";
     } else {
-        mainWindow.webContents.openDevTools();
-        // mainWindow.setMenu(null);
+        // mainWindow.webContents.openDevTools();
+        mainWindow.setMenu(null);
     }
     const dao = new Dao(dbPath);
 
@@ -75,7 +72,7 @@ app.on('ready', function () {
 
     mainWindow.loadURL(loadUrl);
 
-    mainWindow.webContents.on('dom-ready', function () {
+    ipcMain.on('app-ready', () => {
         dao.getSettings(function (settings) {
             mainWindow.webContents.send('current_language', settings.language);
         });

@@ -21,6 +21,8 @@ const ipcRenderer = electron.ipcRenderer;
 const Income = ({active}) => {
 
     const [incomeArray, setIncomeArray] = useState([]);
+    const [contacts, setContacts] = useState([]);
+    const [paymentTypes, setPaymentTypes] = useState([]);
 
     let incomeAverage;
     let incomeTopMonthValue;
@@ -37,6 +39,17 @@ const Income = ({active}) => {
             });
 
             setIncomeArray(data);
+
+            let paymentTypes = data.map(function (e) {
+                return e.paymentType;
+            });
+            setPaymentTypes(paymentTypes.filter(Utils.uniqueArrayFilter));
+
+            let contacts = data.map(function (e) {
+                return e.contact;
+            });
+            setContacts(contacts.filter(Utils.uniqueArrayFilter));
+
         });
 
         ipcRenderer.on('income-data-deleted', function (event, incomeId) {
@@ -90,7 +103,7 @@ const Income = ({active}) => {
 
     incomeAverage = Math.round(incomeSum / Object.keys(dataSumByMonth).length);
 
-    return  <div className={`js-income-page js-page page ${active ? 'active' : ''}`} data-name="income">
+    return  <div className={`page ${active ? 'active' : ''}`} data-name="income">
         <h1>{strings.income}</h1>
 
         <div className="income-statistic">
@@ -216,9 +229,9 @@ const Income = ({active}) => {
                         <th>{strings.description}</th>
                     </tr>
                     {incomeArray.map((income) =>
-                      <IncomeLine key={income.id} item={income}/>
+                      <IncomeLine key={income.id} item={income} contacts={contacts} paymentTypes={paymentTypes}/>
                     )}
-                    <IncomeAddForm />
+                    <IncomeAddForm contacts={contacts} paymentTypes={paymentTypes}/>
                 </tbody>
             </table>
         </div>

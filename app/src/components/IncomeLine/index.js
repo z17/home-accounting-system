@@ -6,7 +6,7 @@ import IncomeAddForm from "../IncomeAddForm";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
-const IncomeLine = ({item}) => {
+const IncomeLine = ({item, contacts, paymentTypes}) => {
   const [isEditMode, setEditMode] = useState(false);
 
   const toggleEditMod = () => {
@@ -18,7 +18,7 @@ const IncomeLine = ({item}) => {
   };
 
   if (isEditMode) {
-    return <IncomeAddForm item={item} toggleEditMode={toggleEditMod} />
+    return <IncomeAddForm item={item} toggleEditMode={toggleEditMod} contacts={contacts} paymentTypes={paymentTypes}/>
   }
 
   return <tr className="row">

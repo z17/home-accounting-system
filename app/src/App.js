@@ -22,6 +22,10 @@ function App() {
             document.title = strings.title;
             setReady(true);
         });
+
+        return () => {
+            ipcRenderer.removeAllListeners('current_language');
+        };
     }, []);
 
     const settingsToggle = () => {

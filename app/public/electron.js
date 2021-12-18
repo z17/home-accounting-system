@@ -1,9 +1,9 @@
 const electron = require('electron');
 const compareVersions = require('compare-versions');
-const Dao = require('./backend/Dao');
-const Backup = require('./backend/Backup');
+const Dao = require('../backend/Dao');
+const Backup = require('../backend/Backup');
 const argv = require('minimist')(process.argv);
-const ServerRequester = require('./backend/ServerRequester');
+const ServerRequester = require('../backend/ServerRequester');
 const path = require('path');
 const Config = require('electron-config');
 const fs = require('fs');
@@ -37,7 +37,12 @@ app.on('ready', function () {
             minHeight: 600,
             width: 1024,
             height: 600,
-            icon: path.join(__dirname, 'build/icon.ico')
+            icon: path.join(__dirname, 'build/icon.ico'),
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+                contextIsolation: false,
+            }
         }
     );
 
@@ -66,9 +71,7 @@ app.on('ready', function () {
 
     let loadUrl = argv.dev
         ? 'http://localhost:3000'
-        : `file://${__dirname}/index.html`;
-
-    loadUrl = 'http://localhost:3000';
+        : `file://${path.join(__dirname, '../build/index.html')}`;
 
     mainWindow.loadURL(loadUrl);
 

@@ -1,5 +1,6 @@
 {
   "name": "cromberg",
+  "productName": "Cromberg",
   "description": "Personal accounting system",
   "homepage": "./",
   "version": "1.3.0",
@@ -71,11 +72,11 @@
     "buildVersion": "1.2.3",
     "win": {
       "target": "portable",
-      "icon": "build/icon.ico"
+      "icon": "build/icons/icon.ico"
     },
     "mac": {
       "category": "public.app-category.finance",
-      "icon": "build/icon.icns"
+      "icon": "build/icons/icon.icns"
     },
     "linux": {
       "target": [

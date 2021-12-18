@@ -37,7 +37,7 @@ app.on('ready', function () {
             minHeight: 600,
             width: 1024,
             height: 600,
-            icon: path.join(__dirname, 'build/icon.ico'),
+            icon: path.join(__dirname, 'build/icons/icon.ico'),
             webPreferences: {
                 nodeIntegration: true,
                 enableRemoteModule: true,
@@ -66,8 +66,6 @@ app.on('ready', function () {
     let rootComponentsReadyStatus = initComponentsStatus();
 
     // mainWindow.maximize();
-
-    // mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     let loadUrl = argv.dev
         ? 'http://localhost:3000'

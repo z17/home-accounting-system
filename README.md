@@ -54,9 +54,12 @@ And for Windows:
     
 ### How to build app
 
-`npm run dist`
+```
+npm run react-build
+npm run dist
+```
 
-### Hot to make pull request
+### How to make pull request
 
 Create pull request only to `dev` branch. Your commits will merge in `master` with next release.
     

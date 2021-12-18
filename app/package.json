@@ -1,9 +1,9 @@
 {
-  "name": "Cromberg",
+  "name": "cromberg",
   "description": "Personal accounting system",
-  "homepage": "http://cromberg.blweb.ru",
-  "version": "1.2.3",
-  "main": "main.js",
+  "homepage": "./",
+  "version": "1.3.0",
+  "main": "public/electron.js",
   "author": {
     "name": "z-17",
     "email": "admin@blweb.ru"
@@ -14,24 +14,57 @@
   },
   "license": "GPL",
   "dependencies": {
-    "compare-versions": "^3.1.0",
-    "electron-config": "^1.0.0",
-    "jquery": "^3.2.1",
-    "jquery-ui-dist": "^1.12.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "compare-versions": "^4.1.2",
+    "concurrently": "^6.5.0",
+    "electron-config": "^2.0.0",
     "minimist": "^1.2.0",
-    "moment": "^2.19.1",
+    "moment": "^2.29.1",
     "nedb": "^1.8.0",
-    "normalize.css": "^6.0.0"
+    "normalize.css": "^6.0.0",
+    "react": "^17.0.2",
+    "react-autocomplete": "^1.8.1",
+    "react-dom": "^17.0.2",
+    "react-google-charts": "^3.0.15",
+    "react-localization": "^1.0.17",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.1.2"
   },
   "devDependencies": {
-    "electron-builder": "^19.45.6",
-    "electron-prebuilt": "^1.4.13"
+    "electron-builder": "^22.14.5",
+    "electron": "^16.0.5"
   },
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
+    "start": "concurrently \"BROWSER=none npm run react-start\" \"electron .\"",
+    "start-win": "concurrently \"set BROWSER=none && npm run react-start\" \"electron .\"",
+    "dev": "concurrently \"BROWSER=none npm run react-start\" \"electron . --dev\"",
+    "dev-win": "concurrently \"set BROWSER=none && npm run react-start\" \"electron . --dev\"",
+    "electron-start" : "electron . --dev",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish never",
+    "build-electron": "mkdir build/electron && robocopy electron build/electron"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "build": {
     "appId": "ru.blweb.cromberg",
@@ -51,6 +84,11 @@
       ],
       "category": "Finance",
       "icon": "build/icons/"
-    }
+    },
+    "files": [
+      "node_modules/**/*",
+      "backend/**/*",
+      "src/**/*"
+    ]
   }
 }

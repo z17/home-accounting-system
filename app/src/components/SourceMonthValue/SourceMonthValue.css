@@ -1,0 +1,20 @@
+.control-with-buttons.source-month-value .source-month-value-input {
+    width: 70%;
+    border: 0;
+}
+
+.balance-items-table .source-month-value .edit {
+    right: 35px;
+}
+
+.balance-items-table .source-month-value .save {
+    right: 10px;
+}
+
+.balance-items-table .source-month-value .delete {
+    right: 10px;
+}
+
+.balance-items-table .source-month-value.edit-mode {
+    background: #f1f1f1;
+}

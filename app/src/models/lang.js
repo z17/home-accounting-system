@@ -36,7 +36,8 @@ let strings = new LocalizedStrings({
             "no_internet": "Its need internet connection for correct work",
             "language": "Language",
             "statistic": "Statistic",
-            "new_version": "A new version of the application has been released. Current: ?, new: ?."
+            "new_version": "A new version of the application has been released. Current: ?, new: ?.",
+            "balance_sum": "Sum"
         },
         ru: {
             "title": "Cromberg - система личного учёта",
@@ -73,7 +74,8 @@ let strings = new LocalizedStrings({
             "no_internet": "Без подключения к интернету работа программы невозможна",
             "language": "Язык",
             "statistic": "Статистика",
-            "new_version": "Вышла новая версия приложения. Текущая версия: ?, новая версия: ?."
+            "new_version": "Вышла новая версия приложения. Текущая версия: ?, новая версия: ?.",
+            "balance_sum": "Сумма"
         },
         fr: {
             "title": "Cromberg - système de comptabilité financière personnelle",
@@ -110,7 +112,8 @@ let strings = new LocalizedStrings({
             "no_internet": "Connexion internet nécessaire pour fonctionné correctement",
             "language": "Langue",
             "statistic": "Statistique",
-            "new_version": "Une nouvelle version de l'application a été publiée. Actuel:?, nouveau:?."
+            "new_version": "Une nouvelle version de l'application a été publiée. Actuel:?, nouveau:?.",
+            "balance_sum": "Somme"
         }
     }
 );

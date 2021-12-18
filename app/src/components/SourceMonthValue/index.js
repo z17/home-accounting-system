@@ -24,6 +24,7 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
     };
 
     const onDelete = () => {
+        setValue(0);
         ipcRenderer.send('balance-month-remove', sourceId, month);
     };
 

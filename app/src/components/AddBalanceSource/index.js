@@ -22,7 +22,7 @@ const AddBalanceSource = () => {
     };
 
     return <form className="js-balance-source-form" onSubmit={addBalanceSource}>
-        <label htmlFor="balancesource">{strings.balance_source_input}:</label>
+        <label htmlFor="balancesource">{strings.balance_source_input}: </label>
         <input type="text" id="balancesource" name="balancesource" value={name} onChange={onChangeName}/>
         <button type="submit" name="incrementsources">+</button>
     </form>

@@ -15,6 +15,7 @@ import {
     getBestMonth, getCostsChartData,
     getMonthsArray
 } from "../../models/Balance";
+import BalanceSumLine from "../BalanceSumLine";
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
@@ -194,6 +195,7 @@ const Balance = ({active}) => {
                        const source = sources[sourceKey];
                        return <SourceLine key={sourceKey} source={source} months={months}/>
                    })}
+                   <BalanceSumLine sources={sources} months={months}/>
                 </tbody>
             </table>
         </article>

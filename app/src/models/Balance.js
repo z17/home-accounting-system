@@ -3,13 +3,8 @@ import Utils from "../Utils";
 import strings from "./lang";
 
 function getMonthsArray(sourceData) {
-    let anyMonth = moment().startOf('month');
-    if (0 in sourceData && sourceData[0].value) {
-        anyMonth = moment(Object.keys(sourceData[0].value)[0], "MMYYYY");
-    }
-    let firstMonth = anyMonth;
-    let lastMonth = anyMonth;
-
+    let firstMonth = moment().startOf('month');
+    let lastMonth = moment().startOf('month');
 
     // search first and last months
     for (let i in sourceData) {
@@ -22,6 +17,7 @@ function getMonthsArray(sourceData) {
 
         [firstMonth, lastMonth] = Utils.calcStartEndDates(firstMonth, lastMonth, monthData);
     }
+
     const countMonths = lastMonth.diff(firstMonth, 'months', false) + 1;
 
     // prepare array of all months
@@ -72,6 +68,11 @@ function getBalanceSum(sources, months) {
         }
     }
 
+    let isCurrentMonthEmpty = true;
+    if (lastUnEmptyMonth === moment().format("MMYYYY")) {
+        isCurrentMonthEmpty = false;
+    }
+
     for (let source in sources) {
         let value = sources[source].months[lastUnEmptyMonth];
         if (value) {
@@ -79,7 +80,7 @@ function getBalanceSum(sources, months) {
         }
     }
 
-    return [balanceSum, lastUnEmptyMonth];
+    return [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty];
 }
 
 function getBestMonth(sources, months) {
@@ -101,22 +102,29 @@ function getBestMonth(sources, months) {
     return [balanceMaxSum, balanceMaxMonth]
 }
 
-function getBalanceChartData(sources, months) {
+function getBalanceChartData(sources, months, isCurrentMonthEmpty) {
 
     let balanceChartArray = [["month"]];
     for (let source in sources) {
         balanceChartArray[0].push(sources[source].name);
     }
 
-    balanceChartArray.push(...months.map((month) => {
-        let chartMonthData = [moment(month, "MMYYYY").format("MMM YYYY")];
+    let chart_data = months.map((month) => {
+        let month_time = moment(month, "MMYYYY");
+        let chartMonthData = [month_time.format("MMM YYYY")];
+
+        if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
+            return null;
+        }
 
         for (let source in sources) {
             let val = sources[source].months.hasOwnProperty(month) ? sources[source].months[month] : 0;
             chartMonthData.push(val);
         }
         return chartMonthData;
-    }));
+    }).filter((month_data) => month_data);
+
+    balanceChartArray.push(...chart_data);
 
     return balanceChartArray
 }
@@ -132,11 +140,16 @@ function getBalancePieChartData(sources, lastUnEmptyMonth) {
     return balancePieChartArray;
 }
 
-function getBalanceDiffChartData(sources, months) {
+function getBalanceDiffChartData(sources, months, isCurrentMonthEmpty ) {
     let chartPartNames = [['month', 'diff']];
 
     let prevMonthSum = null;
     for (let month of months) {
+        let month_time = moment(month, "MMYYYY");
+
+        if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
+            continue;
+        }
 
         let monthsSum = 0;
         for (let source in sources) {
@@ -148,12 +161,12 @@ function getBalanceDiffChartData(sources, months) {
         }
         prevMonthSum = monthsSum;
 
-        chartPartNames.push([moment(month, "MMYYYY").format("MMM YYYY"), diff])
+        chartPartNames.push([month_time.format("MMM YYYY"), diff])
     }
     return chartPartNames;
 }
 
-function getCostsChartData(sources, months, incomes) {
+function getCostsChartData(sources, months, incomes, isCurrentMonthEmpty ) {
     let incomeByMonth = {};
     incomes.forEach(function (element) {
         let month = moment.unix(element.date).format("MMYYYY");
@@ -169,6 +182,12 @@ function getCostsChartData(sources, months, incomes) {
 
     let prevBalance = undefined;
     for (let month of months) {
+        let month_time = moment(month, "MMYYYY");
+
+        if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
+            continue;
+        }
+
         let currentBalance = 0;
         for (let source in sources) {
             currentBalance += sources[source].months.hasOwnProperty(month) ? sources[source].months[month] : 0;
@@ -183,13 +202,10 @@ function getCostsChartData(sources, months, incomes) {
         prevBalance = currentBalance;
 
         costsData.push(
-            [moment(month, "MMYYYY").format("MMM YYYY"), currentCosts]
+            [month_time.format("MMM YYYY"), currentCosts]
         );
     }
 
-    costsData.push(
-        [moment().format('MMM YYYY'), 0]
-    );
     return costsData;
 }
 

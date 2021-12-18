@@ -78,18 +78,19 @@ const Balance = ({active}) => {
     let lastUnEmptyMonth;
     let balanceMaxSum;
     let balanceMaxMonth;
+    let isCurrentMonthEmpty;
 
-    let balanceChartArray = getBalanceChartData(sources, months);
+    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months);
 
-    [balanceSum, lastUnEmptyMonth] = getBalanceSum(sources, months);
+    let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty);
 
     [balanceMaxSum, balanceMaxMonth] = getBestMonth(sources, months);
 
     let balancePieChartArray = getBalancePieChartData(sources, lastUnEmptyMonth);
 
-    let balanceDiffChartArray = getBalanceDiffChartData(sources, months);
+    let balanceDiffChartArray = getBalanceDiffChartData(sources, months, isCurrentMonthEmpty);
 
-    let costsChartArray = getCostsChartData(sources, months, incomes);
+    let costsChartArray = getCostsChartData(sources, months, incomes, isCurrentMonthEmpty);
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>

@@ -109,13 +109,13 @@ const Settings = ({active, settingsToggle}) => {
             <label>{strings.database_folder}:<br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeDatabaseFolder}/>
-                <input type="text" className="settings-folder-text" value={databaseFolder}
+                <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
                        placeholder={strings.choose_folder}/>
             </label>
             <label>{strings.backup_folder}:<br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeBackupFolder}/>
-                <input type="text" className="settings-folder-text" value={backupFolder}
+                <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>
             </label>
             <label>{strings.language}:

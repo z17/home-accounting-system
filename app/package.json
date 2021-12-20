@@ -40,8 +40,8 @@
   "scripts": {
     "start": "concurrently \"BROWSER=none npm run react-start\" \"electron .\"",
     "start-win": "concurrently \"set BROWSER=none && npm run react-start\" \"electron .\"",
-    "dev": "concurrently \"BROWSER=none npm run react-start\" \"electron . --dev\"",
-    "dev-win": "concurrently \"set BROWSER=none && npm run react-start\" \"electron . --dev\"",
+    "dev": "concurrently \"BROWSER=none npm run react-start\" \"npm run electron-start\"",
+    "dev-win": "concurrently \"set BROWSER=none && npm run react-start\" \"npm run electron-start\"",
     "electron-start" : "electron . --dev",
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",

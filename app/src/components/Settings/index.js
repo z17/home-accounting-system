@@ -92,7 +92,6 @@ const Settings = ({active, settingsToggle}) => {
         ipcRenderer.send('update-settings', settings);
     };
 
-    // todo: loader before settings loaded
     // noinspection HtmlUnknownAttribute
     return <div className={`settings-window ${active ? "active" : ""}`}>
 

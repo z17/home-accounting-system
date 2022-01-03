@@ -37,7 +37,7 @@ app.on('ready', function () {
             minHeight: 600,
             width: 1024,
             height: 600,
-            icon: path.join(__dirname, 'build/icons/icon.ico'),
+            icon: path.join(__dirname, 'icons/icon.ico'),
             webPreferences: {
                 nodeIntegration: true,
                 enableRemoteModule: true,
@@ -58,7 +58,6 @@ app.on('ready', function () {
         mainWindow.webContents.openDevTools();
         dbPath = "database-dev";
     } else {
-        // mainWindow.webContents.openDevTools();
         mainWindow.setMenu(null);
     }
     const dao = new Dao(dbPath);

@@ -97,6 +97,10 @@ function getBestMonth(sources, months) {
         return month1;
     }, ['', 0]);
 
+    if (bestMonth[1] === 0) {
+        return [0, 'Empty'];
+    }
+
     let balanceMaxSum = bestMonth[1];
     let balanceMaxMonth = moment(bestMonth[0], "MMYYYY").format("MMM YYYY");
     return [balanceMaxSum, balanceMaxMonth]

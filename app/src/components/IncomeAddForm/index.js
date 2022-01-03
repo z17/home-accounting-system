@@ -66,7 +66,7 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes}) => {
                min="1900-01-01" max="2100-01-01" value={moment.unix(date).format("YYYY-MM-DD")}  onChange={onChangeDate} required/></td>
     <td><input type="month" placeholder="Month"
                min="1900-01" max="2100-01" value={moment.unix(month).format("YYYY-MM")}  onChange={onChangeMonth} required/></td>
-    <td><input type="number" placeholder="[[sum]]" value={sum} onChange={onChangeSum} required/></td>
+    <td><input type="number" placeholder={strings.sum} value={sum} onChange={onChangeSum} required/></td>
     <td>
         <Autocomplete
             getItemValue={(item) => item}

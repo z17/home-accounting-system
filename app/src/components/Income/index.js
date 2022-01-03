@@ -61,6 +61,9 @@ const Income = ({active}) => {
         ipcRenderer.on('income-data-inserted', function (event, incomeItem) {
             const newArray = incomeArray.slice();
             newArray.push(incomeItem);
+            newArray.sort((a, b) => {
+                return a.date - b.date;
+            });
             setIncomeArray(newArray);
         });
 

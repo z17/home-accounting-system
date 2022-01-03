@@ -18,5 +18,7 @@ jobs:
           npm run react-build
 
       - name: Dist
-        run: npm run dist
+        run: |
+          cd app
+          npm run dist
 

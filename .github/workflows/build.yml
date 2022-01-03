@@ -1,0 +1,23 @@
+name: Build
+on: push
+jobs: 
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+      uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Build
+        run: |
+          cd app
+          npm install
+          npm run react-build
+
+      - name: Dist
+        run: npm run dist
+

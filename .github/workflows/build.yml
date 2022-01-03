@@ -14,7 +14,7 @@ jobs:
       - name: Build
         run: |
           cd app
-          npm install
+          npm install --force
           npm run react-build
 
       - name: Dist

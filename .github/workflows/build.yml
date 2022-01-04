@@ -31,5 +31,9 @@ jobs:
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: app/dist
+          path: |
+            app/dist/*.dmg
+            app/dist/*.exe
+            app/dist/*.deb
+            app/dist/*.AppImage
 

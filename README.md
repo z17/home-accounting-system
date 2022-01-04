@@ -47,12 +47,19 @@ In folder `app/db` there is `database-dev-example` file with some prepared data 
 There are two commands to run app from sources:
 * `npm run dev` - to launch app with using database in `app/database-dev` file
 * `npm start` - standard way to launch app
+
+And for Windows:
+* `npm run dev-win` - to launch app with using database in `app/database-dev` file
+* `npm run start-win` - standard way to launch app
     
 ### How to build app
 
-`npm run dist`
+```
+npm run react-build
+npm run dist
+```
 
-### Hot to make pull request
+### How to make pull request
 
 Create pull request only to `dev` branch. Your commits will merge in `master` with next release.
     

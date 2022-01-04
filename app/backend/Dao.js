@@ -1,5 +1,5 @@
 const Database = require('../backend/Database').Database;
-const Settings = require('../models/settings');
+const Settings = require('./models/settings');
 
 let Tables = {
     INCOME: 'income',

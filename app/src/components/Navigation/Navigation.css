@@ -1,0 +1,26 @@
+.buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 20px 0 0;
+}
+
+.tabs {
+    display: inline-block;
+}
+
+.tabs .tab.active {
+    cursor: default;
+}
+
+.tabs .tab, .settings-button {
+    padding: 5px 10px;
+    cursor: pointer;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
+    display: inline-block;
+}
+
+.tabs .tab.active, .settings-button.active {
+    background: #f1f1f1;
+}

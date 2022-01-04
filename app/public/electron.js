@@ -1,10 +1,9 @@
 const electron = require('electron');
 const compareVersions = require('compare-versions');
-const Dao = require('./backend/Dao');
-const Backup = require('./backend/Backup');
-const functions = require('./scripts/functions');
+const Dao = require('../backend/Dao');
+const Backup = require('../backend/Backup');
 const argv = require('minimist')(process.argv);
-const ServerRequester = require('./backend/ServerRequester');
+const ServerRequester = require('../backend/ServerRequester');
 const path = require('path');
 const Config = require('electron-config');
 const fs = require('fs');
@@ -16,9 +15,6 @@ const serverRequester = new ServerRequester();
 
 const DATABASE_FOLDER_KEY = 'database-folder';
 const DATABASE_NAME = 'database';
-
-// require('./tmp/converter').exportBalanceData();
-// require('./tmp/converter').exportIncomeData();
 
 // Определение глобальной ссылки , если мы не определим, окно
 // окно будет закрыто автоматически когда JavaScript объект будет очищен сборщиком мусора.
@@ -41,7 +37,12 @@ app.on('ready', function () {
             minHeight: 600,
             width: 1024,
             height: 600,
-            icon: path.join(__dirname, 'build/icon.ico')
+            icon: path.join(__dirname, 'icons/icon.ico'),
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+                contextIsolation: false,
+            }
         }
     );
 
@@ -61,15 +62,38 @@ app.on('ready', function () {
     }
     const dao = new Dao(dbPath);
 
-    // mainWindow.maximize();
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    let rootComponentsReadyStatus = initComponentsStatus();
 
-    mainWindow.webContents.on('dom-ready', function () {
-        serverRequester.getServerVersion((version) => {
-            if (compareVersions(version, app.getVersion()) > 0) {
-                mainWindow.webContents.send('new-version', app.getVersion(), version);
-            }
+    // mainWindow.maximize();
+
+    let loadUrl = argv.dev
+        ? 'http://localhost:3000'
+        : `file://${path.join(__dirname, '../build/index.html')}`;
+
+    mainWindow.loadURL(loadUrl);
+
+    ipcMain.on('app-ready', () => {
+        dao.getSettings(function (settings) {
+            mainWindow.webContents.send('current_language', settings.language);
         });
+    });
+
+    const loadData = function () {
+        if (rootComponentsReadyStatus['data_sent']
+            || !rootComponentsReadyStatus['balance']
+            || !rootComponentsReadyStatus['income']
+            || !rootComponentsReadyStatus['settings']) {
+            return
+        }
+        rootComponentsReadyStatus['data_sent'] = true;
+
+        if (!argv.dev) {
+            serverRequester.getServerVersion((version) => {
+                if (compareVersions(version, app.getVersion()) > 0) {
+                    mainWindow.webContents.send('new-version', app.getVersion(), version);
+                }
+            });
+        }
 
         dao.getSettings(function (settings) {
             settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
@@ -92,7 +116,7 @@ app.on('ready', function () {
         dao.getBalances(function (types) {
             mainWindow.webContents.send('balance-types', types);
         });
-    });
+    };
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.
     mainWindow.on('closed', function () {
@@ -100,6 +124,26 @@ app.on('ready', function () {
         // окон вы будете хранить их в массиве, это время
         // когда нужно удалить соответствующий элемент.
         mainWindow = null;
+    });
+
+    ipcMain.on('reload', () => {
+        rootComponentsReadyStatus = initComponentsStatus();
+        mainWindow.reload();
+    });
+
+    ipcMain.on('component-balance-ready', () => {
+        rootComponentsReadyStatus['balance'] = true;
+        loadData();
+    });
+
+    ipcMain.on('component-income-ready', () => {
+        rootComponentsReadyStatus['income'] = true;
+        loadData();
+    });
+
+    ipcMain.on('component-settings-ready', () => {
+        rootComponentsReadyStatus['settings'] = true;
+        loadData();
     });
 
     ipcMain.on('income-add', (event, income) => {
@@ -172,9 +216,20 @@ app.on('ready', function () {
         delete newSettings.databaseFolder; // we wont to save this as a settings in database;
         dao.getSettings((oldSettings) => {
             serverRequester.notify(oldSettings, newSettings);
+            let isLanguageUpdated = oldSettings.language !== newSettings.language;
             dao.updateSettings(newSettings, () => {
-                mainWindow.webContents.send('settings-saved', newClientSettings);
+                mainWindow.webContents.send('settings-saved', isLanguageUpdated);
             });
         });
     });
 });
+
+
+function initComponentsStatus() {
+    return {
+        'balance': false,
+        'income': false,
+        'settings': false,
+        'data_sent': false
+    };
+}

@@ -1,0 +1,32 @@
+
+.source-line .source-name {
+    position: absolute;
+    left: 40px;
+    width: 220px;
+    background: #fafafa;
+    z-index: 100;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+.source-line .source-name.edit-mode {
+    background: #f1f1f1;
+}
+
+.balance-items-table .source-name .edit {
+    right: 10px;
+}
+
+.balance-items-table .source-name .save {
+    right: 10px;
+}
+
+.balance-source-name .balance-edit-input {
+    width: 240px;
+}
+
+.source-edit-input {
+    width: 80%;
+    border: 0;
+}

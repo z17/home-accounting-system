@@ -1,0 +1,37 @@
+@import "~normalize.css";
+
+html,
+body {
+    margin: 0;
+}
+
+.wrapper {
+    padding: 20px 40px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.content {
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.js-row {
+    display: none;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page:after {
+    display: block;
+    content: '';
+    clear: both;
+}

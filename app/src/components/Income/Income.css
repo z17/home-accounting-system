@@ -1,0 +1,113 @@
+
+table.data-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    margin-bottom: 35px;
+}
+
+table.data-table tr:hover td, table.data-table tr.row.update {
+    background: #f1f1f1;
+}
+
+table.data-table td {
+    position: relative;
+}
+
+table.data-table input, table.data-table select {
+    width: 100%;
+    border: 0;
+}
+
+table.data-table input.submit {
+    position: absolute;
+    right: 0;
+    width: 80px;
+    top: 40px;
+}
+
+table.data-table td, table.data-table th {
+    padding: 7px 10px 7px 10px;
+    border: 1px dashed #e1e1e1;
+    border-right: 0;
+    border-left: 0;
+}
+
+table.data-table tr.form td {
+    padding: 0;
+}
+
+table.data-table tr.form input {
+    padding: 7px 10px 7px 10px;
+}
+
+table.data-table tr.form:hover td {
+    background: #fff;
+}
+
+table.data-table td:last-child, table.data-table th:last-child {
+    border-right: 0;
+}
+
+table.data-table td:first-child, table.data-table th:first-child {
+    border-left: 0;
+}
+
+table.data-table tr.row span {
+    display: inline-block;
+}
+
+table.data-table tr.row {
+    position: relative;
+}
+
+table.data-table tr.row .income-button {
+    position: absolute;
+    cursor: pointer;
+    display: none;
+    width: 25px;
+    height: 25px;
+}
+
+.income-statistic {
+    text-align: center;
+}
+
+.income-month-chart {
+    height: 400px;
+}
+
+.income-year-chart, .income-average-chart {
+    height: 300px;
+}
+
+.income-by-types-chart, .income-by-contacts-chart {
+    height: 350px;
+}
+
+.inline-blocks .income-chart, .inline-blocks .income-data {
+    display: inline-block;
+    padding: 0 20px;
+    vertical-align: top;
+    min-width: 300px;
+    width: 30%;
+    text-align: left;
+}
+
+.data-line {
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.data-line:hover {
+    background: #f1f1f1;
+}
+
+.income-data-name {
+    font-weight: bold;
+}
+
+.data-value {
+    float: right;
+}

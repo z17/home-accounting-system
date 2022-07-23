@@ -10,6 +10,16 @@ function Income(date, month, sum, paymentType, contact, description) {
     this.description = description;
 }
 
+function getLastMonthTime(incomes) {
+    let maxDate = incomes[0]['month'];
+    for (let i = 0; i < incomes.length; i++) {
+        if (incomes[i]['month'] > maxDate) {
+            maxDate = incomes[i]['month']
+        }
+    }
+    return maxDate
+}
+
 function getChartsData(incomeArray) {
     let firstMonth = moment().startOf('month');
     let firstYear = moment().startOf('year');
@@ -18,8 +28,11 @@ function getChartsData(incomeArray) {
     if (incomeArray.length !== 0) {
         firstMonth = moment.unix(incomeArray[0]['month']).startOf('month');
         firstYear = moment.unix(incomeArray[0]['month']).startOf('year');
-        lastMonth = moment.unix(incomeArray[incomeArray.length - 1]['month']).startOf('month');
-        lastYear = moment.unix(incomeArray[incomeArray.length - 1]['month']).startOf('year');
+        // we need to find last month, because it can be not in the last element of array
+        // example: when you add today new income (it will be the last element) for previous month
+        let lastMonthTime = getLastMonthTime(incomeArray);
+        lastMonth = moment.unix(lastMonthTime).startOf('month');
+        lastYear = moment.unix(lastMonthTime).startOf('year');
     }
 
     let firstYearStr = firstYear.format('YYYY');

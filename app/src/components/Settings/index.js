@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './Settings.css'
 import strings from "../../models/lang";
+import {Currencies} from "../../models/Currency";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -13,13 +14,14 @@ const Settings = ({active, settingsToggle}) => {
     let [id, setId] = useState('');
     let [email, setEmail] = useState('');
     let [remind, setRemind] = useState(false);
+    let [defaultCurrency, setDefaultCurrency] = useState('');
     let [backupFolder, setBackupFolder] = useState('');
     let [databaseFolder, setDatabaseFolder] = useState('');
     let [language, setLanguage] = useState('');
     let [lastBackupDateTimestamp, setLastBackupDateTimestamp] = useState('');
 
-    let [responseCode, setResponseCode] = useState();
-    let [response, setResponse] = useState();
+    let [responseCode, setResponseCode] = useState('');
+    let [response, setResponse] = useState('');
 
     useEffect(() => {
         ipcRenderer.send('component-settings-ready');
@@ -28,6 +30,7 @@ const Settings = ({active, settingsToggle}) => {
             setId(data.id);
             setEmail(data.email);
             setRemind(data.remind);
+            setDefaultCurrency(data.defaultCurrency);
             setBackupFolder(data.backupFolder);
             setDatabaseFolder(data.databaseFolder);
             setLanguage(data.language);
@@ -69,6 +72,10 @@ const Settings = ({active, settingsToggle}) => {
         setLanguage(event.target.value);
     };
 
+    const onChangeDefaultCurrency = (event) => {
+        setDefaultCurrency(event.target.value);
+    };
+
     const onSubmit = (event) => {
         event.preventDefault();
         setResponse('');
@@ -86,7 +93,8 @@ const Settings = ({active, settingsToggle}) => {
             id: id,
             language: language,
             lastBackupDateTimestamp: lastBackupDateTimestamp,
-            remind: remind
+            remind: remind,
+            defaultCurrency: defaultCurrency,
         };
 
         ipcRenderer.send('update-settings', settings);
@@ -99,33 +107,42 @@ const Settings = ({active, settingsToggle}) => {
         <h1>{strings.settings}</h1>
 
         <form className="settings-form" onSubmit={onSubmit}>
-            <label>{strings.remind}:
+            <div className="settings-row"><label className="settings-label">{strings.remind}:</label>
                 <input type="checkbox" checked={remind} onChange={onChangeRemind}/>
-            </label>
-            <label>{strings.remind_email}:
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.defaultCurrency}:</label>
+                <select value={defaultCurrency} onChange={onChangeDefaultCurrency}>
+                    <option value={Currencies.RUB}>{Currencies.RUB}</option>
+                    <option value={Currencies.EUR}>{Currencies.EUR}</option>
+                    <option value={Currencies.USD}>{Currencies.USD}</option>
+                </select>
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.remind_email}:</label>
                 <input type="email" value={email} onChange={onChangeEmail}/>
-            </label>
-            <label>{strings.database_folder}:<br/>
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.database_folder}:</label><br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
                        placeholder={strings.choose_folder}/>
-            </label>
-            <label>{strings.backup_folder}:<br/>
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
                 <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>
-            </label>
-            <label>{strings.language}:
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.language}:</label>
                 <select value={language} onChange={onChangeLanguage}>
                     <option value="ru">Русский</option>
                     <option value="en">English</option>
                     <option value="fr">Français</option>
                 </select>
-            </label>
-            <input type="submit" value={strings.save}/> <span
-            className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
+            </div>
+            <div className="settings-row">
+                <input type="submit" value={strings.save}/> <span
+                className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
+            </div>
         </form>
     </div>
 };

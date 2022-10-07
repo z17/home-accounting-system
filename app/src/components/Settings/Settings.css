@@ -24,9 +24,12 @@
     cursor: pointer;
 }
 
-.settings-form label {
+.settings-form .settings-row {
     display: block;
     margin: 15px 0;
+}
+.settings-form .settings-label {
+    padding-right: 15px;
 }
 
 .settings-form .settings-folder {

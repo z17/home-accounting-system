@@ -37,7 +37,8 @@ let strings = new LocalizedStrings({
             "language": "Language",
             "statistic": "Statistic",
             "new_version": "A new version of the application has been released. Current: ?, new: ?.",
-            "balance_sum": "Sum"
+            "balance_sum": "Sum",
+            "defaultCurrency": "Default Currency"
         },
         ru: {
             "title": "Cromberg - система личного учёта",
@@ -75,7 +76,8 @@ let strings = new LocalizedStrings({
             "language": "Язык",
             "statistic": "Статистика",
             "new_version": "Вышла новая версия приложения. Текущая версия: ?, новая версия: ?.",
-            "balance_sum": "Сумма"
+            "balance_sum": "Сумма",
+            "defaultCurrency": "Валюта по-умолчанию"
         },
         fr: {
             "title": "Cromberg - système de comptabilité financière personnelle",
@@ -113,7 +115,8 @@ let strings = new LocalizedStrings({
             "language": "Langue",
             "statistic": "Statistique",
             "new_version": "Une nouvelle version de l'application a été publiée. Actuel:?, nouveau:?.",
-            "balance_sum": "Somme"
+            "balance_sum": "Somme",
+            "defaultCurrency": "Devise par défaut"
         }
     }
 );

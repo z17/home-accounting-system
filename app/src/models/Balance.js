@@ -44,6 +44,7 @@ function convertSourceData(sourceData) {
             id: source.id,
             name: source.name,
             months: source.value,
+            currency: source.currency,
             index: index
         };
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './Settings.css'
 import strings from "../../models/lang";
-import {Currencies} from "../../models/Currency";
+import CurrencySelect from "../CurrencySelect";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -111,11 +111,7 @@ const Settings = ({active, settingsToggle}) => {
                 <input type="checkbox" checked={remind} onChange={onChangeRemind}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.defaultCurrency}:</label>
-                <select value={defaultCurrency} onChange={onChangeDefaultCurrency}>
-                    <option value={Currencies.RUB}>{Currencies.RUB}</option>
-                    <option value={Currencies.EUR}>{Currencies.EUR}</option>
-                    <option value={Currencies.USD}>{Currencies.USD}</option>
-                </select>
+                <CurrencySelect defaultValue={defaultCurrency} onChange={onChangeDefaultCurrency}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.remind_email}:</label>
                 <input type="email" value={email} onChange={onChangeEmail}/>

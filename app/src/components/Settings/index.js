@@ -9,12 +9,11 @@ const ipcRenderer = electron.ipcRenderer;
 const RESPONSE_OK = 'ok';
 const RESPONSE_ERROR = 'error';
 
-const Settings = ({active, settingsToggle}) => {
+const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency}) => {
 
     let [id, setId] = useState('');
     let [email, setEmail] = useState('');
     let [remind, setRemind] = useState(false);
-    let [defaultCurrency, setDefaultCurrency] = useState('');
     let [backupFolder, setBackupFolder] = useState('');
     let [databaseFolder, setDatabaseFolder] = useState('');
     let [language, setLanguage] = useState('');

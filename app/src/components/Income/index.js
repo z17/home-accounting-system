@@ -33,7 +33,8 @@ const Income = ({active}) => {
     useEffect(() => {
         ipcRenderer.send('component-income-ready');
 
-        ipcRenderer.on('income-data', function (event, data) {
+        ipcRenderer.on('income-data', function (event, dataTuple) {
+            let [data, ] = dataTuple;
             data.sort((a, b) => {
                 return a.date - b.date;
             });

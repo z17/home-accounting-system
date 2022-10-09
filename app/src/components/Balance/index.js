@@ -15,24 +15,28 @@ import {
     getBestMonth, getCostsChartData,
     getMonthsArray
 } from "../../models/Balance";
+import {mergeCurrencyRates} from "../../models/Currency";
 import BalanceSumLine from "../BalanceSumLine";
-const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
 
-const Balance = ({active}) => {
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
+
+const Balance = ({active, defaultCurrency}) => {
 
     const [months, setMonths] = useState([]);
     const [sources, setSources] = useState({});
     const [incomes, setIncomes] = useState([]);
+    const [currencyRates, setCurrencyRates] = useState({}); // todo: transfer this to parent in future
 
     useEffect(() => {
         ipcRenderer.send('component-balance-ready');
 
-        ipcRenderer.on('balance-types', function (event, sourceData) {
-
+        ipcRenderer.on('balance-types', function (event, data) {
+            let [sourceData, rates] = data
             const monthsMapIndexToValue = getMonthsArray(sourceData);
             const sourcesInit = convertSourceData(sourceData);
 
+            setCurrencyRates(mergeCurrencyRates(currencyRates, rates));
             setMonths(monthsMapIndexToValue);
             setSources(sourcesInit);
         });
@@ -61,7 +65,9 @@ const Balance = ({active}) => {
         });
 
         ipcRenderer.on('income-data', function (event, data) {
-            setIncomes(data);
+            let [incomes, rates] = data
+            setCurrencyRates(mergeCurrencyRates(currencyRates, rates));
+            setIncomes(incomes);
         });
 
         return () => {
@@ -80,7 +86,7 @@ const Balance = ({active}) => {
     let balanceMaxMonth;
     let isCurrentMonthEmpty;
 
-    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months);
+    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months, currencyRates, defaultCurrency);
 
     let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty);
 

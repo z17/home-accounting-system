@@ -12,6 +12,7 @@ function App() {
     const [settings_active, setSettingsActive] = useState(false);
     const [active_tab, setActiveTab] = useState('income');
     const [isReady, setReady] = useState(false);
+    const [defaultCurrency, setDefaultCurrency] = useState('');
 
     useEffect(() => {
         ipcRenderer.send('app-ready');
@@ -43,11 +44,12 @@ function App() {
     return (
         <div className="wrapper">
             <Navigation onSettingsClick={settingsToggle} onTabSelect={onTabSelect} activeTab={active_tab}/>
-            <Settings active={settings_active} settingsToggle={settingsToggle}/>
+            <Settings active={settings_active} settingsToggle={settingsToggle}
+                      defaultCurrency={defaultCurrency} setDefaultCurrency={setDefaultCurrency}/>
 
             <div className="content">
                 <Income active={active_tab === 'income'}/>
-                <Balance active={active_tab === 'balance'}/>
+                <Balance active={active_tab === 'balance'} defaultCurrency={defaultCurrency} />
             </div>
         </div>
     );

@@ -97,9 +97,9 @@ ServerRequester.prototype.loadCurrencies = function (dates, callback) {
     // todo: make a request
     let result = {}
     for (let date in dates) {
-        result[date] = {
-                'RUB': 77.8,
-                'EUR': 0.89,
+        result[dates[date]] = {
+                'RUB': 62.35,
+                'EUR': 1.03,
             }
     }
     callback(result);

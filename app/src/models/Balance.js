@@ -1,6 +1,7 @@
 import moment from "moment";
 import Utils from "../Utils";
 import strings from "./lang";
+import {convertCurrency} from "./Currency";
 
 function getMonthsArray(sourceData) {
     let firstMonth = moment().startOf('month');
@@ -53,7 +54,7 @@ function convertSourceData(sourceData) {
     return sourcesInit;
 }
 
-function getBalanceSum(sources, months) {
+function getBalanceSum(sources, months, rates, defaultCurrency) {
     let balanceSum = 0;
     // search last unempty months
     let lastUnEmptyMonth = null;
@@ -74,10 +75,13 @@ function getBalanceSum(sources, months) {
         isCurrentMonthEmpty = false;
     }
 
-    for (let source in sources) {
-        let value = sources[source].months[lastUnEmptyMonth];
+    const lastMonthRates = rates[moment(lastUnEmptyMonth, "MMYYYY").endOf('month').format("DD.MM.YYYY")];
+    for (let sourceId in sources) {
+        let source = sources[sourceId];
+        let value = source.months[lastUnEmptyMonth];
         if (value) {
-            balanceSum += value;
+            let convertedSum = convertCurrency(source['currency'], defaultCurrency, value, lastMonthRates)
+            balanceSum += convertedSum;
         }
     }
 

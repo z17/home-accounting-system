@@ -109,20 +109,16 @@ app.on('ready', function () {
             }
         });
 
-        dao.getIncomes(function (data) {
-            serverRequester.loadCurrenciesForIncome(data, (data) => {
-                mainWindow.webContents.send('currency-data', data);
-                // todo: обработать, может присылать вместе данные?
+        dao.getIncomes(function (incomes) {
+            serverRequester.loadCurrenciesForIncome(incomes, (currencyData) => {
+                mainWindow.webContents.send('income-data', [incomes, currencyData])
             });
-            mainWindow.webContents.send('income-data', data);
         });
 
-        dao.getBalances(function (types) {
-            serverRequester.loadCurrenciesForBalance(types, (data) => {
-                mainWindow.webContents.send('currency-data', data);
-                // todo: обработать, может присылать вместе данные?
+        dao.getBalances(function (balance) {
+            serverRequester.loadCurrenciesForBalance(balance, (currencyData) => {
+                mainWindow.webContents.send('balance-types', [balance, currencyData]);
             });
-            mainWindow.webContents.send('balance-types', types);
         });
     };
 

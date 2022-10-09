@@ -11,7 +11,7 @@ const fs = require('fs');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-const serverRequester = new ServerRequester();
+const serverRequester = new ServerRequester(argv.dev);
 
 const DATABASE_FOLDER_KEY = 'database-folder';
 const DATABASE_NAME = 'database';
@@ -110,10 +110,18 @@ app.on('ready', function () {
         });
 
         dao.getIncomes(function (data) {
+            serverRequester.loadCurrenciesForIncome(data, (data) => {
+                mainWindow.webContents.send('currency-data', data);
+                // todo: обработать, может присылать вместе данные?
+            });
             mainWindow.webContents.send('income-data', data);
         });
 
         dao.getBalances(function (types) {
+            serverRequester.loadCurrenciesForBalance(types, (data) => {
+                mainWindow.webContents.send('currency-data', data);
+                // todo: обработать, может присылать вместе данные?
+            });
             mainWindow.webContents.send('balance-types', types);
         });
     };

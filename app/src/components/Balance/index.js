@@ -35,7 +35,6 @@ const Balance = ({active}) => {
 
             setMonths(monthsMapIndexToValue);
             setSources(sourcesInit);
-
         });
 
         ipcRenderer.on('balance-reupdated', function (event, sourceId, month) {

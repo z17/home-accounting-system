@@ -1,10 +1,12 @@
 "use strict";
 
 const http = require('http');
+const moment = require('moment');
 
 const host = 'cromberg.blweb.ru';
 
-function ServerRequester() {
+function ServerRequester(isDev) {
+    this.isDev = isDev;
 }
 
 ServerRequester.prototype.notify = function (oldSettings, newSettings) {
@@ -53,7 +55,7 @@ ServerRequester.prototype.getServerVersion = function (callback) {
 
         response.on('data', function (data) {
             const versionData = JSON.parse(data);
-            if (versionData.data == undefined) {
+            if (versionData.data === undefined) {
                 return;
             }
             callback(versionData.data);
@@ -61,6 +63,47 @@ ServerRequester.prototype.getServerVersion = function (callback) {
     });
 };
 
+ServerRequester.prototype.loadCurrenciesForIncome = function (data, callback) {
+    let dates = []
+    for (let i in data) {
+        let income = data[i]
+        let date = moment(income['date']).format("DD.MM.YYYY");
+        dates.push(date)
+    }
+    dates = [...new Set(dates)]
+    this.loadCurrencies(dates, callback);
+
+};
+
+ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
+    let dates = [];
+    for (let i in data) {
+        let source = data[i]
+        if (!source['value']) {
+            continue;
+        }
+        for (let month in source['value']) {
+            let date = moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY");
+            console.log(month, date);
+            dates.push(date);
+        }
+    }
+    dates = [...new Set(dates)]
+    this.loadCurrencies(dates, callback);
+
+};
+
+ServerRequester.prototype.loadCurrencies = function (dates, callback) {
+    // todo: make a request
+    let result = {}
+    for (let date in dates) {
+        result[date] = {
+                'RUB': 77.8,
+                'EUR': 0.89,
+            }
+    }
+    callback(result);
+};
 
 function request(method, path, headers, requestData, callback) {
     let req = http.request({

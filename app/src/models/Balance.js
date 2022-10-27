@@ -3,6 +3,14 @@ import Utils from "../Utils";
 import strings from "./lang";
 import {convertCurrency, getLastMothRates} from "./Currency";
 
+function BalanceModel(sources, months, rates, defaultCurrency) {
+    this.sources = sources;
+    this.months = months;
+    this.rates = rates;
+    this.defaultCurrency = defaultCurrency;
+}
+
+
 function getMonthsArray(sourceData) {
     let firstMonth = moment().startOf('month');
     let lastMonth = moment().startOf('month');
@@ -54,13 +62,13 @@ function convertSourceData(sourceData) {
     return sourcesInit;
 }
 
-function getBalanceSum(sources, months, rates, defaultCurrency) {
+BalanceModel.prototype.getBalanceSum = function () {
     let balanceSum = 0;
     // search last unempty months
     let lastUnEmptyMonth = null;
-    for (let month of months.slice().reverse()) {
-        for (let source in sources) {
-            if (sources[source].months.hasOwnProperty(month)) {
+    for (let month of this.months.slice().reverse()) {
+        for (let source in this.sources) {
+            if (this.sources[source].months.hasOwnProperty(month)) {
                 lastUnEmptyMonth = month;
                 break;
             }
@@ -75,12 +83,12 @@ function getBalanceSum(sources, months, rates, defaultCurrency) {
         isCurrentMonthEmpty = false;
     }
 
-    const lastMonthRates = getLastMothRates(rates, lastUnEmptyMonth);
-    for (let sourceId in sources) {
-        let source = sources[sourceId];
+    const lastMonthRates = getLastMothRates(this.rates, lastUnEmptyMonth);
+    for (let sourceId in this.sources) {
+        let source = this.sources[sourceId];
         let value = source.months[lastUnEmptyMonth];
         if (value) {
-            let convertedSum = convertCurrency(source['currency'], defaultCurrency, value, lastMonthRates);
+            let convertedSum = convertCurrency(source['currency'], this.defaultCurrency, value, lastMonthRates);
             balanceSum += convertedSum;
         }
     }
@@ -88,17 +96,17 @@ function getBalanceSum(sources, months, rates, defaultCurrency) {
     return [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty];
 }
 
-function getBestMonth(sources, months, rates, defaultCurrency) {
-    let bestMonth = months.map((month) => {
+BalanceModel.prototype.getBestMonth = function () {
+    let bestMonth = this.months.map((month) => {
         let sum = 0;
-        for (let sourceId in sources) {
-            let source = sources[sourceId];
+        for (let sourceId in this.sources) {
+            let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
                 continue;
             }
             let source_value = source.months[month];
-            let current_rates = getLastMothRates(rates, month);
-            sum += convertCurrency(source['currency'], defaultCurrency, source_value, current_rates);
+            let current_rates = getLastMothRates(this.rates, month);
+            sum += convertCurrency(source['currency'], this.defaultCurrency, source_value, current_rates);
         }
         return [month, sum];
     }).reduce((month1, month2) => {
@@ -117,14 +125,14 @@ function getBestMonth(sources, months, rates, defaultCurrency) {
     return [balanceMaxSum, balanceMaxMonth]
 }
 
-function getBalanceChartData(sources, months, isCurrentMonthEmpty, rates, defaultCurrency) {
+BalanceModel.prototype.getBalanceChartData = function (isCurrentMonthEmpty) {
 
     let balanceChartArray = [["month"]];
-    for (let source in sources) {
-        balanceChartArray[0].push(sources[source].name);
+    for (let source in this.sources) {
+        balanceChartArray[0].push(this.sources[source].name);
     }
 
-    let chart_data = months.map((month) => {
+    let chart_data = this.months.map((month) => {
         let month_time = moment(month, "MMYYYY");
         let chartMonthData = [month_time.format("MMM YYYY")];
 
@@ -132,13 +140,13 @@ function getBalanceChartData(sources, months, isCurrentMonthEmpty, rates, defaul
             return null;
         }
 
-        for (let sourceId in sources) {
-            let source = sources[sourceId];
+        for (let sourceId in this.sources) {
+            let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
                 chartMonthData.push('0');
             }
-            let current_rates = getLastMothRates(rates, month);
-            let val = convertCurrency(source['currency'], defaultCurrency, source.months[month], current_rates);
+            let current_rates = getLastMothRates(this.rates, month);
+            let val = convertCurrency(source['currency'], this.defaultCurrency, source.months[month], current_rates);
 
             chartMonthData.push(val);
         }
@@ -150,25 +158,25 @@ function getBalanceChartData(sources, months, isCurrentMonthEmpty, rates, defaul
     return balanceChartArray
 }
 
-function getBalancePieChartData(sources, lastUnEmptyMonth, rates, defaultCurrency) {
+BalanceModel.prototype.getBalancePieChartData = function (lastUnEmptyMonth) {
     let balancePieChartArray = [["Source", "Sum"]];
-    for (let sourceId in sources) {
-        let source = sources[sourceId];
+    for (let sourceId in this.sources) {
+        let source = this.sources[sourceId];
         let value = source.months[lastUnEmptyMonth];
         if (value) {
-            let current_rates = getLastMothRates(rates, lastUnEmptyMonth);
-            let converted_value = convertCurrency(source['currency'], defaultCurrency, value, current_rates);
+            let current_rates = getLastMothRates(this.rates, lastUnEmptyMonth);
+            let converted_value = convertCurrency(source['currency'], this.defaultCurrency, value, current_rates);
             balancePieChartArray.push([source.name, converted_value])
         }
     }
     return balancePieChartArray;
 }
 
-function getBalanceDiffChartData(sources, months, isCurrentMonthEmpty, rates, defaultCurrency) {
+BalanceModel.prototype.getBalanceDiffChartData = function (isCurrentMonthEmpty) {
     let chartPartNames = [['month', 'diff']];
 
     let prevMonthSum = null;
-    for (let month of months) {
+    for (let month of this.months) {
         let month_time = moment(month, "MMYYYY");
 
         if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
@@ -176,13 +184,13 @@ function getBalanceDiffChartData(sources, months, isCurrentMonthEmpty, rates, de
         }
 
         let monthsSum = 0;
-        for (let sourceId in sources) {
-            let source = sources[sourceId];
+        for (let sourceId in this.sources) {
+            let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
                 continue;
             }
-            let current_rates = getLastMothRates(rates, month);
-            monthsSum += convertCurrency(source['currency'], defaultCurrency, source.months[month], current_rates);
+            let current_rates = getLastMothRates(this.rates, month);
+            monthsSum += convertCurrency(source['currency'], this.defaultCurrency, source.months[month], current_rates);
         }
         let diff = 0;
         if (prevMonthSum !== undefined) {
@@ -195,7 +203,7 @@ function getBalanceDiffChartData(sources, months, isCurrentMonthEmpty, rates, de
     return chartPartNames;
 }
 
-function getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, rates, defaultCurrency) {
+BalanceModel.prototype.getCostsChartData = function (incomes, isCurrentMonthEmpty) {
     let incomeByMonth = {};
     incomes.forEach(function (element) {
         let month = moment.unix(element.date).format("MMYYYY");
@@ -210,7 +218,7 @@ function getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, rates,
     ];
 
     let prevBalance = undefined;
-    for (let month of months) {
+    for (let month of this.months) {
         let month_time = moment(month, "MMYYYY");
 
         if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
@@ -218,13 +226,13 @@ function getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, rates,
         }
 
         let currentBalance = 0;
-        for (let sourceId in sources) {
-            let source = sources[sourceId];
+        for (let sourceId in this.sources) {
+            let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
                 continue;
             }
-            let current_rates = getLastMothRates(rates, month);
-            currentBalance += convertCurrency(source['currency'], defaultCurrency, source.months[month], current_rates);
+            let current_rates = getLastMothRates(this.rates, month);
+            currentBalance += convertCurrency(source['currency'], this.defaultCurrency, source.months[month], current_rates);
         }
         let currentIncome = incomeByMonth.hasOwnProperty(month) ? incomeByMonth[month] : 0;
 
@@ -244,12 +252,7 @@ function getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, rates,
 }
 
 export {
+    BalanceModel,
     getMonthsArray,
     convertSourceData,
-    getBalanceSum,
-    getBestMonth,
-    getBalanceChartData,
-    getBalancePieChartData,
-    getBalanceDiffChartData,
-    getCostsChartData,
 }

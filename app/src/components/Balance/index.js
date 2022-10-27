@@ -7,12 +7,8 @@ import Chart from "react-google-charts";
 import SourceLine from "../SourceLine";
 import strings from "../../models/lang";
 import {
+    BalanceModel,
     convertSourceData,
-    getBalanceChartData,
-    getBalanceDiffChartData,
-    getBalancePieChartData,
-    getBalanceSum,
-    getBestMonth, getCostsChartData,
     getMonthsArray
 } from "../../models/Balance";
 import {mergeCurrencyRates} from "../../models/Currency";
@@ -86,18 +82,15 @@ const Balance = ({active, defaultCurrency}) => {
     let balanceMaxMonth;
     let isCurrentMonthEmpty;
 
+    let balanceModel = new BalanceModel(sources, months, currencyRates, defaultCurrency);
+
     //todo: сделать объект для вычисления таких данных? чтобы везде не передавать в сигнатуру набор валют и дефолт валюту
-    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months, currencyRates, defaultCurrency);
-
-    let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty, currencyRates, defaultCurrency);
-
-    [balanceMaxSum, balanceMaxMonth] = getBestMonth(sources, months, currencyRates, defaultCurrency);
-
-    let balancePieChartArray = getBalancePieChartData(sources, lastUnEmptyMonth, currencyRates, defaultCurrency);
-
-    let balanceDiffChartArray = getBalanceDiffChartData(sources, months, isCurrentMonthEmpty, currencyRates, defaultCurrency);
-
-    let costsChartArray = getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, currencyRates, defaultCurrency);
+    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = balanceModel.getBalanceSum();
+    let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);
+    [balanceMaxSum, balanceMaxMonth] = balanceModel.getBestMonth();
+    let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
+    let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
+    let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>

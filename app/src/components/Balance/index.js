@@ -86,17 +86,18 @@ const Balance = ({active, defaultCurrency}) => {
     let balanceMaxMonth;
     let isCurrentMonthEmpty;
 
+    //todo: сделать объект для вычисления таких данных? чтобы везде не передавать в сигнатуру набор валют и дефолт валюту
     [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months, currencyRates, defaultCurrency);
 
-    let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty);
+    let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty, currencyRates, defaultCurrency);
 
-    [balanceMaxSum, balanceMaxMonth] = getBestMonth(sources, months);
+    [balanceMaxSum, balanceMaxMonth] = getBestMonth(sources, months, currencyRates, defaultCurrency);
 
-    let balancePieChartArray = getBalancePieChartData(sources, lastUnEmptyMonth);
+    let balancePieChartArray = getBalancePieChartData(sources, lastUnEmptyMonth, currencyRates, defaultCurrency);
 
-    let balanceDiffChartArray = getBalanceDiffChartData(sources, months, isCurrentMonthEmpty);
+    let balanceDiffChartArray = getBalanceDiffChartData(sources, months, isCurrentMonthEmpty, currencyRates, defaultCurrency);
 
-    let costsChartArray = getCostsChartData(sources, months, incomes, isCurrentMonthEmpty);
+    let costsChartArray = getCostsChartData(sources, months, incomes, isCurrentMonthEmpty, currencyRates, defaultCurrency);
 
     return <div className={`js-income-page page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>

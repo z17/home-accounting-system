@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const Currencies = {
     EUR: 'EUR',
     USD: 'USD',
@@ -18,6 +20,10 @@ function convertCurrency(currencyFrom, currencyTo, value, rates) {
     return baseValue * rates[currencyTo];
 }
 
+function getLastMothRates(rates, month) {
+    return rates[moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY")];
+}
+
 export {
-    Currencies, mergeCurrencyRates, convertCurrency
+    Currencies, mergeCurrencyRates, convertCurrency, getLastMothRates
 }

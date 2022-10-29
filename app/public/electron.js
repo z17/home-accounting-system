@@ -46,7 +46,13 @@ app.on('ready', function () {
         }
     );
 
-    const config = new Config();
+    let config = null;
+    if (argv.dev) {
+        config = new Config({name: 'dev'});
+    } else {
+        config = new Config();
+    }
+
     let dbPath = config.get(DATABASE_FOLDER_KEY);
     if (dbPath === undefined) {
         dbPath = app.getPath('userData') + path.sep + 'db' + path.sep;

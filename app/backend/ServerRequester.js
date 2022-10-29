@@ -70,6 +70,7 @@ ServerRequester.prototype.loadCurrenciesForIncome = function (data, callback) {
         let date = moment(income['date']).format("DD.MM.YYYY");
         dates.push(date)
     }
+    dates.push(moment().format("DD.MM.YYYY"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 
@@ -88,6 +89,7 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
             dates.push(date);
         }
     }
+    dates.push(moment().format("DD.MM.YYYY"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 
@@ -100,8 +102,12 @@ ServerRequester.prototype.loadCurrencies = function (dates, callback) {
         result[dates[date]] = {
                 'RUB': 62.35,
                 'EUR': 1.03,
-            }
+        }
     }
+    result['latest'] = {
+        'RUB': 62.35,
+        'EUR': 1.03,
+    };
     callback(result);
 };
 

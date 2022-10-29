@@ -7,13 +7,20 @@ const Currencies = {
 }
 
 const BaseCurrency = Currencies.USD;
+const LATEST_CURRENCY_KEY = 'latest';
 
 function mergeCurrencyRates(rates1, rates2) {
     return {...rates1, ...rates2};
 }
 
 function convertCurrency(currencyFrom, currencyTo, value, rates) {
-    let baseValue = value / rates[currencyFrom];
+    let baseValue;
+    if (currencyFrom === BaseCurrency) {
+        baseValue = value;
+    } else {
+        baseValue = value / rates[currencyFrom];
+    }
+
     if (currencyTo === BaseCurrency) {
         return baseValue;
     }
@@ -21,7 +28,12 @@ function convertCurrency(currencyFrom, currencyTo, value, rates) {
 }
 
 function getLastMothRates(rates, month) {
-    return rates[moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY")];
+    let lastMonthDay = moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY");
+    if (lastMonthDay in rates) {
+        return rates[lastMonthDay];
+    } else {
+        return rates[LATEST_CURRENCY_KEY];
+    }
 }
 
 export {

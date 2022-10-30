@@ -16,9 +16,12 @@ function App() {
 
     useEffect(() => {
         ipcRenderer.send('app-ready');
-        ipcRenderer.on('current_language', function (event, language) {
-            if (language) {
-                strings.setLanguage(language);
+        ipcRenderer.on('init_settings', function (event, settings) {
+            if (settings.language) {
+                strings.setLanguage(settings.language);
+            }
+            if(settings.defaultCurrency) {
+                setDefaultCurrency(settings.defaultCurrency);
             }
             document.title = strings.title;
             setReady(true);

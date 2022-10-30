@@ -80,7 +80,7 @@ app.on('ready', function () {
 
     ipcMain.on('app-ready', () => {
         dao.getSettings(function (settings) {
-            mainWindow.webContents.send('current_language', settings.language);
+            mainWindow.webContents.send('init_settings', settings);
         });
     });
 

@@ -13,6 +13,19 @@ function mergeCurrencyRates(rates1, rates2) {
     return {...rates1, ...rates2};
 }
 
+function getCurrencySymbol(currency) {
+    switch (currency) {
+        case Currencies.EUR:
+            return '€';
+        case Currencies.USD:
+            return '$';
+        case Currencies.RUB:
+            return '₽';
+        default:
+            return 'ERROR'
+    }
+}
+
 function convertCurrency(currencyFrom, currencyTo, value, rates) {
     let baseValue;
     if (currencyFrom === BaseCurrency) {
@@ -37,5 +50,5 @@ function getLastMothRates(rates, month) {
 }
 
 export {
-    Currencies, mergeCurrencyRates, convertCurrency, getLastMothRates
+    Currencies, mergeCurrencyRates, convertCurrency, getLastMothRates, getCurrencySymbol
 }

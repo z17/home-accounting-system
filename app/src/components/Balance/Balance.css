@@ -139,3 +139,12 @@ form.addBalance button.submit {
 .source-currency {
   font-weight: normal;
 }
+
+.balance-currency {
+    font-size: 18px;
+}
+
+
+.balance-currency-label {
+  padding-right: 10px;
+}

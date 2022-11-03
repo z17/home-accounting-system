@@ -22,6 +22,8 @@ function App() {
             }
             if(settings.defaultCurrency) {
                 setDefaultCurrency(settings.defaultCurrency);
+            } else {
+                setSettingsActive(true);
             }
             document.title = strings.title;
             setReady(true);

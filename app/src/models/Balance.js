@@ -40,10 +40,9 @@ function getMonthsArray(sourceData) {
 }
 
 
-function convertSourceData(sourceData) {
+function convertSourceData(sourceData, defaultCurrency) {
     // prepare sources object
     const sourcesInit = {};
-    let index = 0;
     for (let i in sourceData) {
         if (!sourceData.hasOwnProperty(i)) {
             continue;
@@ -53,11 +52,9 @@ function convertSourceData(sourceData) {
             id: source.id,
             name: source.name,
             months: source.value,
-            currency: source.currency,
-            index: index
+            currency: source.currency ? source.currency : defaultCurrency,
         };
 
-        index++;
     }
     return sourcesInit;
 }

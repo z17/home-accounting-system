@@ -56,3 +56,7 @@
     cursor: pointer;
     z-index: 100;
 }
+
+.settings-currency-warning {
+    color: #ff0000;
+}

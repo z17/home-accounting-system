@@ -32,7 +32,7 @@ const Balance = ({active, defaultCurrency}) => {
         ipcRenderer.on('balance-types', function (event, data) {
             let [sourceData, rates] = data
             const monthsMapIndexToValue = getMonthsArray(sourceData);
-            const sourcesInit = convertSourceData(sourceData);
+            const sourcesInit = convertSourceData(sourceData, defaultCurrency);
 
             setCurrencyRates(mergeCurrencyRates(currencyRates, rates));
             setMonths(monthsMapIndexToValue);
@@ -86,7 +86,6 @@ const Balance = ({active, defaultCurrency}) => {
 
     let balanceModel = new BalanceModel(sources, months, currencyRates, displayedCurrency);
 
-    //todo: сделать объект для вычисления таких данных? чтобы везде не передавать в сигнатуру набор валют и дефолт валюту
     [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = balanceModel.getBalanceSum();
     let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);
     [balanceMaxSum, balanceMaxMonth] = balanceModel.getBestMonth();

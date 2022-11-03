@@ -99,11 +99,14 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
         ipcRenderer.send('update-settings', settings);
     };
 
+    let currencyWarning = defaultCurrency ? ' ' : <div className="settings-currency-warning">{strings.settingsSetDefaultCurrency}</div>;
+
     // noinspection HtmlUnknownAttribute
     return <div className={`settings-window ${active ? "active" : ""}`}>
 
         <div className="settings-close-button" onClick={settingsToggle}>&#10006;</div>
         <h1>{strings.settings}</h1>
+        {currencyWarning}
 
         <form className="settings-form" onSubmit={onSubmit}>
             <div className="settings-row"><label className="settings-label">{strings.remind}:</label>

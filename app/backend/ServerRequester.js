@@ -85,7 +85,6 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
         }
         for (let month in source['value']) {
             let date = moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY");
-            console.log(month, date);
             dates.push(date);
         }
     }
@@ -96,7 +95,12 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
 };
 
 ServerRequester.prototype.loadCurrencies = function (dates, callback) {
-    // todo: make a request
+    // todo: make a real request
+    const requestData = {
+        dates: dates
+    };
+    // request('POST', '/get_currencies', null, requestData, callback);
+
     let result = {}
     for (let date in dates) {
         result[dates[date]] = {

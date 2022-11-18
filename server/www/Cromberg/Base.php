@@ -2,6 +2,7 @@
 
 namespace Cromberg;
 use PDO;
+use Cromberg\Models\CurrencyRate;
 
 class Base
 {
@@ -30,7 +31,7 @@ class Base
 		SET
 			email = :new_email,
 			lang = :lang
-		WHERE 
+		WHERE
 			email = :old_email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':new_email', $newEmail);
@@ -46,7 +47,7 @@ class Base
 		SET
 			deleted = FALSE,
 			lang = :lang
-		WHERE 
+		WHERE
 			email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
@@ -61,7 +62,7 @@ class Base
 		SET
 			deleted = TRUE,
 			lang = :lang
-		WHERE 
+		WHERE
 			email = :email";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':email', $email);
@@ -75,7 +76,7 @@ class Base
 		UPDATE emails
 		SET
 			deleted = TRUE
-		WHERE 
+		WHERE
 			uuid = :uuid";
         $sql = $this->base->prepare($query);
         $sql->bindParam(':uuid', $uuid);
@@ -103,8 +104,8 @@ class Base
     public function fillNotificationTable()
     {
         $query = "
-        INSERT INTO 
-          reminders (email_uuid) 
+        INSERT INTO
+          reminders (email_uuid)
         SELECT uuid FROM emails WHERE deleted = FALSE";
         $sql = $this->base->prepare($query);
         $sql->execute();
@@ -141,6 +142,31 @@ class Base
         $sql->bindParam(':uuid', $uuid);
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getCurrenciesByDate(string $date) : array {
+        $query = 'SELECT id, date, code, value FROM currency_rate WHERE date = :date';
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':date', $date);
+        $sql->execute();
+        $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+        if (!$data) {
+            return [];
+        }
+        $result = [];
+        foreach ($data as $row) {
+            $result[]= new CurrencyRate((int)$row['id'], $row['date'], (int)$row['value'], (int)$row['code']);
+        }
+        return $result;
+    }
+
+    public function insertCurrency(CurrencyRate $currency) {
+        $query = "INSERT INTO currency_rate (date, code, value) VALUES (:date, :code, :value)";
+        $sql = $this->base->prepare($query);
+        $sql->bindParam(':date', $currency->date);
+        $sql->bindParam(':code', $currency->code);
+        $sql->bindParam(':value', $currency->value);
+        $sql->execute();
     }
 
     public function logVersionRequest($ip)

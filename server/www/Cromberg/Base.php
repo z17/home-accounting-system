@@ -160,6 +160,24 @@ class Base
         return $result;
     }
 
+    public function getCurrenciesByDates(array $dates) : array {
+        $in = join(',', array_fill(0, count($dates), '?'));
+        $query = <<<SQL
+            SELECT id, date, code, value FROM currency_rate WHERE date in ($in);
+        SQL;
+        $sql = $this->base->prepare($query);
+        $sql->execute($dates);
+        $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+        if (!$data) {
+            return [];
+        }
+        $result = [];
+        foreach ($data as $row) {
+            $result[]= new CurrencyRate((int)$row['id'], $row['date'], (int)$row['value'], (int)$row['code']);
+        }
+        return $result;
+    }
+
     public function insertCurrency(CurrencyRate $currency) {
         $query = "INSERT INTO currency_rate (date, code, value) VALUES (:date, :code, :value)";
         $sql = $this->base->prepare($query);

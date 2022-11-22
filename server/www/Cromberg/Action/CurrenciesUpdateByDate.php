@@ -22,14 +22,14 @@ class CurrenciesUpdateByDate extends Action {
 
         $rates_by_date = $this->db->getCurrenciesByDate($date_string);
         if (!empty($rates_by_date)) {
-            $this->error('Already filled');
+            $this->jsonError('Already filled');
         }
 
         $data = file_get_contents('https://api.exchangerate.host/'.$date_string.'?base=USD');
         $parsed_data = json_decode($data);
         $base = $parsed_data->base;
         if ($base != Currency::BASE_CURRENCY) {
-            $this->error('Wrong base');
+            $this->jsonError('Wrong base');
             return;
         }
 
@@ -44,5 +44,6 @@ class CurrenciesUpdateByDate extends Action {
             $currency = Currency::createCurrency($rate_code, date('Y-m-d', $this->time), $value);
             $this->db->insertCurrency($currency);
         }
+        $this->json(['status' => True]);
     }
 }

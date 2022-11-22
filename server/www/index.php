@@ -47,9 +47,10 @@ switch ($path) {
         $action->process();
         break;
     case Urls::CURRENCIES_GET:
-        $data = isset($_POST['dates']) ? json_decode($_POST['dates']) : null;
-        $action = new Action\CurrenciesGetByDates();
-        $action->process($data);
+        $data = file_get_contents('php://input');
+        $decoded_data = json_decode($data);
+        $action = new Action\CurrenciesGetByDates($decoded_data);
+        $action->process();
         break;
     case Urls::CURRENCIES_UPDATE_TODAY:
         $action = new Action\CurrenciesUpdateByDate("");

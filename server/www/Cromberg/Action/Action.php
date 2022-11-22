@@ -24,4 +24,14 @@ abstract class Action
         Functions::writeLog("500 error: " . $message . ' ' . static::class);
         exit();
     }
+
+    public function json($data) {
+        echo json_encode($data);
+        exit();
+    }
+    public function jsonError($message) {
+        header("HTTP/1.0 500 Internal Server Error");
+        echo json_encode(['status' => false, 'message' => $message]);
+        exit();
+    }
 }

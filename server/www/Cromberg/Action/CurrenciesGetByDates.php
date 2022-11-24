@@ -1,6 +1,7 @@
 <?php
 Namespace Cromberg\Action;
-use Cromberg\Currency;
+
+use Cromberg\Currency\Currency;
 
 class CurrenciesGetByDates extends Action {
     private $dates;

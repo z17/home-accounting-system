@@ -53,7 +53,11 @@ switch ($path) {
         $action->process();
         break;
     case Urls::CURRENCIES_UPDATE_TODAY:
-        $action = new Action\CurrenciesUpdateByDate("");
+        $action = new Action\CurrenciesUpdateByDate();
+        $action->process();
+        break;
+    case Urls::CURRENCIES_UPDATE_OLD:
+        $action = new Action\CurrenciesUpdateOldDates();
         $action->process();
         break;
     case Urls::MAIN;

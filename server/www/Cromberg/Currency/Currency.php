@@ -1,6 +1,6 @@
 <?php
 
-namespace Cromberg;
+namespace Cromberg\Currency;
 
 use Cromberg\Models\CurrencyRate;
 
@@ -57,12 +57,4 @@ class Currency {
     public static function getIdByString($string_code) {
         return Currency::CURRENCIES[$string_code];
     }
-
-    public function getLastCurrency() {
-
-    }
-
-    public function addCurrency() {
-    }
-
 }

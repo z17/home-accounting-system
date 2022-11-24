@@ -12,4 +12,5 @@ class Urls {
     const PAGE404 = '/404';
     const CURRENCIES_GET = '/get_currencies';
     const CURRENCIES_UPDATE_TODAY = '/update_today_currency';
+    const CURRENCIES_UPDATE_OLD = '/update_old_currency';
 }

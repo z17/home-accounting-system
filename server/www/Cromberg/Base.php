@@ -145,7 +145,7 @@ class Base
     }
 
     public function getCurrenciesByDate(string $date) : array {
-        $query = 'SELECT id, date, code, value FROM currency_rate WHERE date = :date';
+        $query = 'SELECT id, date, code, value FROM currency_rate WHERE date = :date LIMIT 100';
         $sql = $this->base->prepare($query);
         $sql->bindParam(':date', $date);
         $sql->execute();

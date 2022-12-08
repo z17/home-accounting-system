@@ -75,7 +75,7 @@ const Balance = ({active, defaultCurrency}) => {
           ipcRenderer.removeAllListeners('balance-inserted');
           ipcRenderer.removeAllListeners('income-data');
         };
-    }, [sources, months]);
+    }, [sources, months, currencyRates, defaultCurrency]);
 
 
     let balanceSum;

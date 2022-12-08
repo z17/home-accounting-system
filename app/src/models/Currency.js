@@ -31,13 +31,13 @@ function convertCurrency(currencyFrom, currencyTo, value, rates) {
     if (currencyFrom === BaseCurrency) {
         baseValue = value;
     } else {
-        baseValue = value / rates[currencyFrom];
+        baseValue = value / (rates[currencyFrom] / 100);
     }
 
     if (currencyTo === BaseCurrency) {
-        return baseValue;
+        return Math.round(baseValue);
     }
-    return baseValue * rates[currencyTo];
+    return Math.round(baseValue * (rates[currencyTo] / 100));
 }
 
 function getLastMothRates(rates, month) {

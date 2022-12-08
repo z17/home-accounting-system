@@ -140,7 +140,7 @@ BalanceModel.prototype.getBalanceChartData = function (isCurrentMonthEmpty) {
         for (let sourceId in this.sources) {
             let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
-                chartMonthData.push('0');
+                chartMonthData.push(0);
                 continue;
             }
             let current_rates = getLastMothRates(this.rates, month);

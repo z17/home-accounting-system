@@ -67,10 +67,10 @@ ServerRequester.prototype.loadCurrenciesForIncome = function (data, callback) {
     let dates = []
     for (let i in data) {
         let income = data[i]
-        let date = moment(income['date']).format("DD.MM.YYYY");
+        let date = moment(income['date']).format("YYYY-MM-DD");
         dates.push(date)
     }
-    dates.push(moment().format("DD.MM.YYYY"));
+    dates.push(moment().format("YYYY-MM-DD"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 
@@ -84,35 +84,42 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
             continue;
         }
         for (let month in source['value']) {
-            let date = moment(month, "MMYYYY").endOf('month').format("DD.MM.YYYY");
+            let date = moment(month, "MMYYYY").endOf('month').format("YYYY-MM-DD");
             dates.push(date);
         }
     }
-    dates.push(moment().format("DD.MM.YYYY"));
+    dates.push(moment().format("YYYY-MM-DD"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 
 };
 
 ServerRequester.prototype.loadCurrencies = function (dates, callback) {
-    // todo: make a real request
-    const requestData = {
+    let requestData = JSON.stringify({
         dates: dates
-    };
-    // request('POST', '/get_currencies', null, requestData, callback);
+    });
+    request('POST', '/get_currencies', {'Content-Type': 'application/json'}, requestData,
+    (response) => {
+        response.on('data', function (data) {
+            const ratesData = JSON.parse(data.toString());
+            if (!ratesData || ratesData.length === 0) {
+                callback(ratesData);
+                return;
+            }
 
-    let result = {}
-    for (let date in dates) {
-        result[dates[date]] = {
-                'RUB': 62.35,
-                'EUR': 1.03,
-        }
-    }
-    result['latest'] = {
-        'RUB': 62.35,
-        'EUR': 1.03,
-    };
-    callback(result);
+            const result = {};
+            let latestDate = moment(Object.keys(ratesData)[0]);
+            for (let dateIterateStr in ratesData) {
+                let dateIterate = moment(dateIterateStr);
+                if (dateIterate.isAfter(latestDate)) {
+                    latestDate = dateIterate;
+                }
+                result[dateIterate.format('DD.MM.YYYY')] = ratesData[dateIterateStr];
+            }
+            result['latest'] = ratesData[latestDate.format('YYYY-MM-DD')];
+            callback(result);
+        });
+    });
 };
 
 function request(method, path, headers, requestData, callback) {
@@ -128,6 +135,7 @@ function request(method, path, headers, requestData, callback) {
     });
 
     req.on('error', function (error) {
+        console.log(error);
     });
 
     if (requestData !== null) {

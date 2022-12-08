@@ -48,7 +48,7 @@ switch ($path) {
         break;
     case Urls::CURRENCIES_GET:
         $data = file_get_contents('php://input');
-        $decoded_data = json_decode($data);
+        $decoded_data = json_decode($data, true);
         $action = new Action\CurrenciesGetByDates($decoded_data);
         $action->process();
         break;

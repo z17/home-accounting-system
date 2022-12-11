@@ -84,7 +84,7 @@ const Balance = ({active, defaultCurrency}) => {
     let balanceMaxMonth;
     let isCurrentMonthEmpty;
 
-    let balanceModel = new BalanceModel(sources, months, currencyRates, displayedCurrency);
+    let balanceModel = new BalanceModel(sources, months, currencyRates, displayedCurrency, defaultCurrency);
 
     [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = balanceModel.getBalanceSum();
     let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);

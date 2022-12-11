@@ -71,6 +71,7 @@ ServerRequester.prototype.loadCurrenciesForIncome = function (data, callback) {
         dates.push(date)
     }
     dates.push(moment().format("YYYY-MM-DD"));
+    dates.push(moment().subtract(1, 'days').format("YYYY-MM-DD"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 
@@ -89,6 +90,7 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
         }
     }
     dates.push(moment().format("YYYY-MM-DD"));
+    dates.push(moment().subtract(1, 'days').format("YYYY-MM-DD"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
 

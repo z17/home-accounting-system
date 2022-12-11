@@ -125,7 +125,7 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
                        placeholder={strings.choose_folder}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
+                <input type="file" className="settings-folder" directory webkitdirectory multiple
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>

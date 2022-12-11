@@ -3,11 +3,12 @@ import Utils from "../Utils";
 import strings from "./lang";
 import {convertCurrency, getLastMothRates} from "./Currency";
 
-function BalanceModel(sources, months, rates, neededCurrency) {
+function BalanceModel(sources, months, rates, neededCurrency, defaultCurrency) {
     this.sources = sources;
     this.months = months;
     this.rates = rates;
     this.currency = neededCurrency;
+    this.defaultCurrency = defaultCurrency;
 }
 
 
@@ -223,16 +224,17 @@ BalanceModel.prototype.getCostsChartData = function (incomes, isCurrentMonthEmpt
             continue;
         }
 
+        let current_rates = getLastMothRates(this.rates, month);
         let currentBalance = 0;
         for (let sourceId in this.sources) {
             let source = this.sources[sourceId];
             if (!source.months.hasOwnProperty(month)) {
                 continue;
             }
-            let current_rates = getLastMothRates(this.rates, month);
             currentBalance += convertCurrency(source['currency'], this.currency, source.months[month], current_rates);
         }
         let currentIncome = incomeByMonth.hasOwnProperty(month) ? incomeByMonth[month] : 0;
+        currentIncome =  convertCurrency(this.defaultCurrency, this.currency, currentIncome, current_rates);
 
         let currentCosts = 0;
         if (prevBalance !== undefined) {

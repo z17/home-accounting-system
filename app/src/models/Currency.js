@@ -4,6 +4,7 @@ const Currencies = {
     EUR: 'EUR',
     USD: 'USD',
     RUB: 'RUB',
+    GBP: 'GBP',
 }
 
 const BaseCurrency = Currencies.USD;
@@ -21,6 +22,8 @@ function getCurrencySymbol(currency) {
             return '$';
         case Currencies.RUB:
             return '₽';
+        case Currencies.GBP:
+            return '£';
         default:
             return 'ERROR'
     }

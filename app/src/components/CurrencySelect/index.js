@@ -8,6 +8,7 @@ const CurrencySelect = ({className, defaultValue, onChange}) => {
         <option value={Currencies.USD}>{Currencies.USD}</option>
         <option value={Currencies.EUR}>{Currencies.EUR}</option>
         <option value={Currencies.RUB}>{Currencies.RUB}</option>
+        <option value={Currencies.GBP}>{Currencies.GBP}</option>
     </select>
 
 };

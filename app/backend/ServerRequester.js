@@ -100,10 +100,17 @@ ServerRequester.prototype.loadCurrencies = function (dates, callback) {
     let requestData = JSON.stringify({
         dates: dates
     });
+
     request('POST', '/get_currencies', {'Content-Type': 'application/json'}, requestData,
     (response) => {
-        response.on('data', function (data) {
-            const ratesData = JSON.parse(data.toString());
+
+        let data = [];
+        response.on('data', chunk => {
+            data.push(chunk);
+        });
+
+        response.on('end', () => {
+            const ratesData = JSON.parse(Buffer.concat(data).toString());
             if (!ratesData || ratesData.length === 0) {
                 callback(ratesData);
                 return;

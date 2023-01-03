@@ -11,30 +11,27 @@ import {
     convertSourceData,
     getMonthsArray
 } from "../../models/Balance";
-import {getCurrencySymbol, mergeCurrencyRates} from "../../models/Currency";
+import {getCurrencySymbol} from "../../models/Currency";
 import BalanceSumLine from "../BalanceSumLine";
 import CurrencySelect from "../CurrencySelect";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
-const Balance = ({active, defaultCurrency}) => {
+const Balance = ({active, defaultCurrency, currencyRates}) => {
 
     const [months, setMonths] = useState([]);
     const [sources, setSources] = useState({});
     const [incomes, setIncomes] = useState([]);
-    const [currencyRates, setCurrencyRates] = useState({}); // todo: transfer this to parent in future
     const [displayedCurrency, setDisplayedCurrency] = useState(defaultCurrency);
 
     useEffect(() => {
         ipcRenderer.send('component-balance-ready');
 
-        ipcRenderer.on('balance-types', function (event, data) {
-            let [sourceData, rates] = data
+        ipcRenderer.on('balance-types', function (event, sourceData) {
             const monthsMapIndexToValue = getMonthsArray(sourceData);
             const sourcesInit = convertSourceData(sourceData, defaultCurrency);
 
-            setCurrencyRates(mergeCurrencyRates(currencyRates, rates));
             setMonths(monthsMapIndexToValue);
             setSources(sourcesInit);
         });
@@ -62,9 +59,7 @@ const Balance = ({active, defaultCurrency}) => {
             setSources(s);
         });
 
-        ipcRenderer.on('income-data', function (event, data) {
-            let [incomes, rates] = data
-            setCurrencyRates(mergeCurrencyRates(currencyRates, rates));
+        ipcRenderer.on('income-data', function (event, incomes) {
             setIncomes(incomes);
         });
 
@@ -99,7 +94,7 @@ const Balance = ({active, defaultCurrency}) => {
 
     return <div className={`page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>
-        <div className="balance-currency"><span className="balance-currency-label">{strings.currency}:</span>
+        <div className="balance-currency currency-selector"><span className="balance-currency-label currency-selector-label">{strings.currency}:</span>
                 <CurrencySelect defaultValue={displayedCurrency} onChange={onChangeCurrency}/>
         </div>
         <div className="balance-statistic">

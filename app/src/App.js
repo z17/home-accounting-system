@@ -13,10 +13,14 @@ function App() {
     const [active_tab, setActiveTab] = useState('income');
     const [isReady, setReady] = useState(false);
     const [defaultCurrency, setDefaultCurrency] = useState('');
+    const [currencyRates, setCurrencyRates] = useState({});
 
     useEffect(() => {
         ipcRenderer.send('app-ready');
-        ipcRenderer.on('init_settings', function (event, settings) {
+
+        ipcRenderer.on('init_data', function (event, data) {
+            let [settings, rates] = data;
+
             if (settings.language) {
                 strings.setLanguage(settings.language);
             }
@@ -26,6 +30,7 @@ function App() {
                 setSettingsActive(true);
             }
             document.title = strings.title;
+            setCurrencyRates(rates);
             setReady(true);
         });
 
@@ -53,8 +58,8 @@ function App() {
                       defaultCurrency={defaultCurrency} setDefaultCurrency={setDefaultCurrency}/>
 
             <div className="content">
-                <Income active={active_tab === 'income'}/>
-                <Balance active={active_tab === 'balance'} defaultCurrency={defaultCurrency} />
+                <Income active={active_tab === 'income'} defaultCurrency={defaultCurrency} currencyRates={currencyRates} />
+                <Balance active={active_tab === 'balance'} defaultCurrency={defaultCurrency} currencyRates={currencyRates} />
             </div>
         </div>
     );

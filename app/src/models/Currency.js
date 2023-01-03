@@ -10,10 +10,6 @@ const Currencies = {
 const BaseCurrency = Currencies.USD;
 const LATEST_CURRENCY_KEY = 'latest';
 
-function mergeCurrencyRates(rates1, rates2) {
-    return {...rates1, ...rates2};
-}
-
 function getCurrencySymbol(currency) {
     switch (currency) {
         case Currencies.EUR:
@@ -52,6 +48,21 @@ function getLastMothRates(rates, month) {
     }
 }
 
+function getNearestRates(rates, dateTime) {
+    let date = moment.unix(dateTime)
+    for (let i = 0; i < 16; i++) {
+        let newDate = date.clone().add(i, 'days');
+        if (newDate.format("DD.MM.YYYY") in rates) {
+            return rates[newDate.format("DD.MM.YYYY")]
+        }
+        newDate = date.clone().subtract(i, 'days');
+        if (newDate.format("DD.MM.YYYY") in rates) {
+            return rates[newDate.format("DD.MM.YYYY")]
+        }
+    }
+    return rates[LATEST_CURRENCY_KEY];
+}
+
 export {
-    Currencies, mergeCurrencyRates, convertCurrency, getLastMothRates, getCurrencySymbol
+    Currencies, convertCurrency, getLastMothRates, getCurrencySymbol, getNearestRates
 }

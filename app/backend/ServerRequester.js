@@ -63,24 +63,16 @@ ServerRequester.prototype.getServerVersion = function (callback) {
     });
 };
 
-ServerRequester.prototype.loadCurrenciesForIncome = function (data, callback) {
+ServerRequester.prototype.loadCurrenciesForData = function (incomes, balance, callback) {
     let dates = []
-    for (let i in data) {
-        let income = data[i]
-        let date = moment(income['date']).format("YYYY-MM-DD");
+    for (let i in incomes) {
+        let income = incomes[i]
+        let date = moment.unix(income['date']).format("YYYY-MM-DD");
         dates.push(date)
     }
-    dates.push(moment().format("YYYY-MM-DD"));
-    dates.push(moment().subtract(1, 'days').format("YYYY-MM-DD"));
-    dates = [...new Set(dates)]
-    this.loadCurrencies(dates, callback);
 
-};
-
-ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
-    let dates = [];
-    for (let i in data) {
-        let source = data[i]
+    for (let i in balance) {
+        let source = balance[i]
         if (!source['value']) {
             continue;
         }
@@ -89,11 +81,11 @@ ServerRequester.prototype.loadCurrenciesForBalance = function (data, callback) {
             dates.push(date);
         }
     }
-    dates.push(moment().format("YYYY-MM-DD"));
+
     dates.push(moment().subtract(1, 'days').format("YYYY-MM-DD"));
+    dates.push(moment().format("YYYY-MM-DD"));
     dates = [...new Set(dates)]
     this.loadCurrencies(dates, callback);
-
 };
 
 ServerRequester.prototype.loadCurrencies = function (dates, callback) {

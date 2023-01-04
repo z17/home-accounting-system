@@ -89,36 +89,53 @@ ServerRequester.prototype.loadCurrenciesForData = function (incomes, balance, ca
 };
 
 ServerRequester.prototype.loadCurrencies = function (dates, callback) {
-    let requestData = JSON.stringify({
-        dates: dates
-    });
+    const chunkSize = 500; // limit dates on API
+    const chunks = []
+    for (let i = 0; i < dates.length; i += chunkSize) {
+        chunks.push(dates.slice(i, i + chunkSize));
+    }
 
-    request('POST', '/get_currencies', {'Content-Type': 'application/json'}, requestData,
-    (response) => {
+    let requestedDone = 0;
 
-        let data = [];
-        response.on('data', chunk => {
-            data.push(chunk);
+    let commonRatesData = {};
+    const processCallback = () => {
+        if (requestedDone !== chunks.length) {
+            return;
+        }
+
+        let result = {};
+        let latestDate = moment(Object.keys(commonRatesData)[0]);
+        for (let dateIterateStr in commonRatesData) {
+            let dateIterate = moment(dateIterateStr);
+            if (dateIterate.isAfter(latestDate)) {
+                latestDate = dateIterate;
+            }
+            result[dateIterate.format('DD.MM.YYYY')] = commonRatesData[dateIterateStr];
+        }
+        result['latest'] = commonRatesData[latestDate.format('YYYY-MM-DD')];
+        callback(result);
+    }
+
+    chunks.forEach((chunk) => {
+        let requestData = JSON.stringify({
+            dates: chunk
         });
 
-        response.on('end', () => {
-            const ratesData = JSON.parse(Buffer.concat(data).toString());
-            if (!ratesData || ratesData.length === 0) {
-                callback(ratesData);
-                return;
-            }
+        request('POST', '/get_currencies', {'Content-Type': 'application/json'}, requestData, (response) => {
 
-            const result = {};
-            let latestDate = moment(Object.keys(ratesData)[0]);
-            for (let dateIterateStr in ratesData) {
-                let dateIterate = moment(dateIterateStr);
-                if (dateIterate.isAfter(latestDate)) {
-                    latestDate = dateIterate;
+            let data = [];
+            response.on('data', chunk => {
+                data.push(chunk);
+            });
+
+            response.on('end', () => {
+                const ratesData = JSON.parse(Buffer.concat(data).toString());
+                if (ratesData) {
+                    commonRatesData = Object.assign({}, commonRatesData, ratesData);
                 }
-                result[dateIterate.format('DD.MM.YYYY')] = ratesData[dateIterateStr];
-            }
-            result['latest'] = ratesData[latestDate.format('YYYY-MM-DD')];
-            callback(result);
+                requestedDone += 1;
+                processCallback();
+            });
         });
     });
 };

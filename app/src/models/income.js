@@ -33,7 +33,6 @@ function getLastMonthTime(incomes) {
 IncomeModel.prototype.getIncomeSum = function () {
     let incomeSum = 0;
 
-    console.log('getIncomeSum')
     this.incomes.forEach((element) => {
         console.log(element);
         console.log(this.currencyRates);

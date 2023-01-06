@@ -22,6 +22,8 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
     let [responseCode, setResponseCode] = useState('');
     let [response, setResponse] = useState('');
 
+    let defaultLanguage = language ? language : '--';
+
     useEffect(() => {
         ipcRenderer.send('component-settings-ready');
 
@@ -49,7 +51,7 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
             setResponse('ok');
             setResponseCode(RESPONSE_OK);
         });
-    }, [id]);
+    }, [id, setDefaultCurrency]);
 
 
     const onChangeEmail = (event) => {
@@ -131,7 +133,8 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
                        placeholder={strings.choose_folder}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.language}:</label>
-                <select value={language} onChange={onChangeLanguage}>
+                <select defaultValue={defaultLanguage} onChange={onChangeLanguage}>
+                    <option disabled value='--'> -- </option>
                     <option value="ru">Русский</option>
                     <option value="en">English</option>
                     <option value="fr">Français</option>

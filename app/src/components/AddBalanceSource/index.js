@@ -31,7 +31,7 @@ const AddBalanceSource = () => {
     return <form onSubmit={addBalanceSource}>
         <label htmlFor="balancesource">{strings.balance_source_input}: </label>
         <input className="balance-source-add-field" type="text" id="balancesource" name="balancesource" value={name} onChange={onChangeName}/>
-        <CurrencySelect className="balance-source-add-field" onChange={onChangeCurrency} />
+        <CurrencySelect className="balance-source-add-field" onChange={onChangeCurrency} defaultValue={currency}/>
         <button type="submit" name="incrementsources">{strings.balance_source_add}</button>
     </form>
 

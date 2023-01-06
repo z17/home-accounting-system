@@ -1,31 +1,72 @@
-{"type":"income","data":{"contact":"Сбербанк","date":1500498000,"description":"","id":null,"month":1498856400,"paymentType":"Проценты по вкладу","sum":4211},"_id":"022vnnV5rP1VrQ7X"}
-{"type":"income","data":{"contact":"Ростелеком","date":1475787600,"description":"Остаток","id":null,"month":1472677200,"paymentType":"Зарплата","sum":40000},"_id":"17foQO5Ez113FXyu"}
-{"type":"income","data":{"contact":"Газпром","date":1499720400,"description":"Остаток за июнь","id":null,"month":1496264400,"paymentType":"Зарплата","sum":70000},"_id":"1YshRjfjuAtzYsuN"}
-{"type":"balance","data":{"name":"Наличные","value":{"102016":32540,"112016":11300,"122016":2300,"082016":42155,"092016":2155,"012017":32510,"022017":7510,"032017":30511,"042017":25850,"052017":55850,"062017":25851,"072017":5851,"082017":27851,"092017":53230}},"_id":"3GVxamX9JSsPjwSW"}
-{"type":"income","data":{"contact":"Газпром","date":1489179600,"description":"Остаток за февраль","id":null,"month":1485896400,"paymentType":"Зарплата","sum":60000},"_id":"3J9kwGbyVDYyM6E4"}
-{"type":"income","data":{"contact":"Газпром","date":1494450000,"description":"Остаток за апрель","id":"5BMoG0AvyMLHIsIc","month":1490994000,"paymentType":"Зарплата","sum":60000},"_id":"5BMoG0AvyMLHIsIc"}
-{"type":"balance","data":{"name":"Сбербанк","value":{"102016":85000,"112016":42000,"122016":18001,"082016":54000,"092016":112000,"012017":18001,"022017":63000,"032017":52000,"042017":84300,"052017":110430,"062017":110430,"072017":145430,"082017":205430,"092017":225000}},"_id":"7iw2wbB4lMfxuRHR"}
-{"type":"income","data":{"contact":"Алексей","date":1483477200,"description":"Проект","id":null,"month":1480539600,"paymentType":"Заказ","sum":12000},"_id":"9QM7Rl8wUMDCS0ZN"}
-{"type":"income","data":{"contact":"Ростелеком","date":1478811600,"description":"Остаток","id":null,"month":1475269200,"paymentType":"Зарплата","sum":40000},"_id":"A7XJTJL9Lml4KXRA"}
-{"type":"income","data":{"contact":"Алексей","date":1481835600,"description":"Проект","id":null,"month":1480539600,"paymentType":"Заказ","sum":28000},"_id":"E27muO9s5Fa4xfjh"}
-{"type":"income","data":{"contact":"Газпром","date":1493154000,"description":"Аванс за апрель","id":"E3isLKloVbvufFfY","month":1490994000,"paymentType":"Зарплата","sum":50000},"_id":"E3isLKloVbvufFfY"}
-{"type":"income","data":{"contact":"Ростелеком","date":1480107600,"description":"Аванс","id":null,"month":1477947600,"paymentType":"Зарплата","sum":30000},"_id":"EwcmKST5qVupZzul"}
-{"type":"income","data":{"contact":"Газпром","date":1507669200,"description":"Остаток за сентябрь","id":null,"month":1504213200,"paymentType":"Зарплата","sum":75000},"_id":"FAw7dar63TFpHGme"}
-{"type":"income","data":{"contact":"Ростелеком","date":1473368400,"description":"Остаток","id":null,"month":1469998800,"paymentType":"Зарплата","sum":40000},"_id":"JpsrNVHS4mZaoKKW"}
-{"type":"income","data":{"contact":"Газпром","date":1498424400,"description":"Аванс за июнь","id":null,"month":1496264400,"paymentType":"Зарплата","sum":60000},"_id":"KR6RD7YZgB4wvyRi"}
-{"type":"income","data":{"contact":"Газпром","date":1504126800,"description":"Премия","id":null,"month":1501534800,"paymentType":"Зарплата","sum":15000},"_id":"KiGIwpmLJNL8AUF3"}
-{"type":"income","data":{"contact":"Газпром","date":1490475600,"description":"Аванс за март","id":null,"month":1488315600,"paymentType":"Зарплата","sum":50000},"_id":"PiEweTjC9KSNjLx1"}
-{"type":"income","data":{"contact":"Газпром","date":1487970000,"description":"Аванс","id":null,"month":1485896400,"paymentType":"Зарплата","sum":50000},"_id":"RJtbwxQAHhqRA1eQ"}
-{"type":"income","data":{"contact":"Газпром","date":1495659600,"description":"Аванс за май","id":"SWjlvoRLWeDAjykH","month":1493586000,"paymentType":"Зарплата","sum":60000},"_id":"SWjlvoRLWeDAjykH"}
-{"type":"income","data":{"contact":"Газпром","date":1502398800,"description":"Остаток за июль","id":null,"month":1498856400,"paymentType":"Зарплата","sum":60000},"_id":"VdLFfVbRjhk0yrMf"}
-{"type":"income","data":{"contact":"Газпром","date":1503694800,"description":"Аванс за август","id":null,"month":1501534800,"paymentType":"Зарплата","sum":65000},"_id":"WmVvcPpOhglVMhuv"}
-{"type":"income","data":{"contact":"Ростелеком","date":1481144400,"description":"Остаток","id":null,"month":1477947600,"paymentType":"Зарплата","sum":40000},"_id":"XtG1xJYl5xAr4mt0"}
-{"type":"income","data":{"contact":"Газпром","date":1506373200,"description":"Аванс за сентябрь","id":null,"month":1504213200,"paymentType":"Зарплата","sum":65000},"_id":"c3VkOJWINKeje7y9"}
-{"type":"balance","data":{"name":"Альфабанк","value":{"102016":23300,"112016":113300,"122016":125300,"082016":24500,"092016":19200,"012017":78300,"022017":78300,"032017":128300,"042017":160300,"052017":175000,"062017":265000,"072017":321000,"082017":275001,"092017":275000}},"_id":"jDASnGYBwrrojmXd"}
-{"type":"income","data":{"contact":"Алексей","date":1484859600,"description":"Проект","id":null,"month":1483218000,"paymentType":"Заказ","sum":22000},"_id":"laeTo2PiWCXYEbCx"}
-{"type":"income","data":{"contact":"Газпром","date":1501016400,"description":"Аванс за июль","id":null,"month":1498856400,"paymentType":"Зарплата","sum":60000},"_id":"lefDGbiArzcrS4t8"}
-{"type":"income","data":{"contact":"Газпром","date":1491598800,"description":"Остаток за март","id":"q8OGns23BdEMEQG0","month":1488315600,"paymentType":"Зарплата","sum":60000},"_id":"q8OGns23BdEMEQG0"}
-{"type":"income","data":{"contact":"Ростелеком","date":1477602000,"description":"Аванс","id":"qFLC3jHYaZxuWMxB","month":1475269200,"paymentType":"Зарплата","sum":30000},"_id":"qFLC3jHYaZxuWMxB"}
-{"type":"income","data":{"contact":"Ростелеком","date":1474923600,"description":"Аванс","id":"sSYpHBcpvtJxc0Fy","month":1472677200,"paymentType":"Зарплата","sum":30000},"_id":"sSYpHBcpvtJxc0Fy"}
-{"type":"income","data":{"contact":"Газпром","date":1497128400,"description":"Остаток за май","id":null,"month":1493586000,"paymentType":"Зарплата","sum":70000},"_id":"wOgYUSI8tJUUsNrJ"}
-{"type":"income","data":{"contact":"Газпром","date":1504904400,"description":"Остаток за август","id":null,"month":1501534800,"paymentType":"Зарплата","sum":75000},"_id":"zFKpkXXiZhNr6d6O"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"settings","data":{"email":"test@test.ru","language":"en","lastBackupDateTimestamp":0,"remind":false,"defaultCurrency":"USD"},"_id":"4iv3ete2t4bfpFcu"}
+{"type":"income","data":{"id":null,"date":1610553600,"month":1609430400,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"5oK4wNlO3G3EH7Ge"}
+{"type":"income","data":{"id":null,"date":1613923200,"month":1612108800,"sum":700,"paymentType":"Salary","contact":"MyCompany.com","description":"Bonus"},"_id":"AbECPjTFRpKc9CcF"}
+{"type":"income","data":{"id":null,"date":1605888000,"month":1604160000,"sum":200,"paymentType":"Freelance","contact":"wework","description":"Some work"},"_id":"AgAloOzcmnJnC2AU"}
+{"type":"income","data":{"id":null,"date":1623686400,"month":1622476800,"sum":300,"paymentType":"Freelance","contact":"wework","description":"Fixed parser"},"_id":"CJvfvRrN2bpqTHAw"}
+{"type":"income","data":{"id":"EJEPJW70VJJA09MD","date":1636905600,"month":1635696000,"sum":2300,"paymentType":"Salary","contact":"Facebook.com","description":"Regular salary"},"_id":"EJEPJW70VJJA09MD"}
+{"type":"income","data":{"id":null,"date":1628956800,"month":1627747200,"sum":2000,"paymentType":"Salary","contact":"Facebook.com","description":"Regular salary"},"_id":"FSey5qU02Exrj9ik"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{}},"_id":"FxK1MFJ9fzh6fQIY"}
+{"type":"income","data":{"id":"KrvwXIeZMC23tS2C","date":1602691200,"month":1601481600,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"KrvwXIeZMC23tS2C"}
+{"type":"income","data":{"id":null,"date":1615737600,"month":1614528000,"sum":400,"paymentType":"Freelance","contact":"wework","description":"Some work - website"},"_id":"M7QkenHBqEQWBiHs"}
+{"type":"income","data":{"id":null,"date":1639497600,"month":1638288000,"sum":2300,"paymentType":"Salary","contact":"Facebook.com","description":"Regular salary"},"_id":"UVynjasPik1PDYc1"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"income","data":{"id":null,"date":1607961600,"month":1606752000,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"WJOUWtJkkA19dvqG"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"income","data":{"id":null,"date":1618416000,"month":1617206400,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Just Salary"},"_id":"Z9aIyC0acEHKCgAO"}
+{"type":"income","data":{"id":null,"date":1616342400,"month":1614528000,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"bkUaXyhvTN1MAEWu"}
+{"type":"income","data":{"id":null,"date":1613232000,"month":1612108800,"sum":1500,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"cU1n2cGxzoo2zQVJ"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"income","data":{"id":"pqSgJVDNSBYETnLN","date":1605369600,"month":1604160000,"sum":1450,"paymentType":"Salary","contact":"MyCompany.com","description":"Salary"},"_id":"pqSgJVDNSBYETnLN"}
+{"type":"income","data":{"id":null,"date":1634227200,"month":1633017600,"sum":2000,"paymentType":"Salary","contact":"Facebook.com","description":"Regular salary"},"_id":"qekinlOdut0zDv1T"}
+{"type":"income","data":{"id":null,"date":1631635200,"month":1630425600,"sum":2000,"paymentType":"Salary","contact":"Facebook.com","description":"Regular salary"},"_id":"ynjpmmfzQYEsndTE"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300,"052021":300}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300,"052021":300}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300,"052021":300,"062021":300}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300,"052021":300,"062021":300}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300,"052021":300,"062021":300,"072021":300}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300,"052021":300,"062021":300,"072021":300}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600,"082021":700}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300,"052021":300,"062021":300,"072021":300,"082021":500}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500,"082021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300,"052021":300,"062021":300,"072021":300,"082021":300}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{"082021":15000}},"_id":"FxK1MFJ9fzh6fQIY"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600,"082021":700,"092021":900}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"032021":300,"042021":300,"052021":300,"062021":300,"072021":300,"082021":500,"092021":500}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500,"082021":1500,"092021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"042021":300,"052021":300,"062021":300,"072021":300,"082021":300,"092021":400}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{"082021":15000,"092021":30000}},"_id":"FxK1MFJ9fzh6fQIY"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"102021":1100,"112020":2200,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600,"082021":700,"092021":900}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"102021":500,"032021":300,"042021":300,"052021":300,"062021":300,"072021":300,"082021":500,"092021":500}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"102021":1500,"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500,"082021":1500,"092021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"102021":600,"042021":300,"052021":300,"062021":300,"072021":300,"082021":300,"092021":400}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{"102021":30000,"082021":15000,"092021":30000}},"_id":"FxK1MFJ9fzh6fQIY"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"102021":1100,"112020":2200,"112021":1300,"122020":2700,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600,"082021":700,"092021":900}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"102021":500,"112021":700,"032021":300,"042021":300,"052021":300,"062021":300,"072021":300,"082021":500,"092021":500}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"102021":1500,"112021":1500,"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500,"082021":1500,"092021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"102021":600,"112021":800,"042021":300,"052021":300,"062021":300,"072021":300,"082021":300,"092021":400}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{"102021":30000,"112021":30000,"082021":15000,"092021":30000}},"_id":"FxK1MFJ9fzh6fQIY"}
+{"type":"balance","data":{"name":"Revolut ","currency":"USD","value":{"102020":1500,"102021":1100,"112020":2200,"112021":1300,"122020":2700,"122021":1400,"012021":1000,"022021":600,"032021":800,"042021":900,"052021":800,"062021":500,"072021":600,"082021":700,"092021":900}},"_id":"07K8Zrp7fuiL3Zf6"}
+{"type":"balance","data":{"name":"Revolut ","currency":"EUR","value":{"102021":500,"112021":700,"122021":800,"032021":300,"042021":300,"052021":300,"062021":300,"072021":300,"082021":500,"092021":500}},"_id":"kN9mMlHQtxY1ss4C"}
+{"type":"balance","data":{"name":"USDT","currency":"USD","value":{"102021":1500,"112021":1500,"122021":1500,"012021":2000,"022021":3000,"032021":3000,"042021":3000,"052021":2300,"062021":2100,"072021":1500,"082021":1500,"092021":1500}},"_id":"YbfaqyxJPQAGhzvk"}
+{"type":"balance","data":{"name":"Interactive Brokers","currency":"USD","value":{"102021":600,"112021":800,"122021":800,"042021":300,"052021":300,"062021":300,"072021":300,"082021":300,"092021":400}},"_id":"VpppTLADMde4Qhjd"}
+{"type":"balance","data":{"name":"Cash","currency":"RUB","value":{"102021":30000,"112021":30000,"122021":60000,"082021":15000,"092021":30000}},"_id":"FxK1MFJ9fzh6fQIY"}

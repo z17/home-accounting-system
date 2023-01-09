@@ -121,13 +121,13 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
                 <input type="email" value={email} onChange={onChangeEmail}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.database_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory webkitdirectory multiple
+                <input type="file" className="settings-folder" directory={1} webkitdirectory={1} multiple
                        onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
                        placeholder={strings.choose_folder}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory webkitdirectory multiple
+                <input type="file" className="settings-folder" directory={1} webkitdirectory={1} multiple
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>

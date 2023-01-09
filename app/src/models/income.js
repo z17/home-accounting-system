@@ -34,8 +34,6 @@ IncomeModel.prototype.getIncomeSum = function () {
     let incomeSum = 0;
 
     this.incomes.forEach((element) => {
-        console.log(element);
-        console.log(this.currencyRates);
         let rates = getNearestRates(this.currencyRates, element['date']);
         let convertedSum = convertCurrency(this.defaultCurrency, this.displayedCurrency, element.sum, rates);
         incomeSum += convertedSum;

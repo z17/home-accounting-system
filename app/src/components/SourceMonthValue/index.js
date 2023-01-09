@@ -12,12 +12,13 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
     const [value, setValue] = useState(sourceValue);
 
     const onChangeValue = (event) => {
-        setValue(parseInt(event.target.value));
+        setValue(event.target.value);
     };
 
     const onChangeUpdateMode = () => {
+        let balanceValue = parseInt(value);
         if (editMode) {
-            ipcRenderer.send('balance-update', sourceId, month, value);
+            ipcRenderer.send('balance-update', sourceId, month, balanceValue);
             setEditMode(false);
         } else {
             setEditMode(true);
@@ -37,7 +38,7 @@ const SourceMonthValue = ({month, sourceValue, sourceId, isEditMode}) => {
     }
 
     return <td className="source-month-value control-with-buttons" key={month}>
-        {Utils.numberWithSpaces(value)}
+        {Utils.numberWithSpaces(parseInt(value))}
         <span className="edit control-button" onClick={onChangeUpdateMode}/>
         <span className="delete control-button" onClick={onDelete}/>
     </td>

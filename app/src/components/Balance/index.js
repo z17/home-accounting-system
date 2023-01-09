@@ -7,35 +7,33 @@ import Chart from "react-google-charts";
 import SourceLine from "../SourceLine";
 import strings from "../../models/lang";
 import {
+    BalanceModel,
     convertSourceData,
-    getBalanceChartData,
-    getBalanceDiffChartData,
-    getBalancePieChartData,
-    getBalanceSum,
-    getBestMonth, getCostsChartData,
     getMonthsArray
 } from "../../models/Balance";
+import {getCurrencySymbol} from "../../models/Currency";
 import BalanceSumLine from "../BalanceSumLine";
-const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
+import CurrencySelect from "../CurrencySelect";
 
-const Balance = ({active}) => {
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
+
+const Balance = ({active, defaultCurrency, currencyRates}) => {
 
     const [months, setMonths] = useState([]);
     const [sources, setSources] = useState({});
     const [incomes, setIncomes] = useState([]);
+    const [displayedCurrency, setDisplayedCurrency] = useState(defaultCurrency);
 
     useEffect(() => {
         ipcRenderer.send('component-balance-ready');
 
         ipcRenderer.on('balance-types', function (event, sourceData) {
-
             const monthsMapIndexToValue = getMonthsArray(sourceData);
-            const sourcesInit = convertSourceData(sourceData);
+            const sourcesInit = convertSourceData(sourceData, defaultCurrency);
 
             setMonths(monthsMapIndexToValue);
             setSources(sourcesInit);
-
         });
 
         ipcRenderer.on('balance-reupdated', function (event, sourceId, month) {
@@ -56,12 +54,13 @@ const Balance = ({active}) => {
                 id: source.id,
                 name: source.name,
                 months: source.value,
+                currency: source.currency,
             };
             setSources(s);
         });
 
-        ipcRenderer.on('income-data', function (event, data) {
-            setIncomes(data);
+        ipcRenderer.on('income-data', function (event, incomes) {
+            setIncomes(incomes);
         });
 
         return () => {
@@ -71,7 +70,7 @@ const Balance = ({active}) => {
           ipcRenderer.removeAllListeners('balance-inserted');
           ipcRenderer.removeAllListeners('income-data');
         };
-    }, [sources, months]);
+    }, [sources, months, currencyRates, defaultCurrency]);
 
 
     let balanceSum;
@@ -80,20 +79,24 @@ const Balance = ({active}) => {
     let balanceMaxMonth;
     let isCurrentMonthEmpty;
 
-    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = getBalanceSum(sources, months);
+    let balanceModel = new BalanceModel(sources, months, currencyRates, displayedCurrency, defaultCurrency);
 
-    let balanceChartArray = getBalanceChartData(sources, months, isCurrentMonthEmpty);
+    [balanceSum, lastUnEmptyMonth, isCurrentMonthEmpty] = balanceModel.getBalanceSum();
+    let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);
+    [balanceMaxSum, balanceMaxMonth] = balanceModel.getBestMonth();
+    let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
+    let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
+    let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
-    [balanceMaxSum, balanceMaxMonth] = getBestMonth(sources, months);
+    const onChangeCurrency = (event) => {
+        setDisplayedCurrency(event.target.value);
+    };
 
-    let balancePieChartArray = getBalancePieChartData(sources, lastUnEmptyMonth);
-
-    let balanceDiffChartArray = getBalanceDiffChartData(sources, months, isCurrentMonthEmpty);
-
-    let costsChartArray = getCostsChartData(sources, months, incomes, isCurrentMonthEmpty);
-
-    return <div className={`js-income-page page ${active ? 'active' : ''}`}>
+    return <div className={`page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>
+        <div className="balance-currency currency-selector"><span className="balance-currency-label currency-selector-label">{strings.currency}:</span>
+                <CurrencySelect defaultValue={displayedCurrency} onChange={onChangeCurrency}/>
+        </div>
         <div className="balance-statistic">
 
             <h2>{strings.balance_chart_title}</h2>
@@ -112,8 +115,9 @@ const Balance = ({active}) => {
                         },
                         isStacked: true,
                         vAxis: {
-                            minValue: 0
-                        }
+                            minValue: 0,
+                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
+                        },
                     }}
                     data={balanceChartArray}
                 />
@@ -135,7 +139,8 @@ const Balance = ({active}) => {
                         },
                         isStacked: true,
                         vAxis: {
-                            minValue: 0
+                            minValue: 0,
+                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
                         }
                     }}
                     data={balanceDiffChartArray}
@@ -158,7 +163,8 @@ const Balance = ({active}) => {
                         },
                         isStacked: true,
                         vAxis: {
-                            minValue: 0
+                            minValue: 0,
+                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
                         }
                     }}
                     data={costsChartArray}
@@ -181,9 +187,9 @@ const Balance = ({active}) => {
                 <div className="balance-data">
                     <h2>{strings.statistic}</h2>
                     <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span
-                        className="data-value">{Utils.numberWithSpaces(balanceSum)}</span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceSum)} {getCurrencySymbol(displayedCurrency)}</span></p>
                     <p className="data-line"><span className="income-data-name">{strings.max_sum}:</span> <span
-                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)}, {balanceMaxMonth}</span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)}  {getCurrencySymbol(displayedCurrency)}, {balanceMaxMonth}</span></p>
                 </div>
             </div>
         </div>

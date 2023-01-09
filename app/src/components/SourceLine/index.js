@@ -8,10 +8,11 @@ const ipcRenderer = electron.ipcRenderer;
 const SourceLine = ({source, months}) => {
 
     const [editMode, setEditMode] = useState(false);
-    const [sourceName, setValue] = useState(source.name);
+    const [sourceName, setName] = useState(source.name ? source.name : 'default');
+    const [currency, ] = useState(source.currency);
 
     const onChangeValue = (event) => {
-        setValue(event.target.value);
+        setName(event.target.value);
     };
 
     const onChangeUpdateMode = () => {
@@ -42,7 +43,8 @@ const SourceLine = ({source, months}) => {
         </tr>
     }
     return <tr className="source-line" key={source.id}>
-        <th className="source-name control-with-buttons">{sourceName} <span className="edit control-button" onClick={onChangeUpdateMode}/></th>
+        <th className="source-name control-with-buttons">{sourceName} <span className="source-currency">({currency})</span><span
+            className="edit control-button" onClick={onChangeUpdateMode}/></th>
         {values}
     </tr>
 

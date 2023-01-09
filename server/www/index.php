@@ -9,7 +9,7 @@ spl_autoload_register(function ($name) {
         if ($i == $size - 1) {
             return;
         }
-        $str = strtolower($str);
+        $str = $str;
     }, count($fileParts));
     $filePath = implode('/', $fileParts) . '.php';
     /** @noinspection PhpIncludeInspection */
@@ -44,6 +44,20 @@ switch ($path) {
     case Urls::STATS;
         $code = isset($_GET['code']) ? $_GET['code'] : null;
         $action = new Action\StatsAction($code);
+        $action->process();
+        break;
+    case Urls::CURRENCIES_GET:
+        $data = file_get_contents('php://input');
+        $decoded_data = json_decode($data, true);
+        $action = new Action\CurrenciesGetByDates($decoded_data);
+        $action->process();
+        break;
+    case Urls::CURRENCIES_UPDATE_TODAY:
+        $action = new Action\CurrenciesUpdateByDate();
+        $action->process();
+        break;
+    case Urls::CURRENCIES_UPDATE_OLD:
+        $action = new Action\CurrenciesUpdateOldDates();
         $action->process();
         break;
     case Urls::MAIN;

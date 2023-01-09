@@ -11,7 +11,7 @@ const fs = require('fs');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
-const serverRequester = new ServerRequester();
+const serverRequester = new ServerRequester(argv.dev);
 
 const DATABASE_FOLDER_KEY = 'database-folder';
 const DATABASE_NAME = 'database';
@@ -46,7 +46,13 @@ app.on('ready', function () {
         }
     );
 
-    const config = new Config();
+    let config = null;
+    if (argv.dev) {
+        config = new Config({name: 'dev'});
+    } else {
+        config = new Config();
+    }
+
     let dbPath = config.get(DATABASE_FOLDER_KEY);
     if (dbPath === undefined) {
         dbPath = app.getPath('userData') + path.sep + 'db' + path.sep;
@@ -72,19 +78,65 @@ app.on('ready', function () {
 
     mainWindow.loadURL(loadUrl);
 
-    ipcMain.on('app-ready', () => {
-        dao.getSettings(function (settings) {
-            mainWindow.webContents.send('current_language', settings.language);
-        });
+    let settings = null;
+    let incomes = null;
+    let balance = null;
+    let rates = null;
+    let isReady = false;
+
+    dao.getIncomes((incomesInn) => {
+        incomes = incomesInn;
+        tryToProcessData();
+    });
+    dao.getBalances((balanceIn) => {
+        balance = balanceIn;
+        tryToProcessData();
+    });
+    dao.getSettings((settingsIn) => {
+        settings = settingsIn;
+        settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
+        tryToProcessData();
     });
 
-    const loadData = function () {
+    const tryToProcessData = () => {
+        if (incomes == null || balance == null || settings == null) {
+            return;
+        }
+        onDataLoadReady();
+    }
+    const onDataLoadReady = () => {
+        serverRequester.loadCurrenciesForData(incomes, balance, (currencyData) => {
+            rates = currencyData;
+            tryToSendInitData();
+        });
+    }
+
+    const tryToSendInitData = () => {
+        if (rates == null || isReady === false) {
+            return;
+        }
+        sendInitData();
+    }
+    const sendInitData = () => {
+        mainWindow.webContents.send('init_data', [settings, rates]);
+    }
+
+    ipcMain.on('app-ready', () => {
+        isReady = true;
+        tryToSendInitData();
+    });
+
+    const tryToLoadData = () => {
         if (rootComponentsReadyStatus['data_sent']
             || !rootComponentsReadyStatus['balance']
             || !rootComponentsReadyStatus['income']
             || !rootComponentsReadyStatus['settings']) {
             return
         }
+        loadData();
+    }
+
+    const loadData = function () {
         rootComponentsReadyStatus['data_sent'] = true;
 
         if (!argv.dev) {
@@ -95,27 +147,20 @@ app.on('ready', function () {
             });
         }
 
-        dao.getSettings(function (settings) {
-            settings.databaseFolder = config.get(DATABASE_FOLDER_KEY);
-            mainWindow.webContents.send('settings', settings);
+        mainWindow.webContents.send('settings', settings);
+        let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
+        let backupTimestamp = backup.makeBackup(settings.lastBackupDateTimestamp);
 
-            let backup = new Backup(dao.getDatabasePath(), settings.backupFolder);
-            let backupTimestamp = backup.makeBackup(settings.lastBackupDateTimestamp);
+        if (backupTimestamp !== undefined) {
+            settings.lastBackupDateTimestamp = backupTimestamp;
+            dao.updateSettings(settings, () => {
+            });
+        }
 
-            if (backupTimestamp !== undefined) {
-                settings.lastBackupDateTimestamp = backupTimestamp;
-                dao.updateSettings(settings, () => {
-                });
-            }
-        });
+        mainWindow.webContents.send('income-data', incomes)
 
-        dao.getIncomes(function (data) {
-            mainWindow.webContents.send('income-data', data);
-        });
+        mainWindow.webContents.send('balance-types', balance);
 
-        dao.getBalances(function (types) {
-            mainWindow.webContents.send('balance-types', types);
-        });
     };
 
     // Этот метод будет выполнен когда генерируется событие закрытия окна.
@@ -133,17 +178,17 @@ app.on('ready', function () {
 
     ipcMain.on('component-balance-ready', () => {
         rootComponentsReadyStatus['balance'] = true;
-        loadData();
+        tryToLoadData();
     });
 
     ipcMain.on('component-income-ready', () => {
         rootComponentsReadyStatus['income'] = true;
-        loadData();
+        tryToLoadData();
     });
 
     ipcMain.on('component-settings-ready', () => {
         rootComponentsReadyStatus['settings'] = true;
-        loadData();
+        tryToLoadData();
     });
 
     ipcMain.on('income-add', (event, income) => {

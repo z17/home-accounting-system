@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './Settings.css'
 import strings from "../../models/lang";
+import CurrencySelect from "../CurrencySelect";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -8,7 +9,7 @@ const ipcRenderer = electron.ipcRenderer;
 const RESPONSE_OK = 'ok';
 const RESPONSE_ERROR = 'error';
 
-const Settings = ({active, settingsToggle}) => {
+const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency}) => {
 
     let [id, setId] = useState('');
     let [email, setEmail] = useState('');
@@ -18,8 +19,10 @@ const Settings = ({active, settingsToggle}) => {
     let [language, setLanguage] = useState('');
     let [lastBackupDateTimestamp, setLastBackupDateTimestamp] = useState('');
 
-    let [responseCode, setResponseCode] = useState();
-    let [response, setResponse] = useState();
+    let [responseCode, setResponseCode] = useState('');
+    let [response, setResponse] = useState('');
+
+    let defaultLanguage = language ? language : '--';
 
     useEffect(() => {
         ipcRenderer.send('component-settings-ready');
@@ -28,6 +31,7 @@ const Settings = ({active, settingsToggle}) => {
             setId(data.id);
             setEmail(data.email);
             setRemind(data.remind);
+            setDefaultCurrency(data.defaultCurrency);
             setBackupFolder(data.backupFolder);
             setDatabaseFolder(data.databaseFolder);
             setLanguage(data.language);
@@ -47,7 +51,7 @@ const Settings = ({active, settingsToggle}) => {
             setResponse('ok');
             setResponseCode(RESPONSE_OK);
         });
-    }, [id]);
+    }, [id, setDefaultCurrency]);
 
 
     const onChangeEmail = (event) => {
@@ -69,6 +73,10 @@ const Settings = ({active, settingsToggle}) => {
         setLanguage(event.target.value);
     };
 
+    const onChangeDefaultCurrency = (event) => {
+        setDefaultCurrency(event.target.value);
+    };
+
     const onSubmit = (event) => {
         event.preventDefault();
         setResponse('');
@@ -86,46 +94,56 @@ const Settings = ({active, settingsToggle}) => {
             id: id,
             language: language,
             lastBackupDateTimestamp: lastBackupDateTimestamp,
-            remind: remind
+            remind: remind,
+            defaultCurrency: defaultCurrency,
         };
 
         ipcRenderer.send('update-settings', settings);
     };
+
+    let currencyWarning = defaultCurrency ? ' ' : <div className="settings-currency-warning">{strings.settingsSetDefaultCurrency}</div>;
 
     // noinspection HtmlUnknownAttribute
     return <div className={`settings-window ${active ? "active" : ""}`}>
 
         <div className="settings-close-button" onClick={settingsToggle}>&#10006;</div>
         <h1>{strings.settings}</h1>
+        {currencyWarning}
 
         <form className="settings-form" onSubmit={onSubmit}>
-            <label>{strings.remind}:
+            <div className="settings-row"><label className="settings-label">{strings.remind}:</label>
                 <input type="checkbox" checked={remind} onChange={onChangeRemind}/>
-            </label>
-            <label>{strings.remind_email}:
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.defaultCurrency}:</label>
+                <CurrencySelect defaultValue={defaultCurrency} onChange={onChangeDefaultCurrency}/>
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.remind_email}:</label>
                 <input type="email" value={email} onChange={onChangeEmail}/>
-            </label>
-            <label>{strings.database_folder}:<br/>
-                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.database_folder}:</label><br/>
+                <input type="file" className="settings-folder" directory webkitdirectory multiple
                        onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
                        placeholder={strings.choose_folder}/>
-            </label>
-            <label>{strings.backup_folder}:<br/>
-                <input type="file" className="settings-folder" directory="" webkitdirectory="" multiple
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
+                <input type="file" className="settings-folder" directory webkitdirectory multiple
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>
-            </label>
-            <label>{strings.language}:
-                <select value={language} onChange={onChangeLanguage}>
+            </div>
+            <div className="settings-row"><label className="settings-label">{strings.language}:</label>
+                <select defaultValue={defaultLanguage} onChange={onChangeLanguage}>
+                    <option disabled value='--'> -- </option>
                     <option value="ru">Русский</option>
                     <option value="en">English</option>
                     <option value="fr">Français</option>
                 </select>
-            </label>
-            <input type="submit" value={strings.save}/> <span
-            className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
+            </div>
+            <div className="settings-row">
+                <input type="submit" value={strings.save}/> <span
+                className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
+            </div>
         </form>
     </div>
 };

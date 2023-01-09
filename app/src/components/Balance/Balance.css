@@ -131,3 +131,12 @@ form.addBalance button.submit {
 .balance-items-table .control-with-buttons:hover .delete {
   display: block;
 }
+
+.balance-source-add-field {
+  margin-right: 10px;
+}
+
+.source-currency {
+  font-weight: normal;
+}
+

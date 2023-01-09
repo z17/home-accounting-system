@@ -35,3 +35,12 @@ body {
     content: '';
     clear: both;
 }
+
+
+.currency-selector {
+    font-size: 18px;
+}
+
+.currency-selector-label {
+  padding-right: 10px;
+}

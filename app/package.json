@@ -18,24 +18,24 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "compare-versions": "^4.1.2",
-    "concurrently": "^6.5.0",
-    "electron-config": "^2.0.0",
-    "minimist": "^1.2.0",
+    "compare-versions": "^5.0.3",
+    "concurrently": "^7.6.0",
+    "electron-store": "^8.1.0",
+    "minimist": "^1.2.7",
     "moment": "^2.29.1",
     "nedb": "^1.8.0",
-    "normalize.css": "^6.0.0",
+    "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-autocomplete": "^1.8.1",
     "react-dom": "^17.0.2",
     "react-google-charts": "^3.0.15",
     "react-localization": "^1.0.17",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^3.1.0"
   },
   "devDependencies": {
-    "electron-builder": "^22.14.5",
-    "electron": "^16.0.5"
+    "electron-builder": "^23.6.0",
+    "electron": "^22.0.0"
   },
   "scripts": {
     "start": "concurrently \"BROWSER=none npm run react-start\" \"electron .\"",

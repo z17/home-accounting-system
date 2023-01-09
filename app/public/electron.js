@@ -5,7 +5,7 @@ const Backup = require('../backend/Backup');
 const argv = require('minimist')(process.argv);
 const ServerRequester = require('../backend/ServerRequester');
 const path = require('path');
-const Config = require('electron-config');
+const Config = require('electron-store');
 const fs = require('fs');
 
 const app = electron.app;

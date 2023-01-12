@@ -62,10 +62,16 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
         setRemind(!remind);
     };
     const onChangeDatabaseFolder = (event) => {
+        if (event.target.files.length === 0) {
+            return;
+        }
         setDatabaseFolder(event.target.files[0].path);
     };
 
     const onChangeBackupFolder = (event) => {
+        if (event.target.files.length === 0) {
+            return;
+        }
         setBackupFolder(event.target.files[0].path);
     };
 
@@ -121,13 +127,13 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
                 <input type="email" value={email} onChange={onChangeEmail}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.database_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory={1} webkitdirectory={1} multiple
+                <input type="file" className="settings-folder" directory={1} webkitdirectory={1}
                        onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
                        placeholder={strings.choose_folder}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory={1} webkitdirectory={1} multiple
+                <input type="file" className="settings-folder" directory={1} webkitdirectory={1}
                        onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
                        placeholder={strings.choose_folder}/>

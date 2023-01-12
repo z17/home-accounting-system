@@ -92,6 +92,12 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
         setDisplayedCurrency(event.target.value);
     };
 
+    const sourcesList = Object.keys(sources);
+    sourcesList.sort((a, b) => {
+        const firstName = sources[a].name ? sources[a].name : '';
+        return firstName.localeCompare(sources[b].name);
+    });
+
     return <div className={`page ${active ? 'active' : ''}`}>
         <h1>{strings.balance}</h1>
         <div className="balance-currency currency-selector"><span className="balance-currency-label currency-selector-label">{strings.currency}:</span>
@@ -198,7 +204,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
             <table className="balance-items-table">
                 <tbody>
                    <BalanceMonthsLine months={months}/>
-                   {Object.keys(sources).map((sourceKey) => {
+                   {sourcesList.map((sourceKey) => {
                        const source = sources[sourceKey];
                        return <SourceLine key={sourceKey} source={source} months={months}/>
                    })}

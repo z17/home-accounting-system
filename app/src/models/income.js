@@ -1,4 +1,14 @@
 import moment from "moment";
+import {convertCurrency, getNearestRates} from "./Currency";
+
+
+function IncomeModel(incomes, defaultCurrency, displayedCurrency, currencyRates) {
+    this.incomes = incomes;
+    this.displayedCurrency = displayedCurrency;
+    this.defaultCurrency =  defaultCurrency;
+    this.currencyRates = currencyRates;
+}
+
 
 function Income(date, month, sum, paymentType, contact, description) {
     this.id = null;
@@ -20,17 +30,28 @@ function getLastMonthTime(incomes) {
     return maxDate
 }
 
-function getChartsData(incomeArray) {
+IncomeModel.prototype.getIncomeSum = function () {
+    let incomeSum = 0;
+
+    this.incomes.forEach((element) => {
+        let rates = getNearestRates(this.currencyRates, element['date']);
+        let convertedSum = convertCurrency(this.defaultCurrency, this.displayedCurrency, element.sum, rates);
+        incomeSum += convertedSum;
+    });
+    return incomeSum;
+};
+
+IncomeModel.prototype.getChartsData = function () {
     let firstMonth = moment().startOf('month');
     let firstYear = moment().startOf('year');
     let lastMonth = moment().startOf('month');
     let lastYear = moment().startOf('year');
-    if (incomeArray.length !== 0) {
-        firstMonth = moment.unix(incomeArray[0]['month']).startOf('month');
-        firstYear = moment.unix(incomeArray[0]['month']).startOf('year');
+    if (this.incomes.length !== 0) {
+        firstMonth = moment.unix(this.incomes[0]['month']).startOf('month');
+        firstYear = moment.unix(this.incomes[0]['month']).startOf('year');
         // we need to find last month, because it can be not in the last element of array
         // example: when you add today new income (it will be the last element) for previous month
-        let lastMonthTime = getLastMonthTime(incomeArray);
+        let lastMonthTime = getLastMonthTime(this.incomes);
         lastMonth = moment.unix(lastMonthTime).startOf('month');
         lastYear = moment.unix(lastMonthTime).startOf('year');
     }
@@ -52,16 +73,17 @@ function getChartsData(incomeArray) {
     for (let i = 0; i < countYears; i++) {
         dataSumByYear[firstYear.format("YYYY")] = 0;
         dataAverageByYear[firstYear.format("YYYY")] = 0;
-        firstYear.add(1, 'Y');
+        firstYear.add(1, 'year');
     }
 
-    incomeArray.forEach(function (element) {
-
+    this.incomes.forEach((element) => {
+        let rates = getNearestRates(this.currencyRates, element['date']);
+        let sum = convertCurrency(this.defaultCurrency, this.displayedCurrency, element.sum, rates);
         let month = moment.unix(element.month).format("MMM YYYY");
-        dataSumByMonth[month] += element.sum;
+        dataSumByMonth[month] += sum;
 
         let year = moment.unix(element.month).format("YYYY");
-        dataSumByYear[year] += element.sum;
+        dataSumByYear[year] += sum;
 
         // если разница меньше нуля, значит анализируется месяц за прошлые годы
         let monthDiff = 12;
@@ -73,21 +95,13 @@ function getChartsData(incomeArray) {
             monthDiff = firstYearMonthCount;
         }
 
-        dataAverageByYear[year] += element.sum / monthDiff;
+        dataAverageByYear[year] += sum / monthDiff;
     });
 
     return [dataSumByMonth, dataSumByYear, dataAverageByYear]
 }
 
-function getIncomeSum(incomes) {
-    let incomeSum = 0;
-    incomes.forEach(function (element) {
-        incomeSum += element.sum;
-    });
-    return incomeSum;
-}
-
-function getTopAndWorstValues(dataSumByMonth) {
+IncomeModel.prototype.getTopAndWorstValues = function (dataSumByMonth) {
     let incomeTopMonthValue = 0;
     let incomeTopMonthName = null;
     let incomeWorstMonthValue = 0;
@@ -106,6 +120,30 @@ function getTopAndWorstValues(dataSumByMonth) {
         }
     }
     return [incomeTopMonthValue, incomeTopMonthName, incomeWorstMonthValue, incomeWorstMonthName];
+}
+
+
+IncomeModel.prototype.generateDataForPieChart = function (field, fieldTitles) {
+    let map = this.incomes.reduce(
+        (accumulator, item) => {
+            let rates = getNearestRates(this.currencyRates, item.date);
+            let sum = convertCurrency(this.defaultCurrency, this.displayedCurrency, item.sum, rates);
+            if (accumulator.hasOwnProperty(item[field])) {
+                accumulator[item[field]] += sum;
+            } else {
+                accumulator[item[field]] = sum;
+            }
+            return accumulator;
+        }, {}
+    );
+
+    let result = [fieldTitles];
+    for (let type in map) {
+        if (map.hasOwnProperty(type)) {
+            result.push([type, map[type]]);
+        }
+    }
+    return result;
 }
 
 function generateDataForMonthChart(dataSumByMonth) {
@@ -138,34 +176,11 @@ function generateDataForAverageYearChart(dataAverageByYear) {
     return averageChartArray;
 }
 
-function generateDataForPieChart(incomes, field, fieldTitles) {
-    let map = incomes.reduce(
-        (accumulator, item) => {
-            if (accumulator.hasOwnProperty(item[field])) {
-                accumulator[item[field]] += item.sum;
-            } else {
-                accumulator[item[field]] = item.sum;
-            }
-            return accumulator;
-        }, {}
-    );
-
-    let result = [fieldTitles];
-    for (let type in map) {
-        if (map.hasOwnProperty(type)) {
-            result.push([type, map[type]]);
-        }
-    }
-    return result;
-}
 
 export {
     Income,
-    getChartsData,
-    getIncomeSum,
-    getTopAndWorstValues,
+    IncomeModel,
     generateDataForMonthChart,
     generateDataForYearChart,
     generateDataForAverageYearChart,
-    generateDataForPieChart
 }

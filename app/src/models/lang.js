@@ -6,6 +6,7 @@ let strings = new LocalizedStrings({
             "income": "Income",
             "balance": "Balance",
             "settings": "Settings",
+            "settingsSetDefaultCurrency": "Set default currency and save. It will be used in current balance sources. Restart app after it",
             "remind": "Remind me every month about balance",
             "remind_email": "E-mail for reminds",
             "sum": "Sum",
@@ -19,6 +20,7 @@ let strings = new LocalizedStrings({
             "contact": "Contact",
             "description": "Description",
             "balance_source_input": "Enter a place to storage money",
+            "balance_source_add": "Add",
             "save": "Save",
             "income_month": "Income by month",
             "income_year": "Income by year",
@@ -37,13 +39,16 @@ let strings = new LocalizedStrings({
             "language": "Language",
             "statistic": "Statistic",
             "new_version": "A new version of the application has been released. Current: ?, new: ?.",
-            "balance_sum": "Sum"
+            "balance_sum": "Sum",
+            "defaultCurrency": "Default Currency",
+            "currency": "Currency"
         },
         ru: {
             "title": "Cromberg - система личного учёта",
             "income": "Доход",
             "balance": "Баланс",
             "settings": "Настройки",
+            "settingsSetDefaultCurrency": "Установите валюту по-умолчанию и сохраните. Она будет использована для текущих источников баланса. Перезапустите приложение после этого",
             "remind": "Присылать мне уведомления каждый месяц",
             "remind_email": "E-mail для уведомлений",
             "sum": "Сумма",
@@ -57,6 +62,7 @@ let strings = new LocalizedStrings({
             "contact": "Контакт",
             "description": "Описание",
             "balance_source_input": "Введите место для хранения средств",
+            "balance_source_add": "Добавить",
             "save": "Сохранить",
             "income_month": "Доход по месяцам",
             "income_year": "Доход по годам",
@@ -75,13 +81,16 @@ let strings = new LocalizedStrings({
             "language": "Язык",
             "statistic": "Статистика",
             "new_version": "Вышла новая версия приложения. Текущая версия: ?, новая версия: ?.",
-            "balance_sum": "Сумма"
+            "balance_sum": "Сумма",
+            "defaultCurrency": "Валюта по-умолчанию",
+            "currency": "Валюта"
         },
         fr: {
             "title": "Cromberg - système de comptabilité financière personnelle",
             "income": "Revenu",
             "balance": "Balance",
             "settings": "Paramètres",
+            "settingsSetDefaultCurrency": "Set default currency and save. It will be used in current balance sources. Restart app after it",
             "remind": "Rappelez-moi chaque mois la balance",
             "remind_email": "E-mail de rappel",
             "sum": "Somme",
@@ -95,6 +104,7 @@ let strings = new LocalizedStrings({
             "contact": "Contact",
             "description": "Description",
             "balance_source_input": "Entrer un endroit pour ranger de l'argent",
+            "balance_source_add": "Ajouter",
             "save": "Enregister",
             "income_month": "Revenu mensuel",
             "income_year": "Revenu annuel",
@@ -113,7 +123,9 @@ let strings = new LocalizedStrings({
             "language": "Langue",
             "statistic": "Statistique",
             "new_version": "Une nouvelle version de l'application a été publiée. Actuel:?, nouveau:?.",
-            "balance_sum": "Somme"
+            "balance_sum": "Somme",
+            "defaultCurrency": "Devise par défaut",
+            "currency": "Currency"
         }
     }
 );

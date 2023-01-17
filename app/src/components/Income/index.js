@@ -6,23 +6,23 @@ import * as Utils from "../../Utils";
 import Chart from "react-google-charts";
 import strings from "../../models/lang";
 import {
-    getIncomeSum,
-    getChartsData,
-    getTopAndWorstValues,
+    IncomeModel,
     generateDataForMonthChart,
     generateDataForYearChart,
     generateDataForAverageYearChart,
-    generateDataForPieChart
 } from "../../models/income";
+import CurrencySelect from "../CurrencySelect";
+import {getCurrencySymbol} from "../../models/Currency";
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
-const Income = ({active}) => {
+const Income = ({active, defaultCurrency, currencyRates}) => {
 
     const [incomeArray, setIncomeArray] = useState([]);
     const [contacts, setContacts] = useState([]);
     const [paymentTypes, setPaymentTypes] = useState([]);
+    const [displayedCurrency, setDisplayedCurrency] = useState(defaultCurrency);
 
     let incomeAverage;
     let incomeTopMonthValue;
@@ -49,7 +49,6 @@ const Income = ({active}) => {
                 return e.contact;
             });
             setContacts(contacts.filter(Utils.uniqueArrayFilter));
-
         });
 
         ipcRenderer.on('income-data-deleted', function (event, incomeId) {
@@ -90,24 +89,32 @@ const Income = ({active}) => {
     let dataSumByYear;
     let dataAverageByYear;
 
-    let incomeSum = getIncomeSum(incomeArray);
-    [dataSumByMonth, dataSumByYear, dataAverageByYear] = getChartsData(incomeArray);
 
-    [incomeTopMonthValue, incomeTopMonthName, incomeWorstMonthValue, incomeWorstMonthName] = getTopAndWorstValues(dataSumByMonth);
+    let incomeModel = new IncomeModel(incomeArray, defaultCurrency, displayedCurrency, currencyRates);
+    let incomeSum = incomeModel.getIncomeSum();
+
+    [dataSumByMonth, dataSumByYear, dataAverageByYear] = incomeModel.getChartsData();
+
+    [incomeTopMonthValue, incomeTopMonthName, incomeWorstMonthValue, incomeWorstMonthName] = incomeModel.getTopAndWorstValues(dataSumByMonth);
 
     let incomeByMonthsChartArray = generateDataForMonthChart(dataSumByMonth);
-
     let incomeByYearChartArray = generateDataForYearChart(dataSumByYear);
-
     let averageChartArray = generateDataForAverageYearChart(dataAverageByYear);
 
-    let byContactsChartArray = generateDataForPieChart(incomeArray, 'contact', ['Contact', 'Sum']);
-    let byTypeChartArray = generateDataForPieChart(incomeArray, 'paymentType', ['Payment Type', 'Sum']);
+    let byContactsChartArray = incomeModel.generateDataForPieChart('contact', ['Contact', 'Sum']);
+    let byTypeChartArray = incomeModel.generateDataForPieChart('paymentType', ['Payment Type', 'Sum']);
 
     incomeAverage = Math.round(incomeSum / Object.keys(dataSumByMonth).length);
 
+    const onChangeCurrency = (event) => {
+        setDisplayedCurrency(event.target.value);
+    };
+
     return  <div className={`page ${active ? 'active' : ''}`} data-name="income">
         <h1>{strings.income}</h1>
+        <div className="currency-selector"><span className="currency-selector-label">{strings.currency}:</span>
+            <CurrencySelect defaultValue={displayedCurrency} onChange={onChangeCurrency}/>
+        </div>
 
         <div className="income-statistic">
             <h2>{strings.income_month}</h2>
@@ -125,7 +132,8 @@ const Income = ({active}) => {
                             easing: 'out',
                         },
                         vAxis: {
-                            minValue: 0
+                            minValue: 0,
+                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
                         }
                     }}
                     data={incomeByMonthsChartArray}
@@ -148,7 +156,8 @@ const Income = ({active}) => {
                                     easing: 'out',
                                 },
                                 vAxis: {
-                                    minValue: 0
+                                    minValue: 0,
+                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
                                 }
                             }}
                             data={incomeByYearChartArray}
@@ -171,7 +180,8 @@ const Income = ({active}) => {
                                     easing: 'out',
                                 },
                                 vAxis: {
-                                    minValue: 0
+                                    minValue: 0,
+                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
                                 }
                             }}
                             data={averageChartArray }
@@ -180,10 +190,10 @@ const Income = ({active}) => {
                 </div>
                 <div className="income-data">
                     <h2>{strings.statistic}</h2>
-                    <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeSum)}</span></p>
-                    <p className="data-line"><span className="income-data-name">{strings.average}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeAverage)}</span></p>
-                    <p className="data-line"><span className="income-data-name">{strings.top_month}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)}, {incomeTopMonthName}</span></p>
-                    <p className="data-line"><span className="income-data-name">{strings.worst_month}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)}, {incomeWorstMonthName}</span></p>
+                    <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeSum)} {getCurrencySymbol(displayedCurrency)}</span></p>
+                    <p className="data-line"><span className="income-data-name">{strings.average}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeAverage)} {getCurrencySymbol(displayedCurrency)}</span></p>
+                    <p className="data-line"><span className="income-data-name">{strings.top_month}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeTopMonthValue)} {getCurrencySymbol(displayedCurrency)}, {incomeTopMonthName}</span></p>
+                    <p className="data-line"><span className="income-data-name">{strings.worst_month}:</span> <span className="data-value">{Utils.numberWithSpaces(incomeWorstMonthValue)} {getCurrencySymbol(displayedCurrency)}, {incomeWorstMonthName}</span></p>
                 </div>
                 <div className="income-chart">
                     <h2>{strings.income_by_type}</h2>

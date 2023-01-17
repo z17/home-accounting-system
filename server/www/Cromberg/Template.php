@@ -9,6 +9,7 @@ class Template
     const MAIN = 'page-template';
 
     const PAGE_404 = 'page-404';
+    const PAGE_500 = 'page-500';
     const PAGE_INDEX = 'page-index';
     const PAGE_UNSUBSCRIBE = 'page-unsubscribe';
     const PAGE_STATS = 'page-stats';

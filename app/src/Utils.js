@@ -3,7 +3,8 @@ function uniqueArrayFilter(value, index, self) {
 }
 
 function numberWithSpaces(x) {
-    let parts = x.toString().split(".");
+    const rounded = x.toFixed();
+    let parts = rounded.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     return parts.join(".");
 }

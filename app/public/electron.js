@@ -141,7 +141,7 @@ app.on('ready', function () {
 
         if (!argv.dev) {
             serverRequester.getServerVersion((version) => {
-                if (compareVersions(version, app.getVersion()) > 0) {
+                if (compareVersions.compareVersions(version, app.getVersion()) > 0) {
                     mainWindow.webContents.send('new-version', app.getVersion(), version);
                 }
             });

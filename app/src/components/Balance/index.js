@@ -85,6 +85,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
     let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);
     [balanceMaxSum, balanceMaxMonth] = balanceModel.getBestMonth();
     let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
+    let currenciesPieChartArray = balanceModel.getCurrenciesPieChartData(lastUnEmptyMonth);
     let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
     let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
@@ -183,6 +184,17 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                         chartType="PieChart"
                         loader={<div>Loading Chart</div>}
                         data={balancePieChartArray}
+                        options={{
+                            width: '100%',
+                            height: 350,
+                            pieSliceText: 'label',
+                        }}
+                    />
+
+                    <Chart
+                        chartType="PieChart"
+                        loader={<div>Loading Chart</div>}
+                        data={currenciesPieChartArray}
                         options={{
                             width: '100%',
                             height: 350,

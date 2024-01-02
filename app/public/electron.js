@@ -118,7 +118,7 @@ app.on('ready', function () {
         sendInitData();
     }
     const sendInitData = () => {
-        mainWindow.webContents.send('init_data', [settings, rates]);
+        mainWindow.webContents.send('init_data', [settings, rates, app.getVersion()]);
     }
 
     ipcMain.on('app-ready', () => {

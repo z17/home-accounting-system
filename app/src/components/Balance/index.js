@@ -220,7 +220,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                        const source = sources[sourceKey];
                        return <SourceLine key={sourceKey} source={source} months={months}/>
                    })}
-                   <BalanceSumLine sources={sources} months={months}/>
+                   <BalanceSumLine sources={sources} months={months} rates={currencyRates} currency={displayedCurrency}/>
                 </tbody>
             </table>
         </article>

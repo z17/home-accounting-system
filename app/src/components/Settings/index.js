@@ -9,7 +9,8 @@ const ipcRenderer = electron.ipcRenderer;
 const RESPONSE_OK = 'ok';
 const RESPONSE_ERROR = 'error';
 
-const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency}) => {
+
+const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency, appVersion}) => {
 
     let [id, setId] = useState('');
     let [email, setEmail] = useState('');
@@ -150,6 +151,7 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency})
                 <input type="submit" value={strings.save}/> <span
                 className={`settings-response ${responseCode === RESPONSE_ERROR ? 'error' : ''}`}>{response}</span>
             </div>
+            <div>Version: {appVersion}</div>
         </form>
     </div>
 };

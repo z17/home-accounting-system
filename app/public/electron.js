@@ -11,6 +11,7 @@ const fs = require('fs');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
+const dialog = electron.dialog;
 const serverRequester = new ServerRequester(argv.dev);
 
 const DATABASE_FOLDER_KEY = 'database-folder';
@@ -184,6 +185,13 @@ app.on('ready', function () {
     ipcMain.on('component-income-ready', () => {
         rootComponentsReadyStatus['income'] = true;
         tryToLoadData();
+    });
+
+    ipcMain.on('select-directory',  async (event, key) => {
+        const result = await dialog.showOpenDialog(mainWindow, {
+            properties: ['openDirectory']
+        })
+        mainWindow.webContents.send('select-directory-result', result.filePaths, key);
     });
 
     ipcMain.on('component-settings-ready', () => {

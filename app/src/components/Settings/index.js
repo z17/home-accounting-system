@@ -52,8 +52,26 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency, 
             setResponse('ok');
             setResponseCode(RESPONSE_OK);
         });
+
+        ipcRenderer.on('select-directory-result', function (event, directory, key) {
+            if (!directory || directory.length === 0) {
+              return;
+          }
+          if (key === 'backup') {
+              setBackupFolder(directory[0]);
+          } else if (key === 'database') {
+              setDatabaseFolder(directory[0]);
+          }
+        });
     }, [id, setDefaultCurrency]);
 
+    const onBackupDirectorySelect = () => {
+        ipcRenderer.send('select-directory', 'backup')
+    }
+
+    const onDatabaseDirectorySelect = () => {
+        ipcRenderer.send('select-directory', 'database')
+    }
 
     const onChangeEmail = (event) => {
         setEmail(event.target.value);
@@ -61,19 +79,6 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency, 
 
     const onChangeRemind = () => {
         setRemind(!remind);
-    };
-    const onChangeDatabaseFolder = (event) => {
-        if (event.target.files.length === 0) {
-            return;
-        }
-        setDatabaseFolder(event.target.files[0].path);
-    };
-
-    const onChangeBackupFolder = (event) => {
-        if (event.target.files.length === 0) {
-            return;
-        }
-        setBackupFolder(event.target.files[0].path);
     };
 
     const onChangeLanguage = (event) => {
@@ -108,6 +113,7 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency, 
         ipcRenderer.send('update-settings', settings);
     };
 
+
     let currencyWarning = defaultCurrency ? ' ' : <div className="settings-currency-warning">{strings.settingsSetDefaultCurrency}</div>;
 
     // noinspection HtmlUnknownAttribute
@@ -128,16 +134,12 @@ const Settings = ({active, settingsToggle, defaultCurrency, setDefaultCurrency, 
                 <input type="email" value={email} onChange={onChangeEmail}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.database_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory={1} webkitdirectory={1}
-                       onChange={onChangeDatabaseFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={databaseFolder}
-                       placeholder={strings.choose_folder}/>
+                       placeholder={strings.choose_folder} onClick={onDatabaseDirectorySelect}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.backup_folder}:</label><br/>
-                <input type="file" className="settings-folder" directory={1} webkitdirectory={1}
-                       onChange={onChangeBackupFolder}/>
                 <input type="text" className="settings-folder-text" readOnly={true} value={backupFolder}
-                       placeholder={strings.choose_folder}/>
+                       placeholder={strings.choose_folder} onClick={onBackupDirectorySelect}/>
             </div>
             <div className="settings-row"><label className="settings-label">{strings.language}:</label>
                 <select defaultValue={defaultLanguage} onChange={onChangeLanguage}>

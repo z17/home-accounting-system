@@ -14,4 +14,8 @@ class Config
 	static $notify_count = 10;
 	static $domain_link = 'http://localhost';
 	static $domain = 'localhost';
+
+    static $stats_code = 'code';
+
+    static $exchangerate_key = 'key';
 }

@@ -197,7 +197,7 @@ BalanceModel.prototype.getBalanceDiffChartData = function (isCurrentMonthEmpty) 
     let chartPartNames = [['month', 'diff']];
 
     let prevMonthSum = null;
-    for (let month in this.months) {
+    for (let month of this.months) {
         let month_time = moment(month, "MMYYYY");
 
         if (isCurrentMonthEmpty && month_time.isSame(moment(), 'month')) {
@@ -218,7 +218,6 @@ BalanceModel.prototype.getBalanceDiffChartData = function (isCurrentMonthEmpty) 
             diff = monthsSum - prevMonthSum;
         }
         prevMonthSum = monthsSum;
-
         chartPartNames.push([month_time.format("MMM YYYY"), diff])
     }
     return chartPartNames;

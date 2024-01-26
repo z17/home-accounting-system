@@ -1,7 +1,6 @@
 import moment from "moment";
 import {convertCurrency, getNearestRates} from "./Currency";
 
-
 function IncomeModel(incomes, defaultCurrency, displayedCurrency, currencyRates) {
     this.incomes = incomes;
     this.displayedCurrency = displayedCurrency;
@@ -9,8 +8,7 @@ function IncomeModel(incomes, defaultCurrency, displayedCurrency, currencyRates)
     this.currencyRates = currencyRates;
 }
 
-
-function Income(date, month, sum, paymentType, contact, description) {
+function Income(date, month, sum, paymentType, contact, description, currency) {
     this.id = null;
     this.date = date;
     this.month = month;
@@ -18,6 +16,14 @@ function Income(date, month, sum, paymentType, contact, description) {
     this.paymentType = paymentType;
     this.contact = contact;
     this.description = description;
+    this.currency = currency;
+}
+
+function getIncomeCurrency(income, defaultCurrency) {
+    if (income.currency) {
+        return income.currency;
+    }
+    return defaultCurrency;
 }
 
 function getLastMonthTime(incomes) {
@@ -35,7 +41,8 @@ IncomeModel.prototype.getIncomeSum = function () {
 
     this.incomes.forEach((element) => {
         let rates = getNearestRates(this.currencyRates, element['date']);
-        let convertedSum = convertCurrency(this.defaultCurrency, this.displayedCurrency, element.sum, rates);
+        let incomeCurrency = getIncomeCurrency(element, this.defaultCurrency);
+        let convertedSum = convertCurrency(incomeCurrency, this.displayedCurrency, element.sum, rates);
         incomeSum += convertedSum;
     });
     return incomeSum;
@@ -77,8 +84,9 @@ IncomeModel.prototype.getChartsData = function () {
     }
 
     this.incomes.forEach((element) => {
+        let incomeCurrency = getIncomeCurrency(element, this.defaultCurrency);
         let rates = getNearestRates(this.currencyRates, element['date']);
-        let sum = convertCurrency(this.defaultCurrency, this.displayedCurrency, element.sum, rates);
+        let sum = convertCurrency(incomeCurrency, this.displayedCurrency, element.sum, rates);
         let month = moment.unix(element.month).format("MMM YYYY");
         dataSumByMonth[month] += sum;
 
@@ -127,7 +135,8 @@ IncomeModel.prototype.generateDataForPieChart = function (field, fieldTitles) {
     let map = this.incomes.reduce(
         (accumulator, item) => {
             let rates = getNearestRates(this.currencyRates, item.date);
-            let sum = convertCurrency(this.defaultCurrency, this.displayedCurrency, item.sum, rates);
+            let incomeCurrency = getIncomeCurrency(item, this.defaultCurrency);
+            let sum = convertCurrency(incomeCurrency, this.displayedCurrency, item.sum, rates);
             if (accumulator.hasOwnProperty(item[field])) {
                 accumulator[item[field]] += sum;
             } else {

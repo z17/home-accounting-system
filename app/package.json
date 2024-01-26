@@ -3,7 +3,7 @@
   "productName": "Cromberg",
   "description": "Personal accounting system",
   "homepage": "./",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "public/electron.js",
   "author": {
     "name": "z-17",
@@ -30,17 +30,17 @@
     "react-dom": "^17.0.2",
     "react-google-charts": "^3.0.15",
     "react-localization": "^1.0.17",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^3.1.0"
   },
   "devDependencies": {
-    "electron-builder": "^23.6.0",
-    "electron": "^22.0.0"
+    "electron": "^22.0.0",
+    "electron-builder": "^24.9.1"
   },
   "scripts": {
     "start": "concurrently \"BROWSER=none npm run react-start\" \"electron .\"",
     "start-win": "concurrently \"set BROWSER=none && npm run react-start\" \"electron .\"",
-    "dev": "concurrently \"BROWSER=none npm run react-start\" \"npm run electron-start\"",
+    "dev": "concurrently \"BROWSER=none npm run react-start\" \"sleep 3 && npm run electron-start\"",
     "dev-win": "concurrently \"set BROWSER=none && npm run react-start\" \"npm run electron-start\"",
     "electron-start" : "electron . --dev",
     "react-start": "react-scripts start",

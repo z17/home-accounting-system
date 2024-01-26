@@ -2,22 +2,23 @@
 
 namespace Cromberg\Currency;
 
-use Cromberg\Models\CurrencyRate;
+use Cromberg\Config;
 
 class CurrencyRatesFetcher {
 
-    private function getUrl(string $date) {
-        return  'https://api.exchangerate.host/'.$date.'?base=USD';
+    private function getUrl(string $key, string $date) {
+        return  'http://api.exchangerate.host/historical?access_key=' . $key . '&date=' . $date;
     }
 
    public function getRates(string $date) {
-        $data = file_get_contents($this->getUrl($date));
+        $data = file_get_contents($this->getUrl(Config::$exchangerate_key, $date));
         $parsed_data = json_decode($data);
-        $base = $parsed_data->base;
+        $base = $parsed_data->source;
 
         $currencies = [];
-        $rates = $parsed_data->rates;
-        foreach ($rates as $rate_code => $value) {
+        $rates = $parsed_data->quotes;
+        foreach ($rates as $code => $value) {
+            $rate_code = substr($code, strlen($base));
             if  (!Currency::isAllowed($rate_code)) {
                 continue;
             }

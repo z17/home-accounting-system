@@ -11,6 +11,7 @@ const fs = require('fs');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
+const dialog = electron.dialog;
 const serverRequester = new ServerRequester(argv.dev);
 
 const DATABASE_FOLDER_KEY = 'database-folder';
@@ -118,7 +119,7 @@ app.on('ready', function () {
         sendInitData();
     }
     const sendInitData = () => {
-        mainWindow.webContents.send('init_data', [settings, rates]);
+        mainWindow.webContents.send('init_data', [settings, rates, app.getVersion()]);
     }
 
     ipcMain.on('app-ready', () => {
@@ -141,7 +142,7 @@ app.on('ready', function () {
 
         if (!argv.dev) {
             serverRequester.getServerVersion((version) => {
-                if (compareVersions(version, app.getVersion()) > 0) {
+                if (compareVersions.compareVersions(version, app.getVersion()) > 0) {
                     mainWindow.webContents.send('new-version', app.getVersion(), version);
                 }
             });
@@ -184,6 +185,13 @@ app.on('ready', function () {
     ipcMain.on('component-income-ready', () => {
         rootComponentsReadyStatus['income'] = true;
         tryToLoadData();
+    });
+
+    ipcMain.on('select-directory',  async (event, key) => {
+        const result = await dialog.showOpenDialog(mainWindow, {
+            properties: ['openDirectory']
+        })
+        mainWindow.webContents.send('select-directory-result', result.filePaths, key);
     });
 
     ipcMain.on('component-settings-ready', () => {
@@ -258,7 +266,7 @@ app.on('ready', function () {
         }
 
         let newSettings = Object.assign({}, newClientSettings);
-        delete newSettings.databaseFolder; // we wont to save this as a settings in database;
+        delete newSettings.databaseFolder; // we will not to save this as a settings in database;
         dao.getSettings((oldSettings) => {
             serverRequester.notify(oldSettings, newSettings);
             let isLanguageUpdated = oldSettings.language !== newSettings.language;

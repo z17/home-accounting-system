@@ -85,6 +85,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
     let balanceChartArray = balanceModel.getBalanceChartData(isCurrentMonthEmpty);
     [balanceMaxSum, balanceMaxMonth] = balanceModel.getBestMonth();
     let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
+    let currenciesPieChartArray = balanceModel.getCurrenciesPieChartData(lastUnEmptyMonth);
     let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
     let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
@@ -189,6 +190,17 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                             pieSliceText: 'label',
                         }}
                     />
+
+                    <Chart
+                        chartType="PieChart"
+                        loader={<div>Loading Chart</div>}
+                        data={currenciesPieChartArray}
+                        options={{
+                            width: '100%',
+                            height: 350,
+                            pieSliceText: 'label',
+                        }}
+                    />
                 </div>
                 <div className="balance-data">
                     <h2>{strings.statistic}</h2>
@@ -208,7 +220,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                        const source = sources[sourceKey];
                        return <SourceLine key={sourceKey} source={source} months={months}/>
                    })}
-                   <BalanceSumLine sources={sources} months={months}/>
+                   <BalanceSumLine sources={sources} months={months} rates={currencyRates} currency={displayedCurrency}/>
                 </tbody>
             </table>
         </article>

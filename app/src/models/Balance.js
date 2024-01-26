@@ -171,6 +171,28 @@ BalanceModel.prototype.getBalancePieChartData = function (lastUnEmptyMonth) {
     return balancePieChartArray;
 }
 
+BalanceModel.prototype.getCurrenciesPieChartData = function (lastUnEmptyMonth) {
+    let valuesByCurrency = {}
+    for (let sourceId in this.sources) {
+        let source = this.sources[sourceId];
+        let value = source.months[lastUnEmptyMonth];
+        if (value) {
+            let current_rates = getLastMothRates(this.rates, lastUnEmptyMonth);
+            let converted_value = convertCurrency(source['currency'], this.currency, value, current_rates);
+            if (source.currency in valuesByCurrency) {
+                valuesByCurrency[source.currency] += converted_value
+            } else {
+                valuesByCurrency[source.currency] = converted_value
+            }
+        }
+    }
+    let currencyPieChartArray = [["Currency", "Sum"]];
+    for (let [currency, value] of Object.entries(valuesByCurrency)) {
+            currencyPieChartArray.push([currency, value])
+    }
+    return currencyPieChartArray;
+}
+
 BalanceModel.prototype.getBalanceDiffChartData = function (isCurrentMonthEmpty) {
     let chartPartNames = [['month', 'diff']];
 
@@ -196,7 +218,6 @@ BalanceModel.prototype.getBalanceDiffChartData = function (isCurrentMonthEmpty) 
             diff = monthsSum - prevMonthSum;
         }
         prevMonthSum = monthsSum;
-
         chartPartNames.push([month_time.format("MMM YYYY"), diff])
     }
     return chartPartNames;

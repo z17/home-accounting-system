@@ -242,9 +242,9 @@ const Income = ({active, defaultCurrency, currencyRates}) => {
                         <th>{strings.description}</th>
                     </tr>
                     {incomeArray.map((income) =>
-                      <IncomeLine key={income.id} item={income} contacts={contacts} paymentTypes={paymentTypes}/>
+                      <IncomeLine key={income.id} item={income} contacts={contacts} paymentTypes={paymentTypes} defaultCurrency={defaultCurrency}/>
                     )}
-                    <IncomeAddForm contacts={contacts} paymentTypes={paymentTypes}/>
+                    <IncomeAddForm contacts={contacts} paymentTypes={paymentTypes} defaultCurrency={defaultCurrency}/>
                 </tbody>
             </table>
         </div>

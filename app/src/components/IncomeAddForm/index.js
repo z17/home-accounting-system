@@ -4,11 +4,12 @@ import './IncomeAddForm.css'
 import {Income} from "../../models/income";
 import Autocomplete from 'react-autocomplete'
 import strings from "../../models/lang";
+import CurrencySelect from "../CurrencySelect";
 
 const electron = window.require('electron');
 const ipcRenderer  = electron.ipcRenderer;
 
-const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes}) => {
+const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes, defaultCurrency}) => {
   const updateMode = item !== undefined && toggleEditMode !== undefined;
 
   const [date, setDate] = useState(item ? item.date: moment().unix());
@@ -17,6 +18,7 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes}) => {
   const [paymentType, setPaymentType] = useState(item ? item.paymentType: '');
   const [contact, setContact] = useState(item ? item.contact: '');
   const [description, setDescription] = useState(item ? item.description: '');
+  const [currency, setCurrency] = useState(item ? item.currency : defaultCurrency);
 
   const onChangeDate= (event) => {
     setDate(moment(event.target.value).unix());
@@ -43,13 +45,17 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes}) => {
     setDescription(event.target.value);
   };
 
+  const onChangeCurrency = (event) => {
+    setCurrency(event.target.value);
+  };
+
   const onCreate = () => {
-    const incomeItem = new Income(date,  month, sum, paymentType, contact, description);
+    const incomeItem = new Income(date,  month, sum, paymentType, contact, description, currency);
     ipcRenderer.send('income-add', incomeItem);
   };
 
     const onUpdate = () => {
-        const updatedItem = new Income(date, month, sum, paymentType, contact, description);
+        const updatedItem = new Income(date, month, sum, paymentType, contact, description, currency);
         updatedItem.id = item.id;
         ipcRenderer.send('income-edit', updatedItem);
         toggleEditMode();
@@ -65,8 +71,11 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes}) => {
     <td><input type="date" placeholder="Date"
                min="1900-01-01" max="2100-01-01" value={moment.unix(date).format("YYYY-MM-DD")}  onChange={onChangeDate} required/></td>
     <td><input type="month" placeholder="Month"
-               min="1900-01" max="2100-01" value={moment.unix(month).format("YYYY-MM")}  onChange={onChangeMonth} required/></td>
-    <td><input type="number" placeholder={strings.sum} value={sum} onChange={onChangeSum} required/></td>
+               min="1900-01" max="2100-01" value={moment.unix(month).format("YYYY-MM")}  onChange={onChangeMonth} required/>
+    </td>
+    <td className={'sum'}><input className={'sum-value'} type="number" placeholder={strings.sum} value={sum} onChange={onChangeSum} required/>
+        <CurrencySelect className={'sum-currency'} defaultValue={currency} onChange={onChangeCurrency}/>
+    </td>
     <td>
         <Autocomplete
             getItemValue={(item) => item}

@@ -266,7 +266,7 @@ app.on('ready', function () {
         }
 
         let newSettings = Object.assign({}, newClientSettings);
-        delete newSettings.databaseFolder; // we wont to save this as a settings in database;
+        delete newSettings.databaseFolder; // we will not to save this as a settings in database;
         dao.getSettings((oldSettings) => {
             serverRequester.notify(oldSettings, newSettings);
             let isLanguageUpdated = oldSettings.language !== newSettings.language;

@@ -70,6 +70,22 @@ form.addBalance button.submit {
   margin-bottom: 40px;
 }
 
+.charts-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.chart-half {
+  flex: 1;
+  min-width: 0;
+}
+
+.chart-half h2 {
+  text-align: center;
+}
+
 .inline-blocks .balance-chart, .inline-blocks .balance-data {
   display: inline-block;
   padding: 0 10px;

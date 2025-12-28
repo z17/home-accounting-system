@@ -87,6 +87,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
     let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
     let currenciesPieChartArray = balanceModel.getCurrenciesPieChartData(lastUnEmptyMonth);
     let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
+    let balanceByYearsChartArray = balanceModel.getBalanceByYearsChartData();
     let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
     const onChangeCurrency = (event) => {
@@ -130,28 +131,56 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                 />
             </div>
 
-            <h2>{strings.balance_chart_diff_title}</h2>
-            <div className="balance-chart" id="js-balance-diff-chart">
-                <Chart
-                    chartType="ColumnChart"
-                    loader={<div>Loading Chart</div>}
-                    options={{
-                        width: "100%",
-                        height: 400,
-                        bar: {groupWidth: "95%"},
-                        legend: {position: "top"},
-                        animation: {
-                            duration: 500,
-                            easing: 'out',
-                        },
-                        isStacked: true,
-                        vAxis: {
-                            minValue: 0,
-                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
-                        }
-                    }}
-                    data={balanceDiffChartArray}
-                />
+            <div className="charts-row">
+                <div className="chart-half">
+                    <h2>{strings.balance_chart_diff_title}</h2>
+                    <div className="balance-chart" id="js-balance-diff-chart">
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 400,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "top"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                isStacked: true,
+                                vAxis: {
+                                    minValue: 0,
+                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
+                                }
+                            }}
+                            data={balanceDiffChartArray}
+                        />
+                    </div>
+                </div>
+                <div className="chart-half">
+                    <h2>{strings.balance_by_years}</h2>
+                    <div className="balance-chart" id="js-balance-by-years-chart">
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 400,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "top"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                vAxis: {
+                                    minValue: 0,
+                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
+                                }
+                            }}
+                            data={balanceByYearsChartArray}
+                        />
+                    </div>
+                </div>
             </div>
 
             <h2>{strings.costs_chart_title}</h2>

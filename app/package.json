@@ -3,7 +3,7 @@
   "productName": "Cromberg",
   "description": "Personal accounting system",
   "homepage": "./",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "main": "public/electron.js",
   "author": {
     "name": "z-17",

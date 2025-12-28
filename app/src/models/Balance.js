@@ -272,6 +272,60 @@ BalanceModel.prototype.getCostsChartData = function (incomes, isCurrentMonthEmpt
     return costsData;
 }
 
+BalanceModel.prototype.getBalanceByYearsChartData = function () {
+    let chartData = [["Year", "Balance"]];
+
+    let yearMonths = {};
+    for (let month of this.months) {
+        let month_time = moment(month, "MMYYYY");
+        let year = month_time.year();
+
+        if (!yearMonths[year]) {
+            yearMonths[year] = [];
+        }
+        yearMonths[year].push(month);
+    }
+
+    let years = Object.keys(yearMonths).sort();
+
+    for (let year of years) {
+        let targetMonth = null;
+
+        for (let month of yearMonths[year].slice().reverse()) {
+            let hasData = false;
+            for (let sourceId in this.sources) {
+                if (this.sources[sourceId].months.hasOwnProperty(month)) {
+                    hasData = true;
+                    break;
+                }
+            }
+
+            if (hasData) {
+                targetMonth = month;
+                break;
+            }
+        }
+
+        if (targetMonth) {
+            let yearBalance = 0;
+            let current_rates = getLastMothRates(this.rates, targetMonth);
+
+            for (let sourceId in this.sources) {
+                let source = this.sources[sourceId];
+                if (source.months.hasOwnProperty(targetMonth)) {
+                    yearBalance += convertCurrency(source['currency'], this.currency, source.months[targetMonth], current_rates);
+                }
+            }
+
+            let month_time = moment(targetMonth, "MMYYYY");
+            let label = month_time.format("MMM YYYY");
+            chartData.push([label, yearBalance]);
+        }
+    }
+
+    return chartData;
+}
+
 export {
     BalanceModel,
     getMonthsArray,

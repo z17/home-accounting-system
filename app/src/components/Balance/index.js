@@ -87,6 +87,7 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
     let balancePieChartArray = balanceModel.getBalancePieChartData(lastUnEmptyMonth);
     let currenciesPieChartArray = balanceModel.getCurrenciesPieChartData(lastUnEmptyMonth);
     let balanceDiffChartArray = balanceModel.getBalanceDiffChartData(isCurrentMonthEmpty);
+    let balanceByYearsChartArray = balanceModel.getBalanceByYearsChartData();
     let costsChartArray = balanceModel.getCostsChartData(incomes, isCurrentMonthEmpty);
 
     const onChangeCurrency = (event) => {
@@ -207,7 +208,30 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                     <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span
                         className="data-value">{Utils.numberWithSpaces(balanceSum)} {getCurrencySymbol(displayedCurrency)}</span></p>
                     <p className="data-line"><span className="income-data-name">{strings.max_sum}:</span> <span
-                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)}  {getCurrencySymbol(displayedCurrency)}, {balanceMaxMonth}</span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)} {getCurrencySymbol(displayedCurrency)}, {balanceMaxMonth}</span></p>
+
+                    <div className="balance-by-years-chart">
+                        <h2>{strings.balance_by_years}</h2>
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 400,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "top"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                vAxis: {
+                                    minValue: 0,
+                                    format: '#.## ' + getCurrencySymbol(displayedCurrency),
+                                }
+                            }}
+                            data={balanceByYearsChartArray}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

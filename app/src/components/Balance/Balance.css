@@ -156,3 +156,6 @@ form.addBalance button.submit {
   font-weight: normal;
 }
 
+.balance-by-years-chart {
+    margin-top: 50px;
+}

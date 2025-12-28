@@ -131,56 +131,28 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                 />
             </div>
 
-            <div className="charts-row">
-                <div className="chart-half">
-                    <h2>{strings.balance_chart_diff_title}</h2>
-                    <div className="balance-chart" id="js-balance-diff-chart">
-                        <Chart
-                            chartType="ColumnChart"
-                            loader={<div>Loading Chart</div>}
-                            options={{
-                                width: "100%",
-                                height: 400,
-                                bar: {groupWidth: "95%"},
-                                legend: {position: "top"},
-                                animation: {
-                                    duration: 500,
-                                    easing: 'out',
-                                },
-                                isStacked: true,
-                                vAxis: {
-                                    minValue: 0,
-                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
-                                }
-                            }}
-                            data={balanceDiffChartArray}
-                        />
-                    </div>
-                </div>
-                <div className="chart-half">
-                    <h2>{strings.balance_by_years}</h2>
-                    <div className="balance-chart" id="js-balance-by-years-chart">
-                        <Chart
-                            chartType="ColumnChart"
-                            loader={<div>Loading Chart</div>}
-                            options={{
-                                width: "100%",
-                                height: 400,
-                                bar: {groupWidth: "95%"},
-                                legend: {position: "top"},
-                                animation: {
-                                    duration: 500,
-                                    easing: 'out',
-                                },
-                                vAxis: {
-                                    minValue: 0,
-                                    format:'#.## ' + getCurrencySymbol(displayedCurrency),
-                                }
-                            }}
-                            data={balanceByYearsChartArray}
-                        />
-                    </div>
-                </div>
+            <h2>{strings.balance_chart_diff_title}</h2>
+            <div className="balance-chart" id="js-balance-diff-chart">
+                <Chart
+                    chartType="ColumnChart"
+                    loader={<div>Loading Chart</div>}
+                    options={{
+                        width: "100%",
+                        height: 400,
+                        bar: {groupWidth: "95%"},
+                        legend: {position: "top"},
+                        animation: {
+                            duration: 500,
+                            easing: 'out',
+                        },
+                        isStacked: true,
+                        vAxis: {
+                            minValue: 0,
+                            format:'#.## ' + getCurrencySymbol(displayedCurrency),
+                        }
+                    }}
+                    data={balanceDiffChartArray}
+                />
             </div>
 
             <h2>{strings.costs_chart_title}</h2>
@@ -236,7 +208,30 @@ const Balance = ({active, defaultCurrency, currencyRates}) => {
                     <p className="data-line"><span className="income-data-name">{strings.sum}:</span> <span
                         className="data-value">{Utils.numberWithSpaces(balanceSum)} {getCurrencySymbol(displayedCurrency)}</span></p>
                     <p className="data-line"><span className="income-data-name">{strings.max_sum}:</span> <span
-                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)}  {getCurrencySymbol(displayedCurrency)}, {balanceMaxMonth}</span></p>
+                        className="data-value">{Utils.numberWithSpaces(balanceMaxSum)} {getCurrencySymbol(displayedCurrency)}, {balanceMaxMonth}</span></p>
+
+                    <div className="balance-by-years-chart">
+                        <h2>{strings.balance_by_years}</h2>
+                        <Chart
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            options={{
+                                width: "100%",
+                                height: 400,
+                                bar: {groupWidth: "95%"},
+                                legend: {position: "top"},
+                                animation: {
+                                    duration: 500,
+                                    easing: 'out',
+                                },
+                                vAxis: {
+                                    minValue: 0,
+                                    format: '#.## ' + getCurrencySymbol(displayedCurrency),
+                                }
+                            }}
+                            data={balanceByYearsChartArray}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

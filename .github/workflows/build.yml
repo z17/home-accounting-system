@@ -2,8 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - main
-      - dev
+      - master
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -13,10 +12,10 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v1
         with:
           node-version: 16
 
@@ -33,9 +32,11 @@ jobs:
 
 
       - name: Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
-          name: build-${{ matrix.os }}
-          path: app/dist/
-          if-no-files-found: warn
+          path: |
+            app/dist/*.dmg
+            app/dist/*.exe
+            app/dist/*.deb
+            app/dist/*.AppImage
 

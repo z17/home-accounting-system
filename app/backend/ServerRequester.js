@@ -129,9 +129,13 @@ ServerRequester.prototype.loadCurrencies = function (dates, callback) {
             });
 
             response.on('end', () => {
-                const ratesData = JSON.parse(Buffer.concat(data).toString());
-                if (ratesData) {
-                    commonRatesData = Object.assign({}, commonRatesData, ratesData);
+                if (response.statusCode !== 200) {
+                    console.log('Currencies request error: ' + response.statusCode);
+                } else {
+                    const ratesData = JSON.parse(Buffer.concat(data).toString());
+                    if (ratesData) {
+                        commonRatesData = Object.assign({}, commonRatesData, ratesData);
+                    }
                 }
                 requestedDone += 1;
                 processCallback();

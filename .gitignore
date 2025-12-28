@@ -3,6 +3,7 @@
 /data
 /app/dist/
 /app/node_modules/
+/app/db/database-dev
 /app/database-dev
 /server/www/Cromberg/Config.php
 /*.log

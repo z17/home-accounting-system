@@ -26,6 +26,9 @@ function getCurrencySymbol(currency) {
 }
 
 function convertCurrency(currencyFrom, currencyTo, value, rates) {
+    if (!rates) {
+        return value;
+    }
     let baseValue;
     if (currencyFrom === BaseCurrency) {
         baseValue = value;

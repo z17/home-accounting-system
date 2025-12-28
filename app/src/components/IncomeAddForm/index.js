@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import moment from "moment";
 import './IncomeAddForm.css'
 import {Income} from "../../models/income";
-import Autocomplete from 'react-autocomplete'
+import Autocomplete from '../Autocomplete'
 import strings from "../../models/lang";
 import CurrencySelect from "../CurrencySelect";
 
@@ -78,19 +78,10 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes, defaultCur
     </td>
     <td>
         <Autocomplete
-            getItemValue={(item) => item}
             items={paymentTypes}
-            renderItem={(item, isHighlighted) =>
-                <div key={item} className={`autocomplete-item ${isHighlighted  ? 'active' : ''}`} >
-                    {item}
-                </div>
-            }
             inputProps={
                 {'placeholder' : strings.type}
             }
-            renderMenu={(items, value, style) => {
-                return <div className='autocomplete-items' style={style} children={items}/>
-            }}
             shouldItemRender={(item, value) => {
                 return item.toLowerCase().includes(value.toLowerCase());
             }}
@@ -101,19 +92,10 @@ const IncomeAddForm = ({item, toggleEditMode, contacts, paymentTypes, defaultCur
     </td>
     <td>
         <Autocomplete
-            getItemValue={(item) => item}
             items={contacts}
-            renderItem={(item, isHighlighted) =>
-                <div key={item} className={`autocomplete-item ${isHighlighted  ? 'active' : ''}`} >
-                    {item}
-                </div>
-            }
             inputProps={
                 {'placeholder' : strings.contact}
             }
-            renderMenu={(items, value, style) => {
-                return <div className='autocomplete-items' style={style} children={items}/>
-            }}
             shouldItemRender={(item, value) => {
               return item.toLowerCase().includes(value.toLowerCase());
             }}
